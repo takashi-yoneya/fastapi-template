@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+  web:
+    image: 589800662540.dkr.ecr.us-west-1.amazonaws.com/fastapi-sample-backend:latest
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    # volumes:
+    #   - ./backend:/backend
+    restart: always
+    tty: true
