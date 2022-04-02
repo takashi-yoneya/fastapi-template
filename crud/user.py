@@ -2,10 +2,10 @@ from typing import Any, Dict, Optional, Union
 
 from sqlalchemy.orm import Session
 
-from core.auth import get_password_hash, verify_password
-from crud.base import CRUDBase
 import models
 import schemas
+from core.auth import get_password_hash, verify_password
+from crud.base import CRUDBase
 
 
 class CRUDUser(CRUDBase[models.User, schemas.UserCreate, schemas.UserUpdate, Any]):
@@ -16,16 +16,14 @@ class CRUDUser(CRUDBase[models.User, schemas.UserCreate, schemas.UserUpdate, Any
         db_obj = models.User(
             email=obj_in.email,
             hashed_password=get_password_hash(obj_in.password),
-            full_name=obj_in.full_name
+            full_name=obj_in.full_name,
         )
         db.add(db_obj)
         db.commit()
         db.refresh(db_obj)
         return db_obj
 
-    def update(
-        self, db: Session, *, db_obj: models.User, obj_in: schemas.UserUpdate
-    ) -> models.User:
+    def update(self, db: Session, *, db_obj: models.User, obj_in: schemas.UserUpdate) -> models.User:
         if obj_in.password:
             hashed_password = get_password_hash(obj_in.password)
             db_obj.hashed_password = hashed_password

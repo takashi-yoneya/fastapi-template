@@ -40,10 +40,10 @@ loggers:
         handlers: [console]
         propagate: false
 
-    batch:
-        level: INFO
-        handlers: [console, file]
-        propagate: false
+    # batch:
+    #     level: INFO
+    #     handlers: [console, file]
+    #     propagate: false
 
     gunicorn.error:
         level: DEBUG

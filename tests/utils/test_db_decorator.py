@@ -1,17 +1,18 @@
 import os
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session, sessionmaker
 
 from core.database import Base, get_db
 from main import app
 
 
 def temp_db(f):
-    '''
+    """
     pytestでテスト用のＤＢを使用する場合のデコレーター
     エンドポイントのテストで使用する
-    '''
+    """
+
     def func(TestSession, *args, **kwargs):
         # テスト用のDBに接続するためのsessionmaker instanse
         #  (SessionLocal) をfixtureから受け取る
@@ -34,4 +35,5 @@ def temp_db(f):
             f(*args, **kwargs)
         # get_dbを元に戻す
         app.dependency_overrides[get_db] = get_db
+
     return func

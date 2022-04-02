@@ -3,35 +3,30 @@ from typing import Any, Union
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, SecurityScopes
-from sqlalchemy.orm import Session 
 from jose import jwt
 from passlib.context import CryptContext
 from pydantic import ValidationError
+from sqlalchemy.orm import Session
 
+import crud
+import models
+import schemas
 from exceptions.core import APIException
 from exceptions.error_messages import ErrorMessage
-from .database import get_db
+
 from .config import settings
-import models, schemas, crud
+from .database import get_db
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 ALGORITHM = "HS256"
-reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl="/login/access-token",
-    scopes={
-        "admin": "Admin user only"
-    }
-)
+reusable_oauth2 = OAuth2PasswordBearer(tokenUrl="/login/access-token", scopes={"admin": "Admin user only"})
 
-def create_access_token(
-    subject: Union[str, Any], expires_delta: timedelta = None
-) -> str:
+
+def create_access_token(subject: Union[str, Any], expires_delta: timedelta = None) -> str:
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(
-            minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
-        )
+        expire = datetime.utcnow() + timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode = {"exp": expire, "sub": str(subject)}
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -47,13 +42,11 @@ def get_password_hash(password: str) -> str:
 
 def get_current_user(
     security_scopes: SecurityScopes,
-    db: Session = Depends(get_db), 
-    token: str = Depends(reusable_oauth2)
+    db: Session = Depends(get_db),
+    token: str = Depends(reusable_oauth2),
 ) -> models.User:
     try:
-        payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=[ALGORITHM]
-        )
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
         token_data = schemas.TokenPayload(**payload)
     except (jwt.JWTError, ValidationError):
         raise APIException(
@@ -68,7 +61,7 @@ def get_current_user(
         if scope not in user_scopes:
             raise APIException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                error=ErrorMessage.PERMISSION_ERROR.make_error()
+                error=ErrorMessage.PERMISSION_ERROR.make_error(),
             )
     return user
 
@@ -88,4 +81,4 @@ def get_current_user(
 #         raise HTTPException(
 #             status_code=400, detail="The user doesn't have enough privileges"
 #         )
-#     return 
+#     return

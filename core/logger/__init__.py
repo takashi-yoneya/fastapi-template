@@ -1,9 +1,4 @@
-from .logger import init_logger, get_logger, init_gunicorn_uvicorn_logger
-from .my_memory_handler import (
-    MyMemoryHandler, 
-    StringHandler, 
-    MyFileRotationHandler,
-    FORCE_FLUSH_TAG
-)
+from .logger import get_logger, init_gunicorn_uvicorn_logger, init_logger
+from .my_memory_handler import FORCE_FLUSH_TAG, MyFileRotationHandler, MyMemoryHandler, StringHandler
 
-#init_logger()
+# init_logger()

@@ -24,6 +24,6 @@ class UserResponse(UserBase):
     id: str
     email: EmailStr
     email_verified: bool
-    
+
     class Config:
         orm_mode = True

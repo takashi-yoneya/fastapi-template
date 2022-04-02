@@ -1,7 +1,7 @@
 FastAPI-実用的テンプレート
 ====
 作成中...
-# Structures
+# Features
 - fastapi: バックエンドフレームワーク
 - crud(sqlalchemy): CRUD
 - testing: テスト

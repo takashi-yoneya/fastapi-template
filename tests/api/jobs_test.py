@@ -1,12 +1,13 @@
 from fastapi.testclient import TestClient
 
 from api.endpoints.jobs import *
-from tests.utils.test_db_decorator import temp_db
-from tests.utils import test_crud
-from tests import test_data
 from main import app
+from tests import test_data
+from tests.utils import test_crud
+from tests.utils.test_db_decorator import temp_db
 
 client = TestClient(app)
+
 
 @temp_db
 def test_get_jobs(db: Session):
@@ -17,4 +18,4 @@ def test_get_jobs(db: Session):
     print(data)
     assert data[0]["id"]
     assert data[0]["title"]
-    #assert data[0]["deleted_at"]
+    # assert data[0]["deleted_at"]
