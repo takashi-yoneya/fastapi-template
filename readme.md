@@ -16,3 +16,7 @@ FastAPI-実用的テンプレート
 ```
 sys.path.append(str(Path(__file__).absolute().parent.parent))
 ```
+
+# Demo
+## ECS Fargateにデプロイ済のデモURL
+http://fastapi-sample-backend-alb-1201223431.us-west-1.elb.amazonaws.com/docs
