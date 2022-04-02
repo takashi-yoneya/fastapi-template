@@ -11,9 +11,12 @@ settings = get_settings()
 
 Base = declarative_base()
 
-engine = create_engine(settings.DATABASE_URI, pool_pre_ping=True)
+try:
+    engine = create_engine(settings.DATABASE_URI, pool_pre_ping=True)
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)    
+except:
+    print("DB connection failed")
 
 
 def get_db() -> Generator:
