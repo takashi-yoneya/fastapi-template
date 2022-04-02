@@ -54,6 +54,6 @@ RUN poetry install --no-root
 
 #RUN poetry install
 
-ENTRYPOINT ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--reload", "--log-config", "logger_config.yaml"]
+#ENTRYPOINT ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--reload", "--log-config", "logger_config.yaml"]
 # CMD ["uvicorn","main:app","--host","0.0.0.0", "--port", "80", "--reload"]
 # CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "manaus.server.main:app", "--bind=0.0.0.0:80"]
