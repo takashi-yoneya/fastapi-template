@@ -7,7 +7,7 @@ from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 from starlette.middleware.cors import CORSMiddleware
 
-from api.endpoints import jobs, login, users
+from api.endpoints import jobs, login, users, develop
 from core.auth import get_current_user
 from core.config import get_settings
 from core.logger import init_gunicorn_uvicorn_logger
@@ -47,3 +47,4 @@ def get_info():
 app.include_router(login.router, tags=["ログイン"], prefix="/login")
 app.include_router(jobs.router, tags=["Jobs(求人)"], prefix="/jobs")
 app.include_router(users.router, tags=["Users(ユーザーアカウント)"], prefix="/users")
+app.include_router(develop.router, tags=["Develop"], prefix="/develop")

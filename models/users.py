@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, DateTime, Float, Integer, String, Text, func
+from sqlalchemy import ForeignKey, Boolean, Column, DateTime, Float, Integer, String, Text, func
 from sqlalchemy.sql.functions import current_timestamp
 
 from core.database import Base

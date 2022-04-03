@@ -26,6 +26,7 @@ python-json-logger = "^2.0.2"
 mysql-connector-python = "^8.0.28"
 
 [tool.poetry.dev-dependencies]
+locust = "^2.8.5"
 
 [tool.black]
 line-length = 119

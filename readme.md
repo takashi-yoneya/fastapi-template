@@ -7,7 +7,11 @@ FastAPI-実用的テンプレート
 http://fastapi-sample-backend-alb-1201223431.us-west-1.elb.amazonaws.com/docs
 
 # Features
-- fastapi: バックエンドフレームワーク
+## REST-APIフレームワーク
+FastAPI
+SqlAlchemy
+uvicorn
+
 - crud(sqlalchemy): CRUD
 - testing: テスト
 - logging: ログ出力
@@ -15,6 +19,15 @@ http://fastapi-sample-backend-alb-1201223431.us-west-1.elb.amazonaws.com/docs
 - auth scope: 権限管理
 - sentry: ログの集中管理
 - alembic: テーブルマイグレーション
+
+# コンテナ
+Docker,ECS(Fargate)
+## パッケージ管理
+poetry
+
+### タスクランナー
+poethepoet
+ 
 
 # Installations
 
