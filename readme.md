@@ -14,6 +14,11 @@ uvicorn
 
 - crud(sqlalchemy): CRUD
 - testing: テスト
+テスト関数に、@temp_dbのデコレーターを付与することで
+Cleanなテスト用のDBを使用することができます。
+
+tests/test_data/ 配下にテスト用データをセットする
+
 - logging: ログ出力
 - error handling: エラー管理
 - auth scope: 権限管理
