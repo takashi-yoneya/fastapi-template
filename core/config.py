@@ -1,4 +1,5 @@
 import os
+import sys
 from functools import lru_cache
 from pathlib import Path
 
@@ -11,6 +12,7 @@ class Settings(BaseSettings):
     CORS_ORIGINS: list = [
         "localhost:8000",
         "127.0.0.1:8000",
+        "*"
     ]
     BASE_DIR_PATH: str = str(Path(__file__).parent.parent.absolute())
     DATABASE_URI: str = ""
@@ -19,13 +21,13 @@ class Settings(BaseSettings):
     LOGGER_CONFIG_PATH: str = "logger_config.yaml"
     SENTRY_SDK_DNS: str = ""
 
-    TEST_USER_EMAIL: str = ""
+    TEST_USER_EMAIL: str = "test-user@example.com"
     TEST_DATABASE_URI: str = ""
     TEST_SQL_DATA_PATH: str = os.path.join(BASE_DIR_PATH, "tests", "test_data", "dump.sql.gz")
 
     IS_DOCKER_UVICORN: bool = None
     DOCKER_DATABASE_URI: str = "mysql+mysqlconnector://docker:docker@db/docker"  # Docker内部ネットワークで疎通する場合のURI
-            
+    
     class Config:
         env_file = ".env"
 

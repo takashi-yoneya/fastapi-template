@@ -31,11 +31,9 @@ def get_user(id: str, db: Session = Depends(get_db)):
         raise APIException(ErrorMessage.ID_NOT_FOUND.make_error())
     return user
 
-
 @router.post(
-    "/",
-    response_model=schemas.UserResponse,
-    dependencies=[Security(get_current_user, scopes=["admin"])],
+    "",
+    response_model=schemas.UserResponse
 )
 def create_user(
     data_in: schemas.UserCreate,

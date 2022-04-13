@@ -4,10 +4,8 @@ import crud
 from main import app
 from tests import test_data
 from tests.utils import test_crud
-from tests.utils.test_db_decorator import temp_db
 
 
-@temp_db
 def test_get_jobs(db):
     test_crud.add_test_data(db, test_data.test_jobs)
     data = crud.job.get_list(db)

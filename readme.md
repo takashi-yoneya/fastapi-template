@@ -1,45 +1,100 @@
 FastAPI-実用的テンプレート
 ====
-作成中...
-
-# Demo
-## ECS Fargateにデプロイ済のデモURL
-http://fastapi-sample-backend-alb-1201223431.us-west-1.elb.amazonaws.com/docs
-
-# Features
-## REST-APIフレームワーク
-FastAPI
-SqlAlchemy
-uvicorn
-
-- crud(sqlalchemy): CRUD
-- testing: テスト
-テスト関数に、@temp_dbのデコレーターを付与することで
-Cleanなテスト用のDBを使用することができます。
-
-tests/test_data/ 配下にテスト用データをセットする
-
-- logging: ログ出力
-- error handling: エラー管理
-- auth scope: 権限管理
-- sentry: ログの集中管理
-- alembic: テーブルマイグレーション
-
-# コンテナ
-Docker,ECS(Fargate)
-## パッケージ管理
-poetry
-
-### タスクランナー
-poethepoet
- 
-
-# Installations
+FastAPIを使用した実用的なテンプレートです。
+DB(MySQL)とuvicornを含めてdocker化しています。
+poetryを使用して、パッケージ管理およびタスクランナーを実装しています。
 
 
-# Notes
-バッチ処理などで、サブディレクトリ配下のpyファイルから、別ディレクトリのファイルをimportする場合は、その前に以下のようなコードを追加して環境変数PYTHONPATHへの追加が必要
+# 機能(Features)
+
+## DBレコードの作成・取得・更新・削除(CRUD)
+crud/base.py にCRUDの共通Classを記述しています。
+それ以外のcrud配下のファイルで、CRUD処理をoverrideすることができます。
+
+## 権限(scopes)
+特定のUserのみが実行できるAPIを作成する場合は、
+tableの user.scopes の値とrouterに指定したscopeを一致させる。
+
+```
+@router.get(
+    "/{id}",
+    response_model=schemas.UserResponse,
+    dependencies=[Security(get_current_user, scopes=["admin"])],
+)
+```
+
+## バッチ処理(batch)
+サブディレクトリ配下のpyファイルから、別ディレクトリのファイルをimportする場合は
+その前に以下のコードを記述する必要がある。
+
 ```
 sys.path.append(str(Path(__file__).absolute().parent.parent))
 ```
+
+batch/__set_base_path__.py に記述し、各ファイルの先頭でimportすることで
+より簡単にimportできるようにしています。
+
+
+## Settings
+BaseSettingsを継承して共通設定Classを作成している。
+.envファイルから自動的に設定を読み込む他、個別に設定を定義することもできる。
+
+## ErrorException
+exceptions/
+
+## logging
+logger_config.yaml を使用
+
+## テスト
+tests/
+
+テスト関数の実行毎にDBをクリーンするため、ステートレスなテストが実行できます。
+tests/test_data/ 配下にテスト用データをセットする。
+
+## ログの集中管理
+.envファイルにsentryのDNSを設定すると、error以上のloggingが発生した場合に
+sentryに自動的にloggingされます。
+
+## DBマイグレーション
+alembic/versions.py にマイグレーション情報を記述すると、DBマイグレーション(移行)を実施することができます。
+
+
+## パッケージ管理
+poetryを使用して、パッケージ管理を実施。
+また、poethepoetを使用するすることでタスクランナー機能を追加している。
+
+
+## CI/CD
+push時に、Github Actionsを使用して、ECSに自動デプロイを行います。
+以下にAWSの設定情報等をセットします。
+.aws/ecs-task-definition.json
+.github/workflow/aws.yml
+
+# インストール&使い方(Installations & How to use)
+## Poetryのインストール
+```
+curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+```
+
+## 依存パッケージのインストール
+```
+poetry install
+```
+
+## dockerコンテナのビルド & 起動
+```
+docker-compose up --build
+```
+
+# Notes
+
+## バッチ処理等のuvicorn以外から実行するファイルの対応
+バッチ処理などで、サブディレクトリ配下のpyファイルから、別ディレクトリのファイルをimportする場合は
+その前に以下のコードを記述する必要がある。
+```
+sys.path.append(str(Path(__file__).absolute().parent.parent))
+```
+
+このサンプルでは、batch/__set_base_path__.py に上記を記述し、各ファイルの先頭でimportすることで
+より簡単にimportできるようにしています。
 

@@ -26,7 +26,7 @@ def get_job(id: str, db: Session = Depends(get_db)):
     return job
 
 
-@router.get("/", response_model=schemas.JobsPagedResponse)
+@router.get("", response_model=schemas.JobsPagedResponse)
 def get_jobs(
     q: Optional[str] = None,
     paging: PagingQueryIn = Depends(),
@@ -41,7 +41,7 @@ def get_jobs(
     return crud.job.get_paged_list(db, paging=paging, filtered_query=query)
 
 
-@router.post("/", response_model=schemas.JobResponse)
+@router.post("", response_model=schemas.JobResponse)
 def create_job(data_in: schemas.JobCreate, db: Session = Depends(get_db)):
     return crud.job.create(db, data_in)
 

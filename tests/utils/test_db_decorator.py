@@ -29,6 +29,7 @@ def temp_db(f):
 
         # テスト関数の引数にdbが含まれる場合は、テスト用のdbセッションをセットする
         if "db" in f.__code__.co_varnames:
+            print(args, kwargs)
             db = TestSession()
             f(db=db, *args, **kwargs)
         else:

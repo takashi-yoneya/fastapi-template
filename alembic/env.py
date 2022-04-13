@@ -1,3 +1,4 @@
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config, pool
@@ -25,7 +26,7 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 
 config.set_main_option("sqlalchemy.url", settings.DATABASE_URI)
-target_metadata = Base.metadata
+target_metadata = Base.metadatar
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

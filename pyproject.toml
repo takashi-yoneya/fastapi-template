@@ -24,6 +24,7 @@ PyYAML = "^6.0"
 python-multipart = "^0.0.5"
 python-json-logger = "^2.0.2"
 mysql-connector-python = "^8.0.28"
+bcrypt = "^3.2.0"
 
 [tool.poetry.dev-dependencies]
 locust = "^2.8.5"
@@ -44,13 +45,13 @@ ignore = "E203,W503,W504"
 
 [tool.poe.tasks]
 serve-uvicorn = {"shell" = "uvicorn main:app --host 127.0.0.1 --reload --log-config logger_config.yaml", help="開発用サーバーの起動(DB,uvicorn)"}
-serve = {"shell" = "docker-compose up --build"}
+serve-build = {"shell" = "docker-compose up --build"}
+serve = {"shell" = "docker-compose up"}
 test = {"cmd" = "pytest"}
 testing-set-data = {"shell" = "echo test"}
 format = {"shell" = "black . & isort ."}
 makemigrations = {"shell" = "alembic revision --autogenerate", help="DBマイグレーションファイルの自動作成"}
 migrate = {"shell" = "alembic upgrade heads", help="DBマイグレーション"}
-
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -15,7 +15,7 @@ class Category(Base, ModelBase):
     mysql_collate = "utf8mb4_unicode_ci"
 
     name = Column(String(64))
-    parent_category_id = Column(String(32), ForeignKey("categories.id"))
+    parent_category_id = Column(String(32), ForeignKey("categories.id"), index=True)
 
     updated_at = Column(
         DateTime,
@@ -29,7 +29,7 @@ class Category(Base, ModelBase):
         "Category",
         foreign_keys=[parent_category_id],
         remote_side="[Category.id]",
-        back_populates="childlen_category",
+        back_populates="children_category",
         uselist=False
     )
     children_category = relationship(

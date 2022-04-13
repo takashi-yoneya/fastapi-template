@@ -29,7 +29,7 @@ name: Deploy to Amazon ECS
 on:
   push:
     branches:
-      - master
+      - auto_deploy
 
 env:
   AWS_REGION: us-west-1                   # set this to your preferred AWS region, e.g. us-west-1
