@@ -121,7 +121,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType, ListRespon
 
     def delete(self, db: Session, db_obj: ModelType):
         if db_obj.deleted_at:
-            raise APIException(ErrorMessage.ALREADY_DELETED.make_error())
+            raise APIException(ErrorMessage.ALREADY_DELETED)
         db_obj.deleted_at = datetime.datetime.now()
         db.add(db_obj)
         db.flush()

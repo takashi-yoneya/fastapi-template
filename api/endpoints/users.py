@@ -28,7 +28,7 @@ def get_user_me(db: Session = Depends(get_db), current_user: models.User = Depen
 def get_user(id: str, db: Session = Depends(get_db)):
     user = crud.user.get(db, id=id)
     if not user:
-        raise APIException(ErrorMessage.ID_NOT_FOUND.make_error())
+        raise APIException(ErrorMessage.ID_NOT_FOUND)
     return user
 
 @router.post(
@@ -42,7 +42,7 @@ def create_user(
 ):
     user = crud.user.get_by_email(db, email=data_in.email)
     if user:
-        raise APIException(ErrorMessage.ALREADY_REGISTED_EMAIL.make_error())
+        raise APIException(ErrorMessage.ALREADY_REGISTED_EMAIL)
     return crud.user.create(db, obj_in=data_in)
 
 
@@ -58,5 +58,5 @@ def update_user(
 ):
     user = db.query(models.User).filter_by(id=id).first()
     if not user:
-        raise APIException(ErrorMessage.ID_NOT_FOUND.make_error())
+        raise APIException(ErrorMessage.ID_NOT_FOUND)
     return crud.user.update(db, db_obj=user, obj_in=data_in)

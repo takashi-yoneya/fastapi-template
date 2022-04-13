@@ -40,13 +40,17 @@ BaseSettingsを継承して共通設定Classを作成している。
 .envファイルから自動的に設定を読み込む他、個別に設定を定義することもできる。
 
 ## ErrorException
-exceptions/
+exceptions/error_messages.py にエラーメッセージを定義している。
+APIExceptionと併せて以下のように、呼び出すことで、エラーレスポンスを作成できる。
+```
+raise APIException(ErrorMessage.ID_NOT_FOUND)
+```
 
 ## logging
-logger_config.yaml を使用
+logger_config.yaml から設定を読み込む。
 
 ## テスト
-tests/
+tests/ 配下に、テスト関連の処理を、まとめている。
 
 テスト関数の実行毎にDBをクリーンするため、ステートレスなテストが実行できます。
 tests/test_data/ 配下にテスト用データをセットする。
@@ -85,16 +89,4 @@ poetry install
 ```
 docker-compose up --build
 ```
-
-# Notes
-
-## バッチ処理等のuvicorn以外から実行するファイルの対応
-バッチ処理などで、サブディレクトリ配下のpyファイルから、別ディレクトリのファイルをimportする場合は
-その前に以下のコードを記述する必要がある。
-```
-sys.path.append(str(Path(__file__).absolute().parent.parent))
-```
-
-このサンプルでは、batch/__set_base_path__.py に上記を記述し、各ファイルの先頭でimportすることで
-より簡単にimportできるようにしています。
 

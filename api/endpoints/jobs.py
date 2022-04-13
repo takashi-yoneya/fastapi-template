@@ -22,7 +22,7 @@ router = APIRouter()
 def get_job(id: str, db: Session = Depends(get_db)):
     job = crud.job.get(db, id=id)
     if not job:
-        raise APIException(ErrorMessage.ID_NOT_FOUND.make_error())
+        raise APIException(ErrorMessage.ID_NOT_FOUND)
     return job
 
 
@@ -54,7 +54,7 @@ def update(
 ):
     job = db.query(models.Job).filter_by(id=id).first()
     if not job:
-        raise APIException(ErrorMessage.ID_NOT_FOUND.make_error())
+        raise APIException(ErrorMessage.ID_NOT_FOUND)
     return crud.job.update(db, db_obj=job, obj_in=data_in)
 
 
@@ -65,5 +65,5 @@ def delete(
 ):
     job = db.query(models.Job).filter_by(id=id).first()
     if not job:
-        raise APIException(ErrorMessage.ID_NOT_FOUND.make_error())
+        raise APIException(ErrorMessage.ID_NOT_FOUND)
     return crud.job.delete(db, db_obj=job)

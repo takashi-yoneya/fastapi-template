@@ -22,7 +22,7 @@ router = APIRouter()
 def get_job(id: str, db: Session = Depends(get_db)):
     category = crud.category.get(db, id=id)
     if not category:
-        raise APIException(ErrorMessage.ID_NOT_FOUND.make_error())
+        raise APIException(ErrorMessage.ID_NOT_FOUND)
     return category
 
 
@@ -55,10 +55,10 @@ def update(
 ):
     category = db.query(models.Category).filter_by(id=id).first()
     if not category:
-        raise APIException(ErrorMessage.ID_NOT_FOUND.make_error())
+        raise APIException(ErrorMessage.ID_NOT_FOUND)
     if data_in.parent_category_id:
         if not db.query(models.Category).filter_by(id=data_in.parent_category_id).first():
-            raise APIException(ErrorMessage.NOT_FOUND.make_error("parent_category_id"))  
+            raise APIException(ErrorMessage.NOT_FOUND("parent_category_id"))
     return crud.category.update(db, db_obj=category, obj_in=data_in)
 
 
@@ -69,5 +69,5 @@ def delete(
 ):
     category = db.query(models.Category).filter_by(id=id).first()
     if not category:
-        raise APIException(ErrorMessage.ID_NOT_FOUND.make_error())
+        raise APIException(ErrorMessage.ID_NOT_FOUND)
     return crud.category.delete(db, db_obj=category)

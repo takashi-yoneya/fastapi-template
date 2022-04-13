@@ -2,17 +2,12 @@ class BaseMessage:
     """メッセージクラスのベース"""
 
     text: str
+    
+    def __init__(self, param=None):
+        self.param = param
 
     def __str__(self) -> str:
         return self.__class__.__name__
-
-    @classmethod
-    def make_error(cls, param=None):
-        """レスポンス用のエラーメッセージを作成する"""
-        return {
-            "error_code": cls(),
-            "msg_param": param,
-        }
 
 
 class ErrorMessage:

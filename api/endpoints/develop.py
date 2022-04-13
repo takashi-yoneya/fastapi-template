@@ -19,9 +19,13 @@ logger = get_logger(__name__)
 router = APIRouter()
 
 
-@router.get("/sleep")
-def get_job():
-    time.sleep(100)
-    return
+@router.get("/error")
+def exec_error():
+    # time.sleep(100)
+    raise APIException(ErrorMessage.NOT_FOUND("デバックテストID"))
 
+@router.get("/error2")
+def exec_error2():
+    # time.sleep(100)
+    raise APIException(ErrorMessage.INTERNAL_SERVER_ERROR)
 

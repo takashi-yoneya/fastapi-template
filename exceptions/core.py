@@ -1,5 +1,5 @@
 import traceback
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Callable
 
 from fastapi import HTTPException, status
 
@@ -22,11 +22,22 @@ class APIException(HTTPException):
         self.headers = headers
 
         # msg_paramsにセットしたパラメータをtextに展開する
+        # try:
+        #     error_code = error_obj
+        #     error_obj.text
+        #     message = error["error_code"].text.format(error["msg_param"])
+        # except:
+        #     message = error["error_code"].text
         try:
-            message = error["error_code"].text.format(error["msg_param"])
+            error_obj = error()
         except:
-            message = error["error_code"].text
+            error_obj = error
+            
+        try:
+            message = error_obj.text.format(error_obj.param)
+        except:
+            message = error_obj.text
 
-        self.detail = {"error_code": str(error["error_code"]), "error_msg": message}
+        self.detail = {"error_code": str(error_obj), "error_msg": message}
 
         super().__init__(self.status_code, self.detail)

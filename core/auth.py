@@ -51,17 +51,17 @@ def get_current_user(
     except (jwt.JWTError, ValidationError):
         raise APIException(
             status_code=status.HTTP_403_FORBIDDEN,
-            error=ErrorMessage.CouldNotValidateCredentials.make_error(),
+            error=ErrorMessage.CouldNotValidateCredentials,
         )
     user = crud.user.get(db, id=token_data.sub)
     if not user:
-        raise APIException(ErrorMessage.NOT_FOUND.make_error("User"))
+        raise APIException(ErrorMessage.NOT_FOUND("User"))
     user_scopes = user.scopes.split(",") if user.scopes else []
     for scope in security_scopes.scopes:
         if scope not in user_scopes:
             raise APIException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                error=ErrorMessage.PERMISSION_ERROR.make_error(),
+                error=ErrorMessage.PERMISSION_ERROR,
             )
     return user
 
