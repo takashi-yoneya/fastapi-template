@@ -90,3 +90,7 @@ poetry install
 docker-compose up --build
 ```
 
+## API管理画面(OpenAPI)表示
+```
+http://localhost:8090/docs
+```
