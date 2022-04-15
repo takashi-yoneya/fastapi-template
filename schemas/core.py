@@ -2,15 +2,31 @@ from typing import List, Optional
 
 from fastapi import Query
 from pydantic import BaseModel, validator
+from humps import camel
 
 
-class PagingMeta(BaseModel):
+def to_camel(string):
+    return camel.case(string)
+
+
+class BaseSchema(BaseModel):
+    class Config:
+        '''
+        # キャメルケース　<-> スネークケースの自動変換
+        pythonではスネークケースを使用するが、Javascriptではキャメルケースを使用する場合が多いため
+        変換する必要がある
+        '''
+        alias_generator = to_camel 
+        allow_population_by_field_name = True
+
+
+class PagingMeta(BaseSchema):
     current_page: int
     total_page_count: int
     total_data_count: int
 
 
-class PagingQueryIn(BaseModel):
+class PagingQueryIn(BaseSchema):
     page: int = Query(1)
     per_page: int = Query(30)
 

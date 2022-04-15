@@ -5,9 +5,9 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 from schemas.core import PagingMeta
+from schemas.core import BaseSchema
 
-
-class CategoryResponse(BaseModel):
+class CategoryResponse(BaseSchema):
     id: str
     name: str
     deleted_at: Optional[datetime.datetime]
@@ -19,16 +19,16 @@ class CategoryResponse(BaseModel):
         orm_mode = True
 
 
-class CategoryCreate(BaseModel):
+class CategoryCreate(BaseSchema):
     name: str
     parent_category_id: Optional[str] = None
 
 
-class CategoryUpdate(BaseModel):
+class CategoryUpdate(BaseSchema):
     name: Optional[str] = None
     parent_category_id: Optional[str] = None
 
 
-class CategoriesPagedResponse(BaseModel):
+class CategoriesPagedResponse(BaseSchema):
     data: Optional[List[CategoryResponse]]
     meta: Optional[PagingMeta]

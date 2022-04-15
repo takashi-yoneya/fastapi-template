@@ -2,11 +2,12 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
+from schemas.core import BaseSchema
 
-class Token(BaseModel):
+class Token(BaseSchema):
     access_token: str
     token_type: str
 
 
-class TokenPayload(BaseModel):
+class TokenPayload(BaseSchema):
     sub: Optional[str]

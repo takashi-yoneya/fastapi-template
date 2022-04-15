@@ -2,9 +2,11 @@ from typing import Optional
 
 from pydantic import BaseModel, EmailStr
 
+from schemas.core import BaseSchema
+
 
 # Shared properties
-class UserBase(BaseModel):
+class UserBase(BaseSchema):
     # email: Optional[EmailStr] = None
     full_name: Optional[str] = None
 

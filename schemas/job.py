@@ -4,9 +4,10 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 from schemas.core import PagingMeta
+from schemas.core import BaseSchema
 
 
-class JobResponse(BaseModel):
+class JobResponse(BaseSchema):
     id: str
     title: str
     deleted_at: Optional[datetime.datetime]
@@ -15,14 +16,14 @@ class JobResponse(BaseModel):
         orm_mode = True
 
 
-class JobCreate(BaseModel):
+class JobCreate(BaseSchema):
     title: str
 
 
-class JobUpdate(BaseModel):
+class JobUpdate(BaseSchema):
     title: Optional[str] = None
 
 
-class JobsPagedResponse(BaseModel):
+class JobsPagedResponse(BaseSchema):
     data: Optional[List[JobResponse]]
     meta: Optional[PagingMeta]

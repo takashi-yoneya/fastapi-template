@@ -15,7 +15,8 @@ class ErrorMessage:
 
     Notes:
         BaseMessagを継承することで
-        Class呼び出し時にClass名がerror_codeになり、textでerror_messageにもアクセス可能になる
+        Class呼び出し時にClass名がエラーコードになり、.textでエラーメッセージも取得できるため
+        エラーコードと、メッセージの管理が直感的に行える。
 
     """
 

@@ -25,6 +25,9 @@ python-multipart = "^0.0.5"
 python-json-logger = "^2.0.2"
 mysql-connector-python = "^8.0.28"
 bcrypt = "^3.2.0"
+py = "^1.11.0"
+humps = "^0.2.2"
+inflection = "^0.5.1"
 
 [tool.poetry.dev-dependencies]
 locust = "^2.8.5"
