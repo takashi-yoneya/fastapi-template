@@ -11,5 +11,4 @@ async def http_exception_handler(request, exc):
     """
     HTTPリクエストに起因したExceptionエラー発生時のフック処理
     """
-
     return PlainTextResponse("Server Error: " + str(exc), status_code=500)

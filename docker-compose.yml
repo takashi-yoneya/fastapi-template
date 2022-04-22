@@ -45,24 +45,24 @@ services:
     #   - db_volume:/var/lib/mysql
       #- ./docker/dump_sql/seed.sql.gz:/docker-entrypoint-initdb.d/install_docker.sql.gz
 
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--reload", "--log-config", "logger_config.yaml"]
-    ports:
-      - 8090:80
-    volumes:
-      - .:/backend
-    links:
-      - db
-    restart: always
-    networks:
-      - network
-    tty: true
-    environment:
-      - IS_DOCKER_UVICORN=1
-      - ENV=production
+  # web:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--reload", "--log-config", "logger_config.yaml"]
+  #   ports:
+  #     - 8090:80
+  #   volumes:
+  #     - .:/backend
+  #   links:
+  #     - db
+  #   restart: always
+  #   networks:
+  #     - network
+  #   tty: true
+  #   environment:
+  #     - IS_DOCKER_UVICORN=1
+  #     - ENV=production
 
 
 volumes:

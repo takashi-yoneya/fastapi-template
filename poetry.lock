@@ -747,6 +747,31 @@ pymysql = ["pymysql (<1)", "pymysql"]
 sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
+name = "sqlalchemy-filters"
+version = "0.12.0"
+description = ""
+category = "main"
+optional = false
+python-versions = "*"
+develop = false
+
+[package.dependencies]
+six = ">=1.10.0"
+sqlalchemy = ">=1.0.16"
+
+[package.extras]
+dev = ["pytest (>=4.6.9)", "coverage (>=5.0.4,<5.1.0)", "sqlalchemy-utils (>=0.36.3)", "flake8", "restructuredtext-lint", "pygments"]
+mysql = ["mysql-connector-python-rf (==2.2.2)"]
+postgresql = ["psycopg2 (==2.8.4)"]
+python2 = ["funcsigs (>=1.0.2)"]
+
+[package.source]
+type = "git"
+url = "https://github.com/bodik/sqlalchemy-filters"
+reference = "fix-sqla14-select"
+resolved_reference = "1f0b9bfaa7bcc6159eda14bbdfe03e8ac1d5976d"
+
+[[package]]
 name = "starlette"
 version = "0.17.1"
 description = "The little ASGI library that shines."
@@ -872,7 +897,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "cbb1d9669952c0eb9cb77e2730febe6cc0e992ed8087a6841182aa3f1711e0cc"
+content-hash = "525e227a8b45ad48b2e0ae2542d31bcb71cb1234d5d04233bdb992e0ac13bf27"
 
 [metadata.files]
 anyio = [
@@ -1663,6 +1688,7 @@ sqlalchemy = [
     {file = "SQLAlchemy-1.4.32-cp39-cp39-win_amd64.whl", hash = "sha256:b3f1d9b3aa09ab9adc7f8c4b40fc3e081eb903054c9a6f9ae1633fe15ae503b4"},
     {file = "SQLAlchemy-1.4.32.tar.gz", hash = "sha256:6fdd2dc5931daab778c2b65b03df6ae68376e028a3098eb624d0909d999885bc"},
 ]
+sqlalchemy-filters = []
 starlette = [
     {file = "starlette-0.17.1-py3-none-any.whl", hash = "sha256:26a18cbda5e6b651c964c12c88b36d9898481cd428ed6e063f5f29c418f73050"},
     {file = "starlette-0.17.1.tar.gz", hash = "sha256:57eab3cc975a28af62f6faec94d355a410634940f10b30d68d31cb5ec1b44ae8"},

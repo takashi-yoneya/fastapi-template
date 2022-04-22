@@ -23,6 +23,21 @@ tableの user.scopes の値とrouterに指定したscopeを一致させる。
 )
 ```
 
+## キャメルケースとスネークケースの相互変換
+Pythonではスネークケースが標準ですが、Javascriptではキャメルケースが標準なため、単純にpydanticでschemaを作成しただけでは
+jsonレスポンスにスネークケースを使用せざるをえない問題があります。
+
+そこで、humpsをinstallして、自動的にスネークケースに変換するように
+以下のようなBaseSchemaを作成しています。
+このBaseSchemaを継承することで、簡単にキャメルケースとスネークケースの相互変換が実現できます。
+
+```
+class BaseSchema(BaseModel):
+    class Config:
+        alias_generator = to_camel 
+        allow_population_by_field_name = True
+```
+
 ## バッチ処理(batch)
 サブディレクトリ配下のpyファイルから、別ディレクトリのファイルをimportする場合は
 その前に以下のコードを記述する必要がある。

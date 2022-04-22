@@ -2,7 +2,7 @@ from __future__ import annotations
 import datetime
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
 from schemas.core import PagingMeta
 from schemas.core import BaseSchema

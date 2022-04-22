@@ -39,6 +39,9 @@ class ErrorMessage:
     class ALREADY_DELETED(BaseMessage):
         text = "既に削除済です"
 
+    class COLUMN_NOT_ALLOWED(BaseMessage):
+        text = "このカラムは指定できません"
+
     ### ユーザー ###
     class ALREADY_REGISTED_EMAIL(BaseMessage):
         text = "登録済のメールアドレスです"

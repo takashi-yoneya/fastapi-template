@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from fastapi import Query
 from pydantic import BaseModel, validator
@@ -44,3 +44,23 @@ class PagingQueryIn(BaseSchema):
     def set_paging_query(self, query):
         offset = self.get_offset()
         return query.offset(offset).limit(self.per_page)
+
+
+class FilterQueryIn(BaseSchema):
+    sort: str = Query(None)
+    direction: str = Query(None)
+    start: Optional[int] = Query(None)
+    end: Optional[int] = Query(None)
+    
+    @validator("direction")
+    def validate_direction(cls, v):
+        if not v:
+            return "asc"
+        if v not in ["asc", "desc"]:
+            raise ValueError("asc or desc only")
+        return v
+        
+    def validate_sort_column(self, allowed_columns):
+        if not self.sort:
+            return True
+        return self.sort in allowed_columns
