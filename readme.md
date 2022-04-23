@@ -116,3 +116,43 @@ docker-compose up --build
 ```
 http://localhost:8090/docs
 ```
+
+# デプロイ
+heroku-cliを使用したherokuへのデプロイ方法を説明します。
+
+## heroku-cliのインストール
+以下を参考にインストール<br>
+https://devcenter.heroku.com/articles/heroku-cli#install-the-heroku-cli
+
+## appの作成
+APPNAMEは任意の名称を指定（全ユーザーでユニークである必要があります）
+```
+heroku create APPNAME
+```
+
+## gitにherokuのリモートリポジトリをセット
+```
+heroku git:remote --app APPNAME
+```
+
+## push
+```
+git push heroku master
+```
+
+## heroku-cliにheroku-configをインストール
+本リポジトリでは、.envファイル経由で設定を読み込んでいるため<br>
+herokuでも.envファイルを有効にする必要があります。<br>
+```
+heroku plugins:install heroku-config
+```
+
+## .envファイルをpush
+```
+heroku config:push
+```
+
+## heroku再起動
+```
+heroku restart
+```
