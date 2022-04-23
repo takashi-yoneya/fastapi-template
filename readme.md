@@ -4,6 +4,12 @@ FastAPIを使用した実用的なテンプレートです。
 DB(MySQL)とuvicornを含めてdocker化しています。
 poetryを使用して、パッケージ管理およびタスクランナーを実装しています。
 
+# デモ環境(heroku)
+本リポジトリに、herokuにデプロイするための設定ファイルも含まれております。<br>
+デプロイ済の環境は以下から参照できます。
+```
+https://fastapi-sample-tk.herokuapp.com/docs
+```
 
 # 機能(Features)
 
@@ -106,6 +112,7 @@ docker-compose up --build
 ```
 
 ## API管理画面(OpenAPI)表示
+ローカル環境
 ```
 http://localhost:8090/docs
 ```
