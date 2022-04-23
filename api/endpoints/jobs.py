@@ -51,7 +51,7 @@ def get_jobs(
     # if filter and filter.sort:
     #     sort_dict = [{
     #         "model": "Job", "field": filter.sort, "direction": filter.direction
-    #     }]
+    #     }]w
     #     query = apply_sort(query, sort_dict)
 
     return crud.job.get_paged_list(
