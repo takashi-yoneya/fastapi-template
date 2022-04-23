@@ -29,6 +29,8 @@ py = "^1.11.0"
 humps = "^0.2.2"
 inflection = "^0.5.1"
 sqlalchemy-filters = {git = "https://github.com/bodik/sqlalchemy-filters", rev = "fix-sqla14-select"}
+fire = "^0.4.0"
+typer-cli = "^0.0.12"
 
 [tool.poetry.dev-dependencies]
 locust = "^2.8.5"
@@ -56,6 +58,7 @@ testing-set-data = {"shell" = "echo test"}
 format = {"shell" = "black . & isort ."}
 makemigrations = {"shell" = "alembic revision --autogenerate", help="DBマイグレーションファイルの自動作成"}
 migrate = {"shell" = "alembic upgrade heads", help="DBマイグレーション"}
+create-user = {"cmd" = "python commands/user_creation.py", help="ユーザー作成"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -20,7 +20,6 @@ try:
         engine = create_engine(settings.DATABASE_URI, pool_pre_ping=True)
 
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-    print(engine)
 except Exception as e:
     import traceback
     traceback.print_exc()
