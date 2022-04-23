@@ -22,6 +22,9 @@ try:
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     print(engine)
 except Exception as e:
+    import traceback
+    traceback.print_exc()
+    print(e)
     print("DB connection failed")
 
 
