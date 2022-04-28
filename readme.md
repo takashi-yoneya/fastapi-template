@@ -117,6 +117,18 @@ docker-compose up --build
 http://localhost:8090/docs
 ```
 
+## poeタブ入力補完設定(completion)
+bashを使用している場合は、以下のコマンドを実行する。<br>
+これにより、タスクランナー実行時にタブで入力補完が可能になる。
+```bash
+ poe _bash_completion >> ~/.bashrc
+```
+
+次回bash起動時に有効化されるが、即時有効化するためには以下を実行する。
+```
+. ~/.bashrc
+```
+
 # デプロイ
 heroku-cliを使用したherokuへのデプロイ方法を説明します。
 

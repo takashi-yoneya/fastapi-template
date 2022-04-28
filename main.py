@@ -7,7 +7,7 @@ from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 from starlette.middleware.cors import CORSMiddleware
 
-from api.endpoints import jobs, login, users, categories, develop
+from api.endpoints import jobs, login, users, categories, develop, tasks
 from core.auth import get_current_user
 from core.config import get_settings
 from core.logger import init_gunicorn_uvicorn_logger
@@ -48,4 +48,5 @@ app.include_router(login.router, tags=["ログイン"], prefix="/login")
 app.include_router(users.router, tags=["Users(ユーザーアカウント)"], prefix="/users")
 app.include_router(jobs.router, tags=["Jobs(求人)"], prefix="/jobs")
 app.include_router(categories.router, tags=["Categories(カテゴリー)"], prefix="/categories")
+app.include_router(tasks.router, tags=["Tasks"], prefix="/tasks")
 app.include_router(develop.router, tags=["Develop"], prefix="/develop")

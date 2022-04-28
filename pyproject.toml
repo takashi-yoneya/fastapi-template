@@ -59,6 +59,7 @@ format = {"shell" = "black . & isort ."}
 makemigrations = {"shell" = "alembic revision --autogenerate", help="DBマイグレーションファイルの自動作成"}
 migrate = {"shell" = "alembic upgrade heads", help="DBマイグレーション"}
 create-user = {"cmd" = "python commands/user_creation.py", help="ユーザー作成"}
+init-table = {"cmd" = "echo init table", help="テーブルを作成し、seedデータをセットする"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

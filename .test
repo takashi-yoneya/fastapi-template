@@ -1,0 +1,7 @@
+_poe_complete() {
+    local cur
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    COMPREPLY=( $(compgen -W "$(poe _list_tasks)" -- ${cur}) )
+    return 0
+}
+complete -o default -F _poe_complete poe
