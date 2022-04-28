@@ -34,7 +34,7 @@ def temp_db(f):
             f(db=db, *args, **kwargs)
         else:
             f(*args, **kwargs)
-            
+
         # get_dbを元に戻す
         app.dependency_overrides[get_db] = get_db
 

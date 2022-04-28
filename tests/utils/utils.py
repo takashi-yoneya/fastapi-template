@@ -1,5 +1,5 @@
 import random
-import string 
+import string
 
 
 def random_lower_string() -> str:

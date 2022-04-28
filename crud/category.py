@@ -10,12 +10,7 @@ from .base import CRUDBase, Query, Session, joinedload, jsonable_encoder
 
 
 class CRUDCategory(
-    CRUDBase[
-        models.Category, 
-        schemas.CategoryCreate, 
-        schemas.CategoryUpdate, 
-        schemas.CategoryResponse
-    ]
+    CRUDBase[models.Category, schemas.CategoryCreate, schemas.CategoryUpdate, schemas.CategoryResponse]
 ):
     def updat_parent_category(self, db: Session, db_obj: models.Category, parent_category_id: str):
         db_obj.parent_category_id = parent_category_id
@@ -25,7 +20,4 @@ class CRUDCategory(
         return db_obj
 
 
-category = CRUDCategory(
-    models.Category, 
-    schemas.CategoriesPagedResponse(data=[], meta=None)
-)
+category = CRUDCategory(models.Category, schemas.CategoriesPagedResponse(data=[], meta=None))

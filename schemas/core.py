@@ -1,8 +1,8 @@
 from typing import List, Optional, Union
 
 from fastapi import Query
-from pydantic import BaseModel, validator
 from humps import camel
+from pydantic import BaseModel, validator
 
 
 def to_camel(string):
@@ -11,12 +11,13 @@ def to_camel(string):
 
 class BaseSchema(BaseModel):
     class Config:
-        '''
+        """
         # キャメルケース　<-> スネークケースの自動変換
         pythonではスネークケースを使用するが、Javascriptではキャメルケースを使用する場合が多いため
         変換する必要がある
-        '''
-        alias_generator = to_camel 
+        """
+
+        alias_generator = to_camel
         allow_population_by_field_name = True
 
 
@@ -51,7 +52,7 @@ class FilterQueryIn(BaseSchema):
     direction: str = Query(None)
     start: Optional[int] = Query(None)
     end: Optional[int] = Query(None)
-    
+
     @validator("direction")
     def validate_direction(cls, v):
         if not v:
@@ -59,7 +60,7 @@ class FilterQueryIn(BaseSchema):
         if v not in ["asc", "desc"]:
             raise ValueError("asc or desc only")
         return v
-        
+
     def validate_sort_column(self, allowed_columns):
         if not self.sort:
             return True

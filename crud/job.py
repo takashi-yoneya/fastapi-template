@@ -12,4 +12,5 @@ from .base import CRUDBase, Query, Session, joinedload, jsonable_encoder
 class CRUDHashtag(CRUDBase[models.Job, schemas.JobCreate, schemas.JobUpdate, schemas.JobsPagedResponse]):
     pass
 
+
 job = CRUDHashtag(models.Job, schemas.JobsPagedResponse(data=[], meta=None))

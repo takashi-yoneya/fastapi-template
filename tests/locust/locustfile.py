@@ -1,4 +1,4 @@
-from locust import HttpUser, TaskSet, task, between, constant
+from locust import HttpUser, TaskSet, between, constant, task
 
 
 class UserBehavior(TaskSet):
@@ -8,5 +8,5 @@ class UserBehavior(TaskSet):
 
 
 class WebsiteUser(HttpUser):
-    tasks = {UserBehavior: 1 }
+    tasks = {UserBehavior: 1}
     wait_time = constant(0)

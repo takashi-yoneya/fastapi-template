@@ -2,11 +2,10 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
 from api.endpoints.jobs import *
+from core.config import settings
 from main import app
 from tests import test_data
 from tests.utils import test_crud
-from core.config import settings
-
 
 
 def test_get_users_me(client: TestClient, db: Session, auth_headers):

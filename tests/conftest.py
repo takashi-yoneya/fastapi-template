@@ -5,14 +5,14 @@ from typing import Dict, Generator
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.engine import create_engine
-from sqlalchemy.orm import sessionmaker, Session, scoped_session
+from sqlalchemy.orm import Session, scoped_session, sessionmaker
 
 from core.config import settings
 from core.database import SessionLocal, get_db
 from main import app
 from tests.utils.test_crud import clear_and_set_test_data
-
 from tests.utils.user import authentication_token_from_email
+
 # from tests.utils.utils import get_superuser_token_headers
 
 
@@ -27,10 +27,10 @@ engine = create_engine(f"{settings.TEST_DATABASE_URI}?charset=utf8mb4")
 
 
 def get_test_db() -> Generator:
-    #engine = create_engine(f"{settings.TEST_DATABASE_URI}?charset=utf8mb4")
+    # engine = create_engine(f"{settings.TEST_DATABASE_URI}?charset=utf8mb4")
 
     # テストデータをセット
-    #clear_and_set_test_data(engine)
+    # clear_and_set_test_data(engine)
 
     test_session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = test_session()
@@ -40,6 +40,7 @@ def get_test_db() -> Generator:
         # rollbackすることで、clearなDBを維持する
         db.rollback()
         db.close()
+
 
 @pytest.fixture()
 def clear_db():
@@ -80,9 +81,7 @@ def client() -> Generator:
 
 @pytest.fixture
 def auth_headers(client: TestClient, db: Session) -> Dict[str, str]:
-    return authentication_token_from_email(
-        client=client, email=settings.TEST_USER_EMAIL, db=db
-    )
+    return authentication_token_from_email(client=client, email=settings.TEST_USER_EMAIL, db=db)
 
 
 def TestSession():

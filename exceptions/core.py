@@ -1,5 +1,5 @@
 import traceback
-from typing import Any, Dict, Optional, Callable
+from typing import Any, Callable, Dict, Optional
 
 from fastapi import HTTPException, status
 
@@ -32,7 +32,7 @@ class APIException(HTTPException):
             error_obj = error()
         except:
             error_obj = error
-            
+
         try:
             message = error_obj.text.format(error_obj.param)
         except:

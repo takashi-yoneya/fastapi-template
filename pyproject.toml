@@ -30,10 +30,11 @@ humps = "^0.2.2"
 inflection = "^0.5.1"
 sqlalchemy-filters = {git = "https://github.com/bodik/sqlalchemy-filters", rev = "fix-sqla14-select"}
 fire = "^0.4.0"
-typer-cli = "^0.0.12"
 
 [tool.poetry.dev-dependencies]
 locust = "^2.8.5"
+black = "^22.3.0"
+isort = "^5.10.1"
 
 [tool.black]
 line-length = 119
@@ -50,7 +51,7 @@ max-line-length = 119
 ignore = "E203,W503,W504"
 
 [tool.poe.tasks]
-serve-uvicorn = {"shell" = "uvicorn main:app --host 127.0.0.1 --reload --log-config logger_config.yaml", help="開発用サーバーの起動(DB,uvicorn)"}
+serve-uvicorn = {"shell" = "uvicorn main:app --host 127.0.0.1 --port 8090 --reload --log-config logger_config.yaml", help="開発用サーバーの起動(DB,uvicorn)"}
 serve-build = {"shell" = "docker-compose up --build"}
 serve = {"shell" = "docker-compose up"}
 test = {"cmd" = "pytest"}

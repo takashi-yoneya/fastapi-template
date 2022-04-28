@@ -1,5 +1,5 @@
-from typing import List, Optional
 import time
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
@@ -24,8 +24,8 @@ def exec_error():
     # time.sleep(100)
     raise APIException(ErrorMessage.NOT_FOUND("デバックテストID"))
 
+
 @router.get("/error2")
 def exec_error2():
     # time.sleep(100)
     raise APIException(ErrorMessage.INTERNAL_SERVER_ERROR)
-

@@ -13,15 +13,15 @@ Base = declarative_base()
 try:
     if settings.IS_DOCKER_UVICORN:
         engine = create_engine(
-            settings.DOCKER_DATABASE_URI, 
-            connect_args={'auth_plugin': 'mysql_native_password'},
-            pool_pre_ping=True)
+            settings.DOCKER_DATABASE_URI, connect_args={"auth_plugin": "mysql_native_password"}, pool_pre_ping=True
+        )
     else:
         engine = create_engine(settings.DATABASE_URI, pool_pre_ping=True)
 
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 except Exception as e:
     import traceback
+
     traceback.print_exc()
     print(e)
     print("DB connection failed")

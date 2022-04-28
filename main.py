@@ -7,7 +7,7 @@ from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 from starlette.middleware.cors import CORSMiddleware
 
-from api.endpoints import jobs, login, users, categories, develop, tasks
+from api.endpoints import categories, develop, jobs, login, tasks, users
 from core.auth import get_current_user
 from core.config import get_settings
 from core.logger import init_gunicorn_uvicorn_logger
@@ -34,14 +34,12 @@ app.add_middleware(
 )
 app.add_middleware(SentryAsgiMiddleware)
 
-#app.add_exception_handler(Exception, http_exception_handler)
+# app.add_exception_handler(Exception, http_exception_handler)
 
 
 @app.get("/", tags=["info"])
 def get_info():
-    return {
-        "title": settings.TITLE
-    }
+    return {"title": settings.TITLE}
 
 
 app.include_router(login.router, tags=["ログイン"], prefix="/login")

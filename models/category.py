@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey, Boolean, Column, DateTime, Float, Integer, String, Text, func
+from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text, func
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.functions import current_timestamp
 
@@ -30,12 +30,9 @@ class Category(Base, ModelBase):
         foreign_keys=[parent_category_id],
         remote_side="[Category.id]",
         back_populates="children_category",
-        uselist=False
+        uselist=False,
     )
-    children_category = relationship(
-        "Category",
-        back_populates="parent_category"
-    )
+    children_category = relationship("Category", back_populates="parent_category")
 
     def to_dict(self):
         return self.__dict__.copy()

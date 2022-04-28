@@ -17,6 +17,7 @@ RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-
     poetry config virtualenvs.create false
 
 RUN poetry install --no-root
+RUN echo test
 
 # 環境毎の差異に対応するため、uvicornの起動は、docker-composeやtask-definitionで行う
-#ENTRYPOINT ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--reload", "--log-config", "logger_config.yaml"]
+# CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--reload", "--log-config", "logger_config.yaml"]

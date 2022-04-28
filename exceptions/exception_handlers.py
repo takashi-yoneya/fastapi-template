@@ -6,6 +6,7 @@ from fastapi.responses import PlainTextResponse
 
 from core.config import settings
 from core.logger import get_logger
+
 logger = get_logger(__name__)
 
 

@@ -2,7 +2,7 @@ class BaseMessage:
     """メッセージクラスのベース"""
 
     text: str
-    
+
     def __init__(self, param=None):
         self.param = param
 

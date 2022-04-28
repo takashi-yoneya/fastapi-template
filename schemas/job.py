@@ -3,8 +3,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from schemas.core import PagingMeta
-from schemas.core import BaseSchema
+from schemas.core import BaseSchema, PagingMeta
 
 
 class JobResponse(BaseSchema):

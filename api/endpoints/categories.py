@@ -33,9 +33,7 @@ def get_categories(
     db: Session = Depends(get_db),
 ):
     if q:
-        query = db.query(models.Category).filter(
-            models.Category.name.like(f"%{q}%")
-        )
+        query = db.query(models.Category).filter(models.Category.name.like(f"%{q}%"))
     else:
         query = db.query(models.Category)
     print(query)

@@ -12,7 +12,7 @@ from core.database import get_db
 from core.logger import get_logger
 from exceptions.core import APIException
 from exceptions.error_messages import ErrorMessage
-from schemas.core import PagingQueryIn, FilterQueryIn
+from schemas.core import FilterQueryIn, PagingQueryIn
 
 logger = get_logger(__name__)
 
@@ -32,16 +32,16 @@ def get_jobs(
     q: Optional[str] = None,
     paging: PagingQueryIn = Depends(),
     filter_params: FilterQueryIn = Depends(),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     ALLOWED_COLUMNS = ["title", "created_at", "updated_at"]
     if not filter_params.validate_sort_column(ALLOWED_COLUMNS):
         raise APIException(ErrorMessage.COLUMN_NOT_ALLOWED)
-    
+
     if q:
         query = db.query(models.Job).filter(models.Job.title.like(f"%{q}%"))
     else:
-        query = db.query(models.Job)        
+        query = db.query(models.Job)
     # if filter and filter.sort and (filter.start or filter.end):
     #     filter_dict = [
     #         {"model": "Job", "field": filter.sort, "op": ">=", "value": filter.start},
@@ -54,12 +54,7 @@ def get_jobs(
     #     }]w
     #     query = apply_sort(query, sort_dict)
 
-    return crud.job.get_paged_list(
-        db, 
-        paging=paging, 
-        filtered_query=query,
-        filter_params=filter_params
-    )
+    return crud.job.get_paged_list(db, paging=paging, filtered_query=query, filter_params=filter_params)
 
 
 @router.post("", response_model=schemas.JobResponse)

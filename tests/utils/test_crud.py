@@ -9,7 +9,7 @@ from core.database import Base
 def add_test_data(db: Session, objects: list):
     db.add_all(objects)
     db.commit()
-    
+
 
 def set_test_data(engine):
     with gzip.open(settings.TEST_SQL_DATA_PATH, mode="rt", encoding="utf-8") as fp:

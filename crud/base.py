@@ -78,17 +78,15 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType, ListRespon
             query = filtered_query
         else:
             query = self.model
-            
+
         if filter_params and filter_params.sort and (filter_params.start or filter_params.end):
             filter_dict = [
                 {"model": "Job", "field": filter_params.sort, "op": ">=", "value": filter_params.start},
-                {"model": "Job", "field": filter_params.sort, "op": "<=", "value": filter_params.end}
+                {"model": "Job", "field": filter_params.sort, "op": "<=", "value": filter_params.end},
             ]
             query = apply_filters(query, filter_dict, do_auto_join=False)
         if filter_params and filter_params.sort:
-            sort_dict = [{
-                "model": "Job", "field": filter_params.sort, "direction": filter_params.direction
-            }]
+            sort_dict = [{"model": "Job", "field": filter_params.sort, "direction": filter_params.direction}]
             query = apply_sort(query, sort_dict)
 
         # 削除フラグの処理(DELETE_FLG_COLUMN_NAMESのいずれかに当てはまるカラムがあれば、=Falseでfilterする)
