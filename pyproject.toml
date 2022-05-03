@@ -41,6 +41,7 @@ mypy = "^0.950"
 types-PyYAML = "^6.0.7"
 types-toml = "^0.10.6"
 sqlalchemy-stubs = "^0.4"
+pyproject-flake8 = "^0.0.1-alpha.4"
 
 [tool.black]
 line-length = 119
@@ -54,15 +55,24 @@ force_grid_wrap = 0
 
 [tool.flake8]
 max-line-length = 119
+exclude = "__init__.py,alembic,tests"
 ignore = "E203,W503,W504"
 
+[tool.mypy]
+python_version = "3.8"
+plugins = "pydantic.mypy, sqlmypy"
+ignore_missing_imports = true
+disallow_untyped_defs = true
+exclude = "alembic/|tests/"
+
 [tool.poe.tasks]
-serve-uvicorn = {"shell" = "uvicorn main:app --host 127.0.0.1 --port 8090 --reload --log-config logger_config.yaml", help="開発用サーバーの起動(DB,uvicorn)"}
-serve-build = {"shell" = "docker-compose up --build"}
-serve = {"shell" = "docker-compose up"}
-test = {"cmd" = "pytest"}
-testing-set-data = {"shell" = "echo test"}
-format = {"shell" = "black . & isort ."}
+# serve-uvicorn = {"shell" = "uvicorn main:app --host 127.0.0.1 --port 8090 --reload --log-config logger_config.yaml", help="開発用サーバーの起動(DB,uvicorn)"}
+# serve-build = {"shell" = "docker-compose up --build"}
+# serve = {"shell" = "docker-compose up"}
+test = {"cmd" = "pytest", help="pytestの実行"}
+format = {"shell" = "black ./app && pflake8 ./app && isort ./app"}
+mypy = {"shell" = "mypy ./app"}
+check = {"shell" = "poe mypy && poe format", help="構文、フォーマットチェック"}
 makemigrations = {"shell" = "alembic revision --autogenerate", help="DBマイグレーションファイルの自動作成"}
 migrate = {"shell" = "alembic upgrade heads", help="DBマイグレーション"}
 create-user = {"cmd" = "python commands/user_creation.py", help="ユーザー作成"}

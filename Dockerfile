@@ -3,7 +3,7 @@ FROM python:3.8-buster
 ENV LANG C.UTF-8
 ENV TZ UTC
 ENV PYTHONUNBUFFERED 1
-#ENV PYTHONPATH /backend
+ENV PYTHONPATH /backend/app
 EXPOSE 80
 
 RUN apt-get update && apt-get install -y git gcc libmariadb-dev curl
