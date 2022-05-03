@@ -15,7 +15,7 @@ def user_authentication_headers(*, client: TestClient, email: str, password: str
 
     r = client.post("/login/access-token", data=data)
     response = r.json()
-    auth_token = response["access_token"]
+    auth_token = response["accessToken"]
     headers = {"Authorization": f"Bearer {auth_token}"}
     return headers
 
@@ -33,7 +33,7 @@ def authentication_token_from_email(*, client: TestClient, email: str, db: Sessi
     Return a valid token for the user with given email.
     If the user doesn't exist it is created first.
     """
-    password = random_lower_string()
+    password = settings.TEST_USER_PASSWORD
     user = crud.user.get_by_email(db, email=email)
     if not user:
         user_in_create = UserCreate(email=email, password=password)

@@ -2,10 +2,9 @@ import datetime
 import math
 from typing import Any, Generic, List, Optional, Type, TypeVar
 
-from fastapi import Query
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
-from sqlalchemy.orm import Session, joinedload, query
+from sqlalchemy.orm import Session, query
 from sqlalchemy_filters import apply_filters, apply_sort
 
 import schemas
@@ -36,7 +35,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType, ListRespon
         self.list_response = list_response
 
     def get(self, db: Session, id: Any) -> Optional[ModelType]:
-        return db.query(self.model).filter(self.model.id == id).first()
+        return db.query(self.model).filter(self.model.id == id).first()  # type:ignore
 
     def get_list(
         self,
@@ -52,9 +51,9 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType, ListRespon
         # 削除フラグの処理(DELETE_FLG_COLUMN_NAMESのいずれかに当てはまるカラムがあれば、=Falseでfilterする)
         if not return_deleted_data:
             for delete_flg in self.DELETE_FLG_LIST:
-                delete_flg_column_obj = getattr(self.model, delete_flg.get("column"), None)
+                delete_flg_column_obj = getattr(self.model, delete_flg.get("column"), None)  # type: ignore
                 if delete_flg_column_obj:
-                    query = query.filter(delete_flg_column_obj == delete_flg.get("enable_value"))
+                    query = query.filter(delete_flg_column_obj == delete_flg.get("enable_value"))  # type: ignore
                     break
 
         return query.all()
@@ -77,7 +76,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType, ListRespon
         if filtered_query:
             query = filtered_query
         else:
-            query = self.model
+            query = self.model  # type: ignore
 
         if filter_params and filter_params.sort and (filter_params.start or filter_params.end):
             filter_dict = [
@@ -92,9 +91,9 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType, ListRespon
         # 削除フラグの処理(DELETE_FLG_COLUMN_NAMESのいずれかに当てはまるカラムがあれば、=Falseでfilterする)
         if not return_deleted_data:
             for delete_flg in self.DELETE_FLG_LIST:
-                delete_flg_column_obj = getattr(self.model, delete_flg["column"], None)
+                delete_flg_column_obj = getattr(self.model, delete_flg["column"], None)  # type: ignore
                 if delete_flg_column_obj:
-                    query = query.filter(delete_flg_column_obj == delete_flg["enable_value"])
+                    query = query.filter(delete_flg_column_obj == delete_flg["enable_value"])  # type: ignore
                     break
 
         # list_response = self.list_response.copy()
@@ -106,8 +105,8 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType, ListRespon
             current_page=paging.page,
             total_page_count=int(math.ceil(total_data_count / paging.per_page)),
         )
-        self.list_response.data = data
-        self.list_response.meta = meta
+        self.list_response.data = data  # type: ignore
+        self.list_response.meta = meta  # type: ignore
         return self.list_response
 
     def create(self, db: Session, obj_in: CreateSchemaType) -> ModelType:
@@ -118,7 +117,7 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType, ListRespon
         db.refresh(db_obj)
         return db_obj
 
-    def update(self, db: Session, db_obj: ModelType, obj_in: UpdateSchemaType):
+    def update(self, db: Session, *, db_obj: ModelType, obj_in: UpdateSchemaType) -> ModelType:
         # obj_inでセットされたスキーマをmodelの各カラムにUpdate
         db_obj_dict = jsonable_encoder(db_obj)
         update_dict = obj_in.dict(exclude_unset=True)  # exclude_unset=Trueとすることで、未指定のカラムはUpdateしない
@@ -131,10 +130,10 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType, ListRespon
         db.refresh(db_obj)
         return db_obj
 
-    def delete(self, db: Session, db_obj: ModelType):
-        if db_obj.deleted_at:
+    def delete(self, db: Session, db_obj: ModelType) -> ModelType:
+        if db_obj.deleted_at:  # type: ignore
             raise APIException(ErrorMessage.ALREADY_DELETED)
-        db_obj.deleted_at = datetime.datetime.now()
+        db_obj.deleted_at = datetime.datetime.now()  # type: ignore
         db.add(db_obj)
         db.flush()
         db.refresh(db_obj)

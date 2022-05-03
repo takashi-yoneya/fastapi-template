@@ -9,6 +9,7 @@ from schemas.core import BaseSchema, PagingMeta
 class JobResponse(BaseSchema):
     id: str
     title: str
+    hashtags: Optional[List[str]]
     deleted_at: Optional[datetime.datetime]
 
     class Config:

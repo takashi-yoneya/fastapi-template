@@ -1,4 +1,5 @@
 import os
+from typing import Any
 from urllib.request import Request
 
 from fastapi import FastAPI
@@ -10,7 +11,7 @@ from core.logger import get_logger
 logger = get_logger(__name__)
 
 
-async def http_exception_handler(request, exc):
+async def http_exception_handler(request: Any, exc: Any) -> PlainTextResponse:
     """
     HTTPリクエストに起因したExceptionエラー発生時のフック処理
     """

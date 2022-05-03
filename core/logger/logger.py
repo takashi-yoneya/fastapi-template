@@ -1,12 +1,12 @@
 import os
-from logging import getLogger
+from logging import Logger, getLogger
 from logging.config import dictConfig
 
 import toml
 import yaml
 
 
-def init_logger(filepath: str):
+def init_logger(filepath: str) -> None:
     # config_path = "logging_conf2.yaml"
     with open(filepath) as f:
         config = yaml.safe_load(f)
@@ -14,7 +14,7 @@ def init_logger(filepath: str):
         dictConfig(config)
 
 
-def init_gunicorn_uvicorn_logger(filepath: str):
+def init_gunicorn_uvicorn_logger(filepath: str) -> None:
     import logging
 
     from fastapi.logger import logger as fastapi_logger
@@ -42,5 +42,5 @@ def init_gunicorn_uvicorn_logger(filepath: str):
         fastapi_logger.setLevel(log_level)
 
 
-def get_logger(name: str):
+def get_logger(name: str) -> Logger:
     return getLogger(name)

@@ -1,3 +1,4 @@
+import json
 import traceback
 from typing import Any, Callable, Dict, Optional
 
@@ -13,12 +14,12 @@ class APIException(HTTPException):
 
     def __init__(
         self,
-        error,
+        error: Any,
         status_code: int = default_status_code,
         headers: Optional[Dict[str, Any]] = None,
     ) -> None:
         self.status_code = status_code
-        self.detail = []
+        # self.detail =
         self.headers = headers
 
         # msg_paramsにセットしたパラメータをtextに展開する
@@ -38,6 +39,6 @@ class APIException(HTTPException):
         except:
             message = error_obj.text
 
-        self.detail = {"error_code": str(error_obj), "error_msg": message}
+        self.detail = json.dumps({"error_code": str(error_obj), "error_msg": message})
 
         super().__init__(self.status_code, self.detail)

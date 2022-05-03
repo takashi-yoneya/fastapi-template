@@ -1,6 +1,5 @@
 import ulid
-from pydantic import EmailStr
 
 
-def get_ulid():
+def get_ulid() -> str:
     return ulid.new().str

@@ -20,7 +20,7 @@ router = APIRouter()
 
 
 @router.get("/{id}", response_model=schemas.JobResponse)
-def get_job(id: str, db: Session = Depends(get_db)):
+def get_job(id: str, db: Session = Depends(get_db)) -> models.Job:
     job = crud.job.get(db, id=id)
     if not job:
         raise APIException(ErrorMessage.ID_NOT_FOUND)
@@ -33,9 +33,9 @@ def get_jobs(
     paging: PagingQueryIn = Depends(),
     filter_params: FilterQueryIn = Depends(),
     db: Session = Depends(get_db),
-):
+) -> schemas.JobsPagedResponse:
     ALLOWED_COLUMNS = ["title", "created_at", "updated_at"]
-    if not filter_params.validate_sort_column(ALLOWED_COLUMNS):
+    if not filter_params.validate_allowed_sort_column(ALLOWED_COLUMNS):
         raise APIException(ErrorMessage.COLUMN_NOT_ALLOWED)
 
     if q:
@@ -58,7 +58,7 @@ def get_jobs(
 
 
 @router.post("", response_model=schemas.JobResponse)
-def create_job(data_in: schemas.JobCreate, db: Session = Depends(get_db)):
+def create_job(data_in: schemas.JobCreate, db: Session = Depends(get_db)) -> models.Job:
     return crud.job.create(db, data_in)
 
 
@@ -67,7 +67,7 @@ def update(
     id: str,
     data_in: schemas.JobUpdate,
     db: Session = Depends(get_db),
-):
+) -> models.Job:
     job = db.query(models.Job).filter_by(id=id).first()
     if not job:
         raise APIException(ErrorMessage.ID_NOT_FOUND)
@@ -78,7 +78,7 @@ def update(
 def delete(
     id: str,
     db: Session = Depends(get_db),
-):
+) -> models.Job:
     job = db.query(models.Job).filter_by(id=id).first()
     if not job:
         raise APIException(ErrorMessage.ID_NOT_FOUND)

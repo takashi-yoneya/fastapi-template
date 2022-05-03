@@ -26,5 +26,5 @@ class User(Base, ModelBase):
         onupdate=func.utc_timestamp(),
     )
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return self.__dict__.copy()

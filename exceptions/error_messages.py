@@ -1,9 +1,12 @@
+from typing import Any, Optional
+
+
 class BaseMessage:
     """メッセージクラスのベース"""
 
     text: str
 
-    def __init__(self, param=None):
+    def __init__(self, param: Optional[Any] = None) -> None:
         self.param = param
 
     def __str__(self) -> str:

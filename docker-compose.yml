@@ -18,7 +18,7 @@ services:
       MYSQL_USER: docker
       MYSQL_PASSWORD: docker
     networks:
-      - network
+      - fastapi_network
     volumes:
       - db_volume:/var/lib/mysql
       #- ./docker/dump_sql/seed.sql.gz:/docker-entrypoint-initdb.d/install_docker.sql.gz
@@ -40,7 +40,7 @@ services:
       MYSQL_USER: docker
       MYSQL_PASSWORD: docker
     networks:
-      - network
+      - fastapi_network
     # volumes:
     #   - db_volume:/var/lib/mysql
       #- ./docker/dump_sql/seed.sql.gz:/docker-entrypoint-initdb.d/install_docker.sql.gz
@@ -58,7 +58,7 @@ services:
       - db
     restart: always
     networks:
-      - network
+      - fastapi_network
     tty: true
     environment:
       - IS_DOCKER_UVICORN=1
@@ -70,5 +70,6 @@ volumes:
     driver: local
 
 networks:
-  network:
+  fastapi_network:
+    name: fastapi_network
     driver: bridge

@@ -34,5 +34,5 @@ class Category(Base, ModelBase):
     )
     children_category = relationship("Category", back_populates="parent_category")
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return self.__dict__.copy()

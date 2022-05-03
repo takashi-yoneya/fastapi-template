@@ -6,7 +6,7 @@ import schemas
 from exceptions.core import APIException
 from exceptions.error_messages import ErrorMessage
 
-from .base import CRUDBase, Query, Session, joinedload, jsonable_encoder
+from .base import CRUDBase
 
 
 class CRUDHashtag(CRUDBase[models.Job, schemas.JobCreate, schemas.JobUpdate, schemas.JobsPagedResponse]):

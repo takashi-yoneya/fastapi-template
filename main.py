@@ -21,7 +21,7 @@ sentry_logging = LoggingIntegration(level=logging.INFO, event_level=logging.ERRO
 app = FastAPI(title=settings.TITLE)
 
 if settings.SENTRY_SDK_DNS:
-    sentry_sdk.init(
+    sentry_sdk.init(  # type: ignore
         dsn=settings.SENTRY_SDK_DNS,
         integrations=[sentry_logging, SqlalchemyIntegration()],
     )
@@ -38,7 +38,7 @@ app.add_middleware(SentryAsgiMiddleware)
 
 
 @app.get("/", tags=["info"])
-def get_info():
+def get_info() -> dict:
     return {"title": settings.TITLE}
 
 

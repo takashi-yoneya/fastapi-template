@@ -30,11 +30,17 @@ humps = "^0.2.2"
 inflection = "^0.5.1"
 sqlalchemy-filters = {git = "https://github.com/bodik/sqlalchemy-filters", rev = "fix-sqla14-select"}
 fire = "^0.4.0"
+alembic = "^1.7.7"
 
 [tool.poetry.dev-dependencies]
 locust = "^2.8.5"
 black = "^22.3.0"
 isort = "^5.10.1"
+pytest = "^7.1.2"
+mypy = "^0.950"
+types-PyYAML = "^6.0.7"
+types-toml = "^0.10.6"
+sqlalchemy-stubs = "^0.4"
 
 [tool.black]
 line-length = 119

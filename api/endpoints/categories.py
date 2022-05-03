@@ -19,7 +19,7 @@ router = APIRouter()
 
 
 @router.get("/{id}", response_model=schemas.CategoryResponse)
-def get_job(id: str, db: Session = Depends(get_db)):
+def get_job(id: str, db: Session = Depends(get_db)) -> models.Category:
     category = crud.category.get(db, id=id)
     if not category:
         raise APIException(ErrorMessage.ID_NOT_FOUND)
@@ -31,7 +31,7 @@ def get_categories(
     q: Optional[str] = None,
     paging: PagingQueryIn = Depends(),
     db: Session = Depends(get_db),
-):
+) -> schemas.CategoriesPagedResponse:
     if q:
         query = db.query(models.Category).filter(models.Category.name.like(f"%{q}%"))
     else:
@@ -41,7 +41,7 @@ def get_categories(
 
 
 @router.post("", response_model=schemas.CategoryResponse)
-def create_job(data_in: schemas.CategoryCreate, db: Session = Depends(get_db)):
+def create_job(data_in: schemas.CategoryCreate, db: Session = Depends(get_db)) -> models.Category:
     return crud.category.create(db, data_in)
 
 
@@ -50,7 +50,7 @@ def update(
     id: str,
     data_in: schemas.CategoryUpdate,
     db: Session = Depends(get_db),
-):
+) -> models.Category:
     category = db.query(models.Category).filter_by(id=id).first()
     if not category:
         raise APIException(ErrorMessage.ID_NOT_FOUND)
@@ -64,7 +64,7 @@ def update(
 def delete(
     id: str,
     db: Session = Depends(get_db),
-):
+) -> models.Category:
     category = db.query(models.Category).filter_by(id=id).first()
     if not category:
         raise APIException(ErrorMessage.ID_NOT_FOUND)

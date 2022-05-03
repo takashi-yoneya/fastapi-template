@@ -34,7 +34,7 @@ def set_test_data(engine):
                 pass
 
 
-def clear_and_set_test_data(engine):
+def init_tables(engine):
     if settings.TEST_DATABASE_URI not in str(engine.url):
         raise Exception("test-db以外では実行できません")
     try:
@@ -43,7 +43,7 @@ def clear_and_set_test_data(engine):
 
         # 既存データの削除
         for table_name in Base.metadata.tables:
-            engine.execute(f"DROP TABLE {table_name}")
+            engine.execute(f"TRUNCATE TABLE {table_name}")
 
         # テーブルの作成
         Base.metadata.create_all(engine)

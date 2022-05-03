@@ -1,0 +1,68 @@
+version: '3.7'
+
+services:
+  es01:
+    build: 
+      context: ./elasticsearch
+      dockerfile: Dockerfile
+    container_name: es01
+    environment:
+      - node.name=es01
+      - discovery.seed_hosts=es02
+      - cluster.initial_master_nodes=es01,es02
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata01:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks:
+      - fastapi_network
+  es02:
+    build: 
+      context: ./elasticsearch
+      dockerfile: Dockerfile
+    container_name: es02
+    environment:
+      - node.name=es02
+      - discovery.seed_hosts=es01
+      - cluster.initial_master_nodes=es01,es02
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata02:/usr/share/elasticsearch/data
+    networks:
+      - fastapi_network
+
+  logstash:
+    build:
+      context: ./logstash
+      dockerfile: Dockerfile
+    ports:
+      - 5044:5044
+      - 9600:9600
+    # volumes:
+    #   - ./logstash:/logstash
+    tty: true
+    networks:
+      - fastapi_network
+
+volumes:
+  esdata01:
+    driver: local
+  esdata02:
+    driver: local
+
+networks:
+  fastapi_network:
+    external: true

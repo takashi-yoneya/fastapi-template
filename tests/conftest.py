@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session, scoped_session, sessionmaker
 from core.config import settings
 from core.database import SessionLocal, get_db
 from main import app
-from tests.utils.test_crud import clear_and_set_test_data
+from tests.utils.test_crud import init_tables
 from tests.utils.user import authentication_token_from_email
 
 # from tests.utils.utils import get_superuser_token_headers
@@ -22,7 +22,7 @@ from tests.utils.user import authentication_token_from_email
 # test_session = scoped_session(
 #     sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # )
-
+# テスト専用のDBを使用する
 engine = create_engine(f"{settings.TEST_DATABASE_URI}?charset=utf8mb4")
 
 
@@ -44,7 +44,7 @@ def get_test_db() -> Generator:
 
 @pytest.fixture()
 def clear_db():
-    clear_and_set_test_data(engine)
+    init_tables(engine)
 
 
 @pytest.fixture()
@@ -92,8 +92,8 @@ def TestSession():
     # settings of test database
     engine = create_engine(f"{settings.TEST_DATABASE_URI}?charset=utf8mb4")
 
-    # テストデータをセット
-    clear_and_set_test_data(engine)
+    # tableを初期化
+    init_tables(engine)
 
     test_session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

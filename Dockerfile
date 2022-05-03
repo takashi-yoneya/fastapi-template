@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster
+FROM python:3.8-buster
 
 ENV LANG C.UTF-8
 ENV TZ UTC
@@ -15,9 +15,9 @@ RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-
     cd /usr/local/bin && \
     ln -s /opt/poetry/bin/poetry && \
     poetry config virtualenvs.create false
-
 RUN poetry install --no-root
-RUN echo test
+# poe scriptsのcompletionを設定
+RUN poe _bash_completion >> /root/.bashrc
 
 # 環境毎の差異に対応するため、uvicornの起動は、docker-composeやtask-definitionで行う
 # CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--reload", "--log-config", "logger_config.yaml"]

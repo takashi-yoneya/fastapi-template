@@ -12,7 +12,7 @@ class CRUDUser(CRUDBase[models.User, schemas.UserCreate, schemas.UserUpdate, Any
     def get_by_email(self, db: Session, *, email: str) -> Optional[models.User]:
         return db.query(models.User).filter(models.User.email == email).first()
 
-    def create(self, db: Session, *, obj_in: schemas.UserCreate) -> models.User:
+    def create(self, db: Session, obj_in: schemas.UserCreate) -> models.User:
         db_obj = models.User(
             email=obj_in.email,
             hashed_password=get_password_hash(obj_in.password),

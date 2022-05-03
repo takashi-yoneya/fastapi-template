@@ -1,0 +1,6 @@
+PUT http://localhost:9200/jobs
+
+
+####
+
+GET http://localhost:9200/jobs/_search
