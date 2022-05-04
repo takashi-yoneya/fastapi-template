@@ -1,14 +1,12 @@
-import sys
-from pathlib import Path
 from typing import Dict, Generator
 
 import pytest
 from core.config import settings
-from core.database import SessionLocal, get_db
+from core.database import get_db
 from fastapi.testclient import TestClient
 from main import app
 from sqlalchemy.engine import create_engine
-from sqlalchemy.orm import Session, scoped_session, sessionmaker
+from sqlalchemy.orm import Session, sessionmaker
 from tests.utils.test_crud import init_tables
 from tests.utils.user import authentication_token_from_email
 

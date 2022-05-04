@@ -42,6 +42,8 @@ types-PyYAML = "^6.0.7"
 types-toml = "^0.10.6"
 sqlalchemy-stubs = "^0.4"
 pyproject-flake8 = "^0.0.1-alpha.4"
+autoflake = "^1.4"
+pre-commit = "^2.18.1"
 
 [tool.black]
 line-length = 119
@@ -70,7 +72,7 @@ exclude = "alembic/|tests/"
 # serve-build = {"shell" = "docker-compose up --build"}
 # serve = {"shell" = "docker-compose up"}
 test = {"cmd" = "pytest", help="pytestの実行"}
-format = {"shell" = "black ./app && pflake8 ./app && isort ./app"}
+format = {"shell" = "black ./app && pflake8 ./app && isort ./app && autoflake --in-place --recursive --expand-star-imports --remove-all-unused-imports --ignore-init-module-imports --remove-unused-variables app/*"}
 mypy = {"shell" = "mypy ./app"}
 check = {"shell" = "poe mypy && poe format", help="構文、フォーマットチェック"}
 makemigrations = {"shell" = "alembic revision --autogenerate", help="DBマイグレーションファイルの自動作成"}

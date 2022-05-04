@@ -30,7 +30,6 @@ def set_test_data(engine):
             except Exception as e:
                 # logging.error(str(e))
                 print(str(e))
-                pass
 
 
 def init_tables(engine):

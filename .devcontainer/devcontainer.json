@@ -30,7 +30,16 @@
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
-		"donjayamanne.python-extension-pack"
+		"donjayamanne.python-extension-pack",
+		"eamodio.gitlens",
+		"mechatroner.rainbow-csv",
+		"coenraads.bracket-pair-colorizer-2",
+		"mikestead.dotenv",
+		"hediet.vscode-drawio",
+		"vscode-icons-team.vscode-icons",
+		"cweijan.vscode-database-client2",
+		"bungcip.better-toml",
+		"ms-azuretools.vscode-docker"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

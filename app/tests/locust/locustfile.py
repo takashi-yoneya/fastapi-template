@@ -1,4 +1,4 @@
-from locust import HttpUser, TaskSet, between, constant, task
+from locust import HttpUser, TaskSet, constant, task
 
 
 class UserBehavior(TaskSet):

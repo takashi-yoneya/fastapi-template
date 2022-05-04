@@ -1,6 +1,4 @@
-from api.endpoints.jobs import *
 from fastapi.testclient import TestClient
-from main import app
 from sqlalchemy.orm import Session
 from tests import test_data
 from tests.utils import test_crud

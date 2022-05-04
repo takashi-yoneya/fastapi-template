@@ -1,6 +1,4 @@
 import crud
-from fastapi.testclient import TestClient
-from main import app
 from tests import test_data
 from tests.utils import test_crud
 

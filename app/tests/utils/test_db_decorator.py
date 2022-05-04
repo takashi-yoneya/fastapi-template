@@ -1,6 +1,5 @@
 from core.database import get_db
 from main import app
-from sqlalchemy import create_engine
 
 
 def temp_db(f):
