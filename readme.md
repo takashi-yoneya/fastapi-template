@@ -11,6 +11,11 @@ poetryを使用して、パッケージ管理およびタスクランナーを�
 https://fastapi-sample-tk.herokuapp.com/docs
 ```
 
+DB定義(dbdocs)
+```
+https://dbdocs.io/marutoraman/fastapi-sample?table=jobs&schema=public&view=table_structure
+```
+
 # 機能(Features)
 
 ## DBレコードの作成・取得・更新・削除(CRUD)
@@ -96,17 +101,31 @@ push時に、Github Actionsを使用して、ECSに自動デプロイを行い�
 .github/workflow/aws.yml
 
 # インストール&使い方(Installations & How to use)
-## Poetryのインストール
+
+## Dockerコンテナ内で開発(推奨)
+
+### VSCODEに「Remote Containers」をインストール
+拡張機能「Remote Containers」をインストール
+
+### コンテナを起動
+コマンドパレットを開き、「reopen container」と入力して実行
+
+### コンテナ内のコンソールログ確認方法
+リモートエクスプローラー -> CONTAINERS -> {{ コンテナ名 }} -> Show Container Logs　
+
+## ローカルで開発
+ローカルで開発する場合
+### Poetryのインストール
 ```
 curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
 ```
 
-## 依存パッケージのインストール
+### 依存パッケージのインストール
 ```
 poetry install
 ```
 
-## dockerコンテナのビルド & 起動
+### dockerコンテナのビルド & 起動
 ```
 docker-compose up --build
 ```
@@ -118,8 +137,10 @@ http://localhost:8090/docs
 ```
 
 ## poeタブ入力補完設定(completion)
+※dockerコンテ内で開発する場合は、Dockerfileに組み込まれているため実行不要です
 bashを使用している場合は、以下のコマンドを実行する。<br>
-これにより、タスクランナー実行時にタブで入力補完が可能になる。
+これにより、タスクランナー実行時にタブで入力補完が可能になります。<br>
+
 ```bash
  poe _bash_completion >> ~/.bashrc
 ```

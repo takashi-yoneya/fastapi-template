@@ -49,7 +49,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80", "--reload", "--log-config", "logger_config.yaml"]
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--reload", "--log-config", "./app/logger_config.yaml"]
     ports:
       - 8090:80
     volumes:

@@ -1,0 +1,44 @@
+Table "alembic_version" {
+  "version_num" varchar(32) [pk, not null]
+}
+
+Table "categories" {
+  "id" varchar(32) [pk, not null]
+  "created_at" datetime [not null, default: `CURRENT_TIMESTAMP`]
+  "deleted_at" datetime [default: NULL]
+  "name" varchar(64) [default: NULL]
+  "parent_category_id" varchar(32) [default: NULL]
+  "updated_at" datetime [not null]
+
+Indexes {
+  parent_category_id [name: "ix_categories_parent_category_id"]
+}
+}
+
+Table "jobs" {
+  "id" varchar(32) [pk, not null]
+  "created_at" datetime [not null, default: `CURRENT_TIMESTAMP`]
+  "deleted_at" datetime [default: NULL]
+  "title" varchar(100) [default: NULL]
+  "description" text
+  "updated_at" datetime [not null]
+}
+
+Table "users" {
+  "id" varchar(32) [pk, not null]
+  "created_at" datetime [not null, default: `CURRENT_TIMESTAMP`]
+  "deleted_at" datetime [default: NULL]
+  "full_name" varchar(64) [default: NULL]
+  "email" varchar(200) [not null]
+  "email_verified" tinyint(1) [not null, default: "0"]
+  "hashed_password" text [not null]
+  "scopes" text
+  "updated_at" datetime [not null]
+
+Indexes {
+  email [unique, name: "ix_users_email"]
+}
+}
+
+Ref "categories_ibfk_1":"categories"."id" < "categories"."parent_category_id"
+

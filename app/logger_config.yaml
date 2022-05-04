@@ -1,0 +1,70 @@
+version: 1
+disable_existing_loggers: false
+
+formatters:
+    json:
+        format: "%(asctime)s %(name)s %(levelname)s  %(message)s %(filename)s %(module)s %(funcName)s %(lineno)d"
+        class: pythonjsonlogger.jsonlogger.JsonFormatter
+
+handlers:
+    console:
+        class: logging.StreamHandler
+        level: DEBUG
+        formatter: json
+        stream: ext://sys.stdout
+
+    memory:
+        class: core.logger.MyMemoryHandler
+        level: INFO
+        formatter: json
+        capacity: 10
+        target: console
+
+    string:
+        class: core.logger.StringHandler
+        level: DEBUG
+        formatter: json
+
+    # file:
+    #     class: core.logger.MyFileRotationHandler
+    #     level: INFO
+    #     formatter: json
+    #     filename: "logs/test.log"
+    #     when: D
+    #     interval: 1
+    #     backupCount: 31
+
+loggers:
+    backend:
+        level: INFO
+        handlers: [console]
+        propagate: false
+
+    # batch:
+    #     level: INFO
+    #     handlers: [console, file]
+    #     propagate: false
+
+    gunicorn.error:
+        level: DEBUG
+        handlers: [console]
+        propagate: false
+    
+    uvicorn.access:
+        level: INFO
+        handlers: [console]
+        propagate: false
+
+    sqlalchemy.engine:
+        level: INFO
+        handlers: [console]
+        propagate: false
+    
+    alembic.runtime.migration:
+        level: INFO
+        handlers: [console]
+        propagate: false
+
+root:
+    level: INFO
+    handlers: [console]
