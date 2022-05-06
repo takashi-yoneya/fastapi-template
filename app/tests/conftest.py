@@ -49,11 +49,10 @@ def clear_db():
     init_tables(engine)
 
 
-@pytest.fixture()
+@pytest.fixture
 def db() -> Generator:
     # test_session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     # settings of test database
-    print("fixture_db")
     # clear_and_set_test_data(engine)
     init_tables(engine)
     test_session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -70,7 +69,6 @@ def db() -> Generator:
 @pytest.fixture
 def client() -> Generator:
     with TestClient(app) as c:
-        print("fixture_client")
         init_tables(engine)
         app.dependency_overrides[get_db] = get_test_db
         # try:
@@ -86,7 +84,6 @@ def client() -> Generator:
 
 @pytest.fixture
 def auth_headers(client: TestClient, db: Session) -> Dict[str, str]:
-    print("fixture_auth_headers")
     return authentication_token_from_email(client=client, email=settings.TEST_USER_EMAIL, db=db)
 
 

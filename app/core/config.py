@@ -8,7 +8,9 @@ from pydantic import BaseSettings
 
 class Settings(BaseSettings):
     # NOTE: .envファイルや環境変数が同名の変数にセットされる
-    TITLE: str = "FastAPI サンプル"
+    TITLE: str = "FastAPI Sample"
+    ENV: str = ""
+    VERSION: str = "0.0.1"
     CORS_ORIGINS: list = ["localhost:8000", "127.0.0.1:8000", "*"]
     BASE_DIR_PATH: str = str(Path(__file__).parent.parent.absolute())
     DATABASE_URI: str = ""

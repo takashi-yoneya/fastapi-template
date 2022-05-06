@@ -5,10 +5,8 @@ from tests.utils import test_crud
 
 
 def test_get_jobs(clear_db, client: TestClient, db: Session):
-    test_crud.add_test_data(db, test_data.test_jobs)
+    test_crud.add_test_data(db, test_data.test_jobs())
     response = client.get("/jobs")
-    print(response.request.__dict__)
-    print(response.__dict__)
     assert response.status_code == 200
     data = response.json()["data"]
     print(data)
@@ -18,7 +16,7 @@ def test_get_jobs(clear_db, client: TestClient, db: Session):
 
 
 def test_create_job(client: TestClient, db: Session):
-    test_crud.add_test_data(db, test_data.test_jobs)
+    test_crud.add_test_data(db, test_data.test_jobs())
     response = client.post("/jobs", json={"title": "creation_job1"})
     print(response.__dict__)
     assert response.status_code == 200

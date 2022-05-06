@@ -33,6 +33,7 @@ def set_test_data(engine):
 
 
 def init_tables(engine):
+    print("init_tables")
     if settings.TEST_DATABASE_URI not in str(engine.url):
         raise Exception("test-db以外では実行できません")
     try:

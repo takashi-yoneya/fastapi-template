@@ -3,7 +3,6 @@ repos:
     rev: 5.10.1
     hooks:
       - id: isort
-        args: [--settings-path=.app/pyproject.toml]
         additional_dependencies: [toml]
 
   - repo: https://github.com/myint/autoflake
@@ -22,20 +21,22 @@ repos:
     rev: 22.3.0
     hooks:
     - id: black
-      args: [--config=.app/pyproject.toml]
+      args:
+        - app/
 
   - repo: https://gitlab.com/pycqa/flake8
     rev: 3.9.2
     hooks:
       - id: flake8
-        args: [--settings-path=.app/pyproject.toml]
+        args:
+          - app/
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v0.942
     hooks:
       - id: mypy
-        args: [--config-file=.app/pyproject.toml]
-        additional_dependencies: [pydantic, sqlalchemy-stubs==0.4]
+        exclude: app/tests/
+        additional_dependencies: [pydantic, sqlalchemy-stubs==0.4, types-PyYAML==6.0.7]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.2.0

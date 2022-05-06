@@ -15,7 +15,7 @@ init_gunicorn_uvicorn_logger(settings.LOGGER_CONFIG_PATH)
 
 sentry_logging = LoggingIntegration(level=logging.INFO, event_level=logging.ERROR)
 
-app = FastAPI(title=settings.TITLE)
+app = FastAPI(title=f"[{settings.ENV}]{settings.TITLE}", version=settings.VERSION)
 
 if settings.SENTRY_SDK_DNS:
     sentry_sdk.init(  # type: ignore
