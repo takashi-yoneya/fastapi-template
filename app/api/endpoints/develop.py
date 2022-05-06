@@ -11,6 +11,8 @@ router = APIRouter()
 @router.get("/error")
 def exec_error() -> None:
     # time.sleep(100)
+    logger.error("debug test")
+    print(1/0)
     raise APIException(ErrorMessage.NOT_FOUND("デバックテストID"))
 
 

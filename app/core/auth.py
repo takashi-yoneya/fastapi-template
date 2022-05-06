@@ -13,8 +13,10 @@ from passlib.context import CryptContext
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
+from .logger import get_logger
 from .config import settings
 from .database import get_db
+logger = get_logger(__name__)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 ALGORITHM = "HS256"
@@ -62,6 +64,7 @@ def get_current_user(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 error=ErrorMessage.PERMISSION_ERROR,
             )
+    logger.info(user.to_dict())
     return user
 
 

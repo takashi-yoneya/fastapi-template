@@ -9,7 +9,8 @@ from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 from starlette.middleware.cors import CORSMiddleware
-
+from core.logger import get_logger
+logger = get_logger(__name__)
 settings = get_settings()
 init_gunicorn_uvicorn_logger(settings.LOGGER_CONFIG_PATH)
 
@@ -22,14 +23,17 @@ if settings.SENTRY_SDK_DNS:
         dsn=settings.SENTRY_SDK_DNS,
         integrations=[sentry_logging, SqlalchemyIntegration()],
     )
+    print("init sentry")
 
+app.add_middleware(SentryAsgiMiddleware)
+
+logger.error("test")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[str(origin) for origin in settings.CORS_ORIGINS],
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.add_middleware(SentryAsgiMiddleware)
 
 # app.add_exception_handler(Exception, http_exception_handler)
 
