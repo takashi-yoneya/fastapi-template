@@ -13,17 +13,17 @@ handlers:
         formatter: json
         stream: ext://sys.stdout
 
-    memory:
-        class: core.logger.MyMemoryHandler
-        level: INFO
-        formatter: json
-        capacity: 10
-        target: console
+    # memory:
+    #     class: core.logger.MyMemoryHandler
+    #     level: INFO
+    #     formatter: json
+    #     capacity: 10
+    #     target: console
 
-    string:
-        class: core.logger.StringHandler
-        level: DEBUG
-        formatter: json
+    # string:
+    #     class: core.logger.StringHandler
+    #     level: DEBUG
+    #     formatter: json
 
     # file:
     #     class: core.logger.MyFileRotationHandler
@@ -49,7 +49,7 @@ loggers:
         level: DEBUG
         handlers: [console]
         propagate: false
-    
+
     uvicorn.access:
         level: INFO
         handlers: [console]
@@ -59,7 +59,7 @@ loggers:
         level: INFO
         handlers: [console]
         propagate: false
-    
+
     alembic.runtime.migration:
         level: INFO
         handlers: [console]

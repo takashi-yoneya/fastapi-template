@@ -11,14 +11,15 @@ RUN apt-get update && apt-get install -y \
     gcc \
     libmariadb-dev \
     curl
-
-#RUN bash -c "if [ $EVN == 'production' ]; then copy . ./backend; fi"
-WORKDIR /backend
-COPY ./pyproject.toml ./poetry.lock /backend/
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | POETRY_HOME=/opt/poetry python && \
     cd /usr/local/bin && \
     ln -s /opt/poetry/bin/poetry && \
     poetry config virtualenvs.create false
+
+#RUN bash -c "if [ $EVN == 'production' ]; then copy . ./backend; fi"
+WORKDIR /backend
+COPY ./pyproject.toml ./poetry.lock /backend/
+
 RUN poetry install --no-root
 # poe scriptsのcompletionを設定
 RUN poe _bash_completion >> /root/.bashrc
