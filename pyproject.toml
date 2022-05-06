@@ -57,10 +57,10 @@ multi_line_output = 3
 include_trailing_comma = true
 force_grid_wrap = 0
 
-# [tool.flake8]
-# max-line-length = 119
-# exclude = "__init__.py,alembic,tests"
-# ignore = "E203,W503,W504"
+[tool.flake8]
+max-line-length = 119
+exclude = "__init__.py,alembic,tests"
+ignore = "E203,W503,W504"
 
 [tool.mypy]
 python_version = "3.8"
@@ -74,14 +74,15 @@ exclude = "alembic/|tests/"
 # serve-build = {"shell" = "docker-compose up --build"}
 # serve = {"shell" = "docker-compose up"}
 test = {"cmd" = "pytest", help="pytestの実行"}
-format = {"shell" = "black ./app && pflake8 ./app && isort ./app && autoflake --in-place --recursive --expand-star-imports --remove-all-unused-imports --ignore-init-module-imports --remove-unused-variables app/*"}
-mypy = {"shell" = "mypy ./app"}
-check = {"shell" = "poe mypy && poe format", help="構文、フォーマットチェック"}
-spell = {"shell" = "codespell app/", help="スペルチェック"}
+# format = {"shell" = "black ./app && pflake8 ./app && isort ./app && autoflake --in-place --recursive --expand-star-imports --remove-all-unused-imports --ignore-init-module-imports --remove-unused-variables app/*"}
+# mypy = {"shell" = "mypy ./app"}
+# check = {"shell" = "poe mypy && poe format", help="構文、フォーマットチェック"}
+# spell = {"shell" = "codespell app/", help="スペルチェック"}
 makemigrations = {"shell" = "alembic revision --autogenerate", help="DBマイグレーションファイルの自動作成"}
 migrate = {"shell" = "alembic upgrade heads", help="DBマイグレーション"}
 create-user = {"cmd" = "python commands/user_creation.py", help="ユーザー作成"}
 init-table = {"cmd" = "echo init table", help="テーブルを作成し、seedデータをセットする"}
+pre-commit = {"cmd" = "pre-commit", help="pre-commit処理の実行(commit自体は行わない)"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
