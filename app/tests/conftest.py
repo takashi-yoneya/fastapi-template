@@ -7,8 +7,13 @@ from fastapi.testclient import TestClient
 from main import app
 from sqlalchemy.engine import create_engine
 from sqlalchemy.orm import Session, sessionmaker
-from tests.utils.test_crud import init_tables
-from tests.utils.user import authentication_token_from_email
+
+from .utils.test_crud import init_tables
+
+# from tests.utils.test_crud import init_tables
+from .utils.user import authentication_token_from_email
+
+# from tests.utils.user import authentication_token_from_email
 
 # from tests.utils.utils import get_superuser_token_headers
 
@@ -48,8 +53,9 @@ def clear_db():
 def db() -> Generator:
     # test_session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     # settings of test database
-
+    print("fixture_db")
     # clear_and_set_test_data(engine)
+    init_tables(engine)
     test_session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
     db = test_session()
 
@@ -64,6 +70,8 @@ def db() -> Generator:
 @pytest.fixture
 def client() -> Generator:
     with TestClient(app) as c:
+        print("fixture_client")
+        init_tables(engine)
         app.dependency_overrides[get_db] = get_test_db
         # try:
         yield c
@@ -78,21 +86,22 @@ def client() -> Generator:
 
 @pytest.fixture
 def auth_headers(client: TestClient, db: Session) -> Dict[str, str]:
+    print("fixture_auth_headers")
     return authentication_token_from_email(client=client, email=settings.TEST_USER_EMAIL, db=db)
 
 
-def TestSession():
-    """
-    テスト用のＤＢと接続し、テストデータをセットするための処理
-    テスト関数実行毎に呼ばれるfixture
-    """
-    # settings of test database
-    engine = create_engine(f"{settings.TEST_DATABASE_URI}?charset=utf8mb4")
+# def TestSession():
+#     """
+#     テスト用のＤＢと接続し、テストデータをセットするための処理
+#     テスト関数実行毎に呼ばれるfixture
+#     """
+#     # settings of test database
+#     engine = create_engine(f"{settings.TEST_DATABASE_URI}?charset=utf8mb4")
 
-    # tableを初期化
-    init_tables(engine)
+#     # tableを初期化
+#     init_tables(engine)
 
-    test_session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+#     test_session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-    # Run the tests
-    yield test_session
+#     # Run the tests
+#     yield test_session

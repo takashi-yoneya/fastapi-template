@@ -45,7 +45,7 @@ jsonレスポンスにスネークケースを使用せざるをえない問題�
 ```
 class BaseSchema(BaseModel):
     class Config:
-        alias_generator = to_camel 
+        alias_generator = to_camel
         allow_population_by_field_name = True
 ```
 
@@ -134,6 +134,12 @@ docker-compose up --build
 ローカル環境
 ```
 http://localhost:8090/docs
+```
+
+Debugモード(F5押下)で起動した場合
+※Debugモードの場合は、ブレークポイントでローカル変数を確認できます。
+```
+http://localhost:8091/docs
 ```
 
 ## poeタブ入力補完設定(completion)
