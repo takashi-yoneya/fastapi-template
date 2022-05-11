@@ -13,7 +13,9 @@ class Category(Base, ModelBase):
     mysql_collate = "utf8mb4_unicode_ci"
 
     name = Column(String(64))
-    parent_category_id = Column(String(32), ForeignKey("categories.id"), index=True)
+    parent_category_id = Column(
+        String(32), ForeignKey("categories.id"), index=True, nullable=True
+    )
 
     updated_at = Column(
         DateTime,
@@ -29,8 +31,8 @@ class Category(Base, ModelBase):
         remote_side="[Category.id]",
         back_populates="children_category",
         uselist=False,
-    )
-    children_category = relationship("Category", back_populates="parent_category")
+    )  # type: ignore
+    children_category = relationship("Category", back_populates="parent_category")  # type: ignore
 
     def to_dict(self) -> dict:
         return self.__dict__.copy()

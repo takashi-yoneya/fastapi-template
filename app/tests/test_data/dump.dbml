@@ -41,4 +41,3 @@ Indexes {
 }
 
 Ref "categories_ibfk_1":"categories"."id" < "categories"."parent_category_id"
-

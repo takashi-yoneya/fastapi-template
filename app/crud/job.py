@@ -4,7 +4,11 @@ import schemas
 from .base import CRUDBase
 
 
-class CRUDHashtag(CRUDBase[models.Job, schemas.JobCreate, schemas.JobUpdate, schemas.JobsPagedResponse]):
+class CRUDHashtag(
+    CRUDBase[
+        models.Job, schemas.JobCreate, schemas.JobUpdate, schemas.JobsPagedResponse
+    ]
+):
     pass
 
 

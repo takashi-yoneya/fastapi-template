@@ -3,7 +3,7 @@ version: '3.7'
 services:
   es01:
     build:
-      context: ./elasticsearch
+      context: ./elasticsearch/elasticsearch
       dockerfile: Dockerfile.es
     container_name: es01
     environment:
@@ -25,7 +25,7 @@ services:
       - fastapi_network
   es02:
     build:
-      context: ./elasticsearch
+      context: ./elasticsearch/elasticsearch
       dockerfile: Dockerfile.es
     container_name: es02
     environment:

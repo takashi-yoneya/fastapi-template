@@ -1,12 +1,10 @@
-import os
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config, pool
-
-import models
-from alembic import context
 from core.config import get_settings
 from core.database import Base
+from sqlalchemy import engine_from_config, pool
+
+from alembic import context
 
 settings = get_settings()
 

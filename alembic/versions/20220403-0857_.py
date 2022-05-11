@@ -21,7 +21,12 @@ def upgrade():
     op.create_table(
         "categories",
         sa.Column("id", sa.String(length=32), nullable=False),
-        sa.Column("created_at", sa.DateTime(), server_default=sa.text("CURRENT_TIMESTAMP"), nullable=False),
+        sa.Column(
+            "created_at",
+            sa.DateTime(),
+            server_default=sa.text("CURRENT_TIMESTAMP"),
+            nullable=False,
+        ),
         sa.Column("deleted_at", sa.DateTime(), nullable=True),
         sa.Column("name", sa.String(length=64), nullable=True),
         sa.Column("parent_category_id", sa.String(length=32), nullable=True),

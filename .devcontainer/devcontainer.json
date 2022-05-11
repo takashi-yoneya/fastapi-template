@@ -8,6 +8,7 @@
 	// The .devcontainer/docker-compose.yml file contains any overrides you need/want to make.
 	"dockerComposeFile": [
     	"../docker-compose.yml",
+		// "../docker-compose.es.yml",
 	],
 
 	// The 'service' property is the name of the service for the container that VS Code should
@@ -24,8 +25,15 @@
 		"python.linting.enabled": true,
 		"python.linting.pylintEnabled": false,
 		"python.linting.flake8Enabled": true,
+		"python.linting.flake8Args": ["--ignore=W503"],
+		"python.linting.mypyEnabled": true,
+		"python.linting.lintOnSave": true,
 		"python.formatting.provider": "black",
-		"python.analysis.typeCheckingMode": "basic",
+		// "python.analysis.typeCheckingMode": "basic",
+		"editor.formatOnSave": true,
+		"mypy.targets": [
+			"./app"
+		]
 	},
 
 	// Add the IDs of extensions you want installed when the container is created.

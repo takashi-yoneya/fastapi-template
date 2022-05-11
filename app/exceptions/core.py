@@ -1,4 +1,3 @@
-import json
 from typing import Any, Dict, Optional
 
 from fastapi import HTTPException, status
@@ -36,6 +35,6 @@ class APIException(HTTPException):
         except Exception:
             message = error_obj.text
 
-        self.detail = json.dumps({"error_code": str(error_obj), "error_msg": message})
+        self.detail = {"error_code": str(error_obj), "error_msg": message}
 
         super().__init__(self.status_code, self.detail)

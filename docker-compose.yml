@@ -48,7 +48,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.web
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--reload", "--log-config", "./app/logger_config.yaml"]
     ports:
       - 8090:80
@@ -61,9 +61,6 @@ services:
     networks:
       - fastapi_network
     tty: true
-    environment:
-      - IS_DOCKER_UVICORN=1
-      - ENV=production
 
 
 volumes:

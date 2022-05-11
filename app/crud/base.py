@@ -18,23 +18,32 @@ UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 ListResponseSchemaType = TypeVar("ListResponseSchemaType", bound=BaseModel)
 
 
-class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType, ListResponseSchemaType]):
+class CRUDBase(
+    Generic[ModelType, CreateSchemaType, UpdateSchemaType, ListResponseSchemaType]
+):
 
-    DELETE_FLG_LIST = [
-        {"column": "disabled", "enable_value": False},
-        {"column": "delete", "enable_value": False},
-        {"column": "disable", "enable_value": False},
-        {"column": "deleted", "enable_value": False},
-        {"column": "deleted_at", "enable_value": None},
-        {"column": "disabled_at", "enable_value": None},
-    ]
+    # DELETE_FLG_LIST = [
+    #     {"column": "disabled", "enable_value": False},
+    #     {"column": "delete", "enable_value": False},
+    #     {"column": "disable", "enable_value": False},
+    #     {"column": "deleted", "enable_value": False},
+    #     {"column": "deleted_at", "enable_value": None},
+    #     {"column": "disabled_at", "enable_value": None},
+    # ]
 
     def __init__(self, model: Type[ModelType], list_response: ListResponseSchemaType):
         self.model = model
         self.list_response = list_response
 
-    def get(self, db: Session, id: Any) -> Optional[ModelType]:
-        return db.query(self.model).filter(self.model.id == id).first()  # type:ignore
+    def get(
+        self, db: Session, id: Any, include_deleted: bool = False
+    ) -> Optional[ModelType]:
+        return (
+            db.query(self.model)
+            .filter(self.model.id == id)
+            .execution_options(include_deleted=include_deleted)
+            .first()
+        )  # type:ignore
 
     def get_list(
         self,
@@ -48,12 +57,12 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType, ListRespon
             query = db.query(self.model)
 
         # 削除フラグの処理(DELETE_FLG_COLUMN_NAMESのいずれかに当てはまるカラムがあれば、=Falseでfilterする)
-        if not return_deleted_data:
-            for delete_flg in self.DELETE_FLG_LIST:
-                delete_flg_column_obj = getattr(self.model, delete_flg.get("column"), None)  # type: ignore
-                if delete_flg_column_obj:
-                    query = query.filter(delete_flg_column_obj == delete_flg.get("enable_value"))  # type: ignore
-                    break
+        # if not return_deleted_data:
+        #     for delete_flg in self.DELETE_FLG_LIST:
+        #         delete_flg_column_obj = getattr(self.model, delete_flg.get("column"), None)  # type: ignore
+        #         if delete_flg_column_obj:
+        #             query = query.filter(delete_flg_column_obj == delete_flg.get("enable_value"))  # type: ignore
+        #             break
 
         return query.all()
 
@@ -77,23 +86,43 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType, ListRespon
         else:
             query = self.model  # type: ignore
 
-        if filter_params and filter_params.sort and (filter_params.start or filter_params.end):
+        if (
+            filter_params
+            and filter_params.sort
+            and (filter_params.start or filter_params.end)
+        ):
             filter_dict = [
-                {"model": "Job", "field": filter_params.sort, "op": ">=", "value": filter_params.start},
-                {"model": "Job", "field": filter_params.sort, "op": "<=", "value": filter_params.end},
+                {
+                    "model": "Job",
+                    "field": filter_params.sort,
+                    "op": ">=",
+                    "value": filter_params.start,
+                },
+                {
+                    "model": "Job",
+                    "field": filter_params.sort,
+                    "op": "<=",
+                    "value": filter_params.end,
+                },
             ]
             query = apply_filters(query, filter_dict, do_auto_join=False)
         if filter_params and filter_params.sort:
-            sort_dict = [{"model": "Job", "field": filter_params.sort, "direction": filter_params.direction}]
+            sort_dict = [
+                {
+                    "model": "Job",
+                    "field": filter_params.sort,
+                    "direction": filter_params.direction,
+                }
+            ]
             query = apply_sort(query, sort_dict)
 
-        # 削除フラグの処理(DELETE_FLG_COLUMN_NAMESのいずれかに当てはまるカラムがあれば、=Falseでfilterする)
-        if not return_deleted_data:
-            for delete_flg in self.DELETE_FLG_LIST:
-                delete_flg_column_obj = getattr(self.model, delete_flg["column"], None)  # type: ignore
-                if delete_flg_column_obj:
-                    query = query.filter(delete_flg_column_obj == delete_flg["enable_value"])  # type: ignore
-                    break
+        # # 削除フラグの処理(DELETE_FLG_COLUMN_NAMESのいずれかに当てはまるカラムがあれば、=Falseでfilterする)
+        # if not return_deleted_data:
+        #     for delete_flg in self.DELETE_FLG_LIST:
+        #         delete_flg_column_obj = getattr(self.model, delete_flg["column"], None)  # type: ignore
+        #         if delete_flg_column_obj:
+        #             query = query.filter(delete_flg_column_obj == delete_flg["enable_value"])  # type: ignore
+        #             break
 
         # list_response = self.list_response.copy()
         total_data_count = query.count()
@@ -109,17 +138,23 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType, ListRespon
         return self.list_response
 
     def create(self, db: Session, obj_in: CreateSchemaType) -> ModelType:
-        obj_in_data = jsonable_encoder(obj_in)
+        # by_alias=Falseにしないとalias側(CamenCase)が採用されてしまう
+        obj_in_data = jsonable_encoder(obj_in, by_alias=False)
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)
         db.flush()
         db.refresh(db_obj)
+
         return db_obj
 
-    def update(self, db: Session, *, db_obj: ModelType, obj_in: UpdateSchemaType) -> ModelType:
+    def update(
+        self, db: Session, *, db_obj: ModelType, obj_in: UpdateSchemaType
+    ) -> ModelType:
         # obj_inでセットされたスキーマをmodelの各カラムにUpdate
         db_obj_dict = jsonable_encoder(db_obj)
-        update_dict = obj_in.dict(exclude_unset=True)  # exclude_unset=Trueとすることで、未指定のカラムはUpdateしない
+        update_dict = obj_in.dict(
+            exclude_unset=True
+        )  # exclude_unset=Trueとすることで、未指定のカラムはUpdateしない
         for field in db_obj_dict:
             if field in update_dict:
                 setattr(db_obj, field, update_dict[field])

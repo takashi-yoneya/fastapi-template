@@ -9,6 +9,7 @@ from exceptions.core import APIException
 from exceptions.error_messages import ErrorMessage
 from fastapi import APIRouter, Depends
 from schemas.core import FilterQueryIn, PagingQueryIn
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 logger = get_logger(__name__)
@@ -16,9 +17,16 @@ logger = get_logger(__name__)
 router = APIRouter()
 
 
+@router.get("/count")
+def get_count(db: Session = Depends(get_db)) -> models.Job:
+    return db.query(func.count(models.Job.id)).all()
+
+
 @router.get("/{id}", response_model=schemas.JobResponse)
-def get_job(id: str, db: Session = Depends(get_db)) -> models.Job:
-    job = crud.job.get(db, id=id)
+def get_job(
+    id: str, include_deleted: bool = False, db: Session = Depends(get_db)
+) -> models.Job:
+    job = crud.job.get(db, id=id, include_deleted=include_deleted)
     if not job:
         raise APIException(ErrorMessage.ID_NOT_FOUND)
     return job
@@ -51,7 +59,9 @@ def get_jobs(
     #     }]w
     #     query = apply_sort(query, sort_dict)
 
-    return crud.job.get_paged_list(db, paging=paging, filtered_query=query, filter_params=filter_params)
+    return crud.job.get_paged_list(
+        db, paging=paging, filtered_query=query, filter_params=filter_params
+    )
 
 
 @router.post("", response_model=schemas.JobResponse)
