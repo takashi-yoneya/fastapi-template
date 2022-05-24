@@ -1,5 +1,0 @@
-site_name: FastAPI Sample Docs
-nav:
-  - Home: index.md
-  - Install: install.md
-  - Demos: demos.md
