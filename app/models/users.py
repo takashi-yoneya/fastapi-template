@@ -1,8 +1,16 @@
 from core.database import Base
-from sqlalchemy import Boolean, Column, DateTime, String, Text, func
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, String, Table, Text, func
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql.functions import current_timestamp
 
 from . import ModelBase
+
+users_jobs = Table(
+    "user_jobs",
+    Base.metadata,
+    Column("user_id", ForeignKey("users.id"), index=True),
+    Column("job_id", ForeignKey("jobs.id"), index=True),
+)
 
 
 class User(Base, ModelBase):
@@ -23,6 +31,7 @@ class User(Base, ModelBase):
         default=current_timestamp(),
         onupdate=func.utc_timestamp(),
     )
+    jobs = relationship("Job", secondary=users_jobs, backref="users")
 
     def to_dict(self) -> dict:
         return self.__dict__.copy()

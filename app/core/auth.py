@@ -54,7 +54,9 @@ def get_current_user(
     token: str = Depends(reusable_oauth2),
 ) -> models.User:
     try:
+        logger.info(token)
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
+        logger.info(payload)
         token_data = schemas.TokenPayload(**payload)
     except (jwt.JWTError, ValidationError):
         raise APIException(

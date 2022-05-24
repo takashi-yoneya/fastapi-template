@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 import crud
 import models
@@ -18,7 +18,7 @@ router = APIRouter()
 
 
 @router.get("/count")
-def get_count(db: Session = Depends(get_db)) -> models.Job:
+def get_count(db: Session = Depends(get_db)) -> List[models.Job]:
     return db.query(func.count(models.Job.id)).all()
 
 

@@ -36,14 +36,18 @@ class CRUDBase(
         self.list_response = list_response
 
     def get(
-        self, db: Session, id: Any, include_deleted: bool = False
+        self, db: Session, id: Any, include_deleted: bool = False, select_query=None
     ) -> Optional[ModelType]:
+        if not select_query:
+            query = db.query(self.model)
+        else:
+            query = db.query(*select_query)
+
         return (
-            db.query(self.model)
-            .filter(self.model.id == id)
+            query.filter(self.model.id == id)
             .execution_options(include_deleted=include_deleted)
             .first()
-        )  # type:ignore
+        )
 
     def get_list(
         self,

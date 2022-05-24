@@ -1,7 +1,8 @@
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import EmailStr
 from schemas.core import BaseSchema
+from schemas.job import JobResponse
 
 
 # Shared properties
@@ -25,6 +26,7 @@ class UserResponse(UserBase):
     id: str
     email: EmailStr
     email_verified: bool
+    jobs: Optional[List[JobResponse]]
 
     class Config:
         orm_mode = True

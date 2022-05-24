@@ -30,6 +30,7 @@ app.add_middleware(SentryAsgiMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[str(origin) for origin in settings.CORS_ORIGINS],
+    allow_origin_regex=r"^https?:\/\/([\w\-\_]{1,}\.|)example\.com",
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -39,7 +40,7 @@ app.add_middleware(
 
 @app.get("/", tags=["info"])
 def get_info() -> dict:
-    return {"title": settings.TITLE}
+    return {"title": settings.TITLE, "version": settings.VERSION}
 
 
 app.include_router(login.router, tags=["ログイン"], prefix="/login")

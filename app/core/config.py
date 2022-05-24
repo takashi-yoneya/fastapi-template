@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     TITLE: str = "FastAPI Sample"
     ENV: str = ""
     VERSION: str = "0.0.1"
-    CORS_ORIGINS: list = ["localhost:8000", "127.0.0.1:8000", "*"]
+    CORS_ORIGINS: list = ["localhost:8000", "127.0.0.1:8000"]
     BASE_DIR_PATH: str = str(Path(__file__).parent.parent.absolute())
     DATABASE_URI: str = ""
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
