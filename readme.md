@@ -132,11 +132,97 @@ app.add_middleware(
 exceptions/error_messages.py にエラーメッセージを定義しています。  
 APIExceptionと併せて以下のように、呼び出すことで、任意のHTTPコードのエラーレスポンスを作成できます。
 ```python
-raise APIException(ErrorMessage.ID_NOT_FOUND)
+raise APIException(ErrorMessage.INTERNAL_SERVER_ERROR)
+```
+
+レスポンス例
+```
+http status code=400
+{
+  "detail": {
+    "error_code": "INTERNAL_SERVER_ERROR",
+    "error_msg": "システムエラーが発生しました、管理者に問い合わせてください"
+  }
+}
 ```
 
 ## logging
-logger_config.yaml でlogging設定を管理しています。
+logger_config.yaml でlogging設定を管理しています。可読性が高くなるようにyamlで記述しています。
+uvironの起動時に```--log-config ./app/logger_config.yaml``` のようにoption指定してlogger設定を行います。
+
+```yaml
+version: 1
+disable_existing_loggers: false # 既存のlogger設定を無効化しない
+
+formatters: # formatterの指定、ここではjsonFormatterを使用して、json化したlogを出力するようにしている
+    json:
+        format: "%(asctime)s %(name)s %(levelname)s  %(message)s %(filename)s %(module)s %(funcName)s %(lineno)d"
+        class: pythonjsonlogger.jsonlogger.JsonFormatter
+
+handlers: # handerで指定した複数種類のログを出力可能
+    console:
+        class: logging.StreamHandler
+        level: DEBUG
+        formatter: json
+        stream: ext://sys.stdout
+
+    # 以下は調整中
+    # memory:
+    #     class: core.logger.MyMemoryHandler
+    #     level: INFO
+    #     formatter: json
+    #     capacity: 10
+    #     target: console
+
+    # string:
+    #     class: core.logger.StringHandler
+    #     level: DEBUG
+    #     formatter: json
+
+    # file:
+    #     class: core.logger.MyFileRotationHandler
+    #     level: INFO
+    #     formatter: json
+    #     filename: "logs/test.log"
+    #     when: D
+    #     interval: 1
+    #     backupCount: 31
+
+loggers: # loggerの名称毎に異なるhandlerやloglevelを指定できる
+    backend:
+        level: INFO
+        handlers: [console]
+        propagate: false
+
+    # batch:
+    #     level: INFO
+    #     handlers: [console, file]
+    #     propagate: false
+
+    gunicorn.error:
+        level: DEBUG
+        handlers: [console]
+        propagate: false
+
+    uvicorn.access:
+        level: INFO
+        handlers: [console]
+        propagate: false
+
+    sqlalchemy.engine:
+        level: INFO
+        handlers: [console]
+        propagate: false
+
+    alembic.runtime.migration:
+        level: INFO
+        handlers: [console]
+        propagate: false
+
+root:
+    level: INFO
+    handlers: [console]
+```
 
 ## テスト(Testing)
 tests/ 配下に、テスト関連の処理を、まとめています。
