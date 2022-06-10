@@ -11,8 +11,13 @@ FastAPIを使用した実用的なテンプレートです。
 DB(MySQL)とuvicornを含めてdocker化しています。  
 poetryを使用して、パッケージ管理およびタスクランナーを実装しています。
 
+# 機能追加要望・改善要望・バグ報告(Feature reports, Improvement reports, Bug reports)
+Please send improvement requests and bug reports to Issue.
+Issueからお願いします。可能な限り対応いたします。
 
-# デモ環境(heroku)
+
+
+# デモ環境(Heroku Demos)
 本リポジトリに、herokuにデプロイするための設定ファイルも含まれています。  
 デプロイ済の環境は以下から参照できます。
 ```
@@ -25,7 +30,7 @@ https://dbdocs.io/marutoraman/fastapi-sample?table=jobs&schema=public&view=table
 ```
 
 # 機能(Features)
-## パッケージ管理、タスクランナー管理
+## パッケージ管理、タスクランナー管理(Package management, task runner management)
 poetryおよびpoeを使用してパッケージやタスクランナーを管理しています。  
 詳しい定義内容は、pyproject.tomlを参照してください。  
 [tool.poe.tasks] セクションにタスクランナーを定義しています。
@@ -34,7 +39,7 @@ poetryおよびpoeを使用してパッケージやタスクランナーを管�
 crud/base.py にCRUDの共通Classを実装しています。  
 個別のCRUD実装時は、この共通Classを継承して個別処理を実装してください。
 
-## 論理削除のCRUD管理
+## 論理削除のCRUD管理(Software delete)
 DBレコード削除時に実際には削除せずdeleted_atに削除日付をセットすることで  
 論理削除を実装しています。
 
@@ -64,7 +69,7 @@ def _add_filtering_deleted_at(execute_state):
         )
 
 ```
-## 権限(scopes)
+## 権限(Scopes)
 特定のUserのみが実行できるAPIを作成する場合は、  
 tableの user.scopes の値とrouterに指定したscopeを一致させてください。
 
@@ -76,7 +81,7 @@ tableの user.scopes の値とrouterに指定したscopeを一致させてくだ
 )
 ```
 
-## キャメルケースとスネークケースの相互変換
+## キャメルケースとスネークケースの相互変換(Mutual conversion between CamelCase and SnakeCase)
 Pythonではスネークケースが標準ですが、Javascriptではキャメルケースが標準なため  
 単純にpydanticでschemaを作成しただけでは、jsonレスポンスにスネークケースを使用せざるをえない問題があります。  
 
@@ -91,7 +96,7 @@ class BaseSchema(BaseModel):
         allow_population_by_field_name = True
 ```
 
-## バッチ処理(batch)
+## バッチ処理(Batch)
 サブディレクトリ配下のpyファイルから、別ディレクトリのファイルをimportする場合は  
 その前に以下のコードを記述する必要があります。
 
@@ -133,17 +138,17 @@ raise APIException(ErrorMessage.ID_NOT_FOUND)
 ## logging
 logger_config.yaml でlogging設定を管理しています。
 
-## テスト
+## テスト(Testing)
 tests/ 配下に、テスト関連の処理を、まとめています。
 
 テスト関数の実行毎にDBをクリーンするため、ステートレスなテストが実行できます。  
 tests/test_data/ 配下でテスト用のデータを定義してください。
 
-## ログの集中管理
+## ログの集中管理(Sentry log management)
 .envファイルのSENTRY_SDK_DNSを設定すると、error以上のloggingが発生した場合に  
 sentryに自動的にloggingされます。
 
-## DBマイグレーション
+## DBマイグレーション(DB migrations)
 alembic/versions.py にマイグレーション情報を記述すると、DBマイグレーション(移行)を実施することができます。  
 以下を実行することで、modelsの定義と実際のDBとの差分から自動的にマイグレーションファイルを作成できます。
 ```bash
@@ -208,7 +213,7 @@ Debugモード(F5押下)で起動した場合
 http://localhost:8889/docs
 ```
 
-## poeタブ入力補完設定(completion)
+## poeタブ入力補完設定(Completion)
 ※dockerコンテ内で開発する場合は、Dockerfileに組み込まれているため実行不要です  
 bashを使用している場合は、以下のコマンドを実行する。  
 これにより、タスクランナー実行時にタブで入力補完が可能になります。
@@ -222,7 +227,7 @@ bashを使用している場合は、以下のコマンドを実行する。
 . ~/.bashrc
 ```
 
-# デプロイ
+# デプロイ(Deploy to heroku)
 heroku-cliを使用したherokuへのデプロイ方法を紹介します。  
 githubからの自動デプロイはheroku側のセキュリティ問題により停止されているので、手動でherokuにpushします。
 
