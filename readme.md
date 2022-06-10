@@ -147,7 +147,7 @@ http status code=400
 ```
 
 ## logging
-logger_config.yaml でlogging設定を管理しています。可読性が高くなるようにyamlで記述しています。
+logger_config.yaml でlogging設定を管理しています。可読性が高くなるようにyamlで記述しています。  
 uvironの起動時に```--log-config ./app/logger_config.yaml``` のようにoption指定してlogger設定を行います。
 
 ```yaml
