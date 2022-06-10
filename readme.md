@@ -12,7 +12,7 @@ DB(MySQL)とuvicornを含めてdocker化しています。
 poetryを使用して、パッケージ管理およびタスクランナーを実装しています。
 
 # 機能追加要望・改善要望・バグ報告(Feature reports, Improvement reports, Bug reports)
-Please send improvement requests and bug reports to Issue.
+Please send improvement requests and bug reports to Issue.  
 Issueからお願いします。可能な限り対応いたします。
 
 
