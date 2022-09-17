@@ -1,10 +1,9 @@
-from typing import Tuple, List
-from enum import Enum
-from sudachipy import tokenizer, dictionary, MorphemeList
-from pydantic import BaseModel, Field
 import time
+from enum import Enum
+from typing import List
 
 import schemas
+from sudachipy import dictionary, tokenizer
 
 
 class SudachiDictType(Enum):

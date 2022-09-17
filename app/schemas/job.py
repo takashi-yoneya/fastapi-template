@@ -22,7 +22,7 @@ class JobCreate(BaseSchema):
     _VALIDATION_REQUIRED_CONFIGS: dict[str, Any] = {"data_type": {"case": 1, "required_fields": ["description"]}}
 
     @root_validator
-    def validate_description(cls, values):
+    def validate_description(cls, values: dict[str, Any]) -> dict[str, Any]:
         for key, config in cls._VALIDATION_REQUIRED_CONFIGS.items():
             if values.get(key) != config.get("case"):
                 continue

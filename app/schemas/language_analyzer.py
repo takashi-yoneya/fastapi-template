@@ -1,5 +1,7 @@
-from typing import Tuple, List
+from typing import List, Tuple
+
 from pydantic import BaseModel, Field
+
 
 class AnalyzedlanguageToken(BaseModel):
     surface: str = Field(..., description="表層形式(入力文字のまま)")

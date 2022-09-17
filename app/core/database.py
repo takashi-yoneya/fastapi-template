@@ -2,6 +2,8 @@ from typing import Generator
 
 from core.config import get_settings
 from core.logger import get_logger
+from debug_toolbar.panels.sqlalchemy import SQLAlchemyPanel
+from fastapi import Request, Response
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -30,6 +32,16 @@ except Exception as e:
     traceback.print_exc()
     print(e)
     print("DB connection failed")
+
+if settings.DEBUG:
+
+    class SQLAlchemyPanel_(SQLAlchemyPanel):
+        async def process_request(self, request: Request) -> Response:
+            self.register(engine)
+            try:
+                return await super().process_request(request)
+            finally:
+                self.unregister(engine)
 
 
 def get_db() -> Generator:

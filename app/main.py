@@ -4,6 +4,7 @@ import sentry_sdk
 from api.endpoints import categories, develop, jobs, login, tasks, users
 from core.config import get_settings
 from core.logger import get_logger, init_gunicorn_uvicorn_logger
+from debug_toolbar.middleware import DebugToolbarMiddleware
 from fastapi import FastAPI
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from sentry_sdk.integrations.logging import LoggingIntegration
@@ -16,7 +17,7 @@ init_gunicorn_uvicorn_logger(settings.LOGGER_CONFIG_PATH)
 
 sentry_logging = LoggingIntegration(level=logging.INFO, event_level=logging.ERROR)
 
-app = FastAPI(title=f"[{settings.ENV}]{settings.TITLE}", version=settings.VERSION)
+app = FastAPI(title=f"[{settings.ENV}]{settings.TITLE}", version=settings.VERSION, debug=True)
 
 if settings.SENTRY_SDK_DNS:
     sentry_sdk.init(  # type: ignore
@@ -25,6 +26,12 @@ if settings.SENTRY_SDK_DNS:
         environment=settings.ENV,
     )
 
+
+if settings.DEBUG:
+    app.add_middleware(
+        DebugToolbarMiddleware,
+        panels=["core.database.SQLAlchemyPanel_"],
+    )
 
 app.add_middleware(SentryAsgiMiddleware)
 
