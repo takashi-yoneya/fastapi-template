@@ -30,7 +30,7 @@ def _add_filtering_deleted_at(execute_state: Any) -> None:
         and not execute_state.execution_options.get("include_deleted", False)
     ):
         execute_state.statement = execute_state.statement.options(
-            orm.with_loader_criteria( # ignore[mypy]
+            orm.with_loader_criteria(  # ignore[mypy]
                 ModelBase,
                 lambda cls: cls.deleted_at.is_(None),
                 include_aliases=True,

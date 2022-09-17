@@ -45,20 +45,11 @@ services:
       dockerfile: Dockerfile.web
     depends_on:
       - db
-    command:
-      [
-        "uvicorn",
-        "app.main:app",
-        "--host",
-        "0.0.0.0",
-        "--port",
-        "80",
-        "--reload",
-        "--log-config",
-        "./app/logger_config.yaml",
-        --proxy-headers,
-        --forwarded-allow-ips='*'
-      ]
+    command: [
+        "/bin/sh",
+        "-c",
+        "poe migrate && uvicorn app.main:app --host 0.0.0.0 --port 80 --reload --log-config ./app/logger_config.yaml --proxy-headers --forwarded-allow-ips='*'"
+    ]
     ports:
       - 8888:80
       - 8889:81 # for debug launch
