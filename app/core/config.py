@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     DATABASE_URI: str = ""
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     SECRET_KEY: str = "secret"
-    LOGGER_CONFIG_PATH: str = "logger_config.yaml"
+    LOGGER_CONFIG_PATH: str = os.path.join(BASE_DIR_PATH, "logger_config.yaml")
     SENTRY_SDK_DNS: str = ""
 
     TEST_USER_EMAIL: str = "test-user@example.com"

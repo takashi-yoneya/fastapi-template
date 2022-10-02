@@ -2,7 +2,7 @@ import logging
 
 import sentry_sdk
 from api.endpoints import categories, develop, jobs, login, tasks, users
-from core.config import get_settings
+from core.config import settings
 from core.logger import get_logger, init_gunicorn_uvicorn_logger
 from debug_toolbar.middleware import DebugToolbarMiddleware
 from fastapi import FastAPI
@@ -12,7 +12,6 @@ from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 from starlette.middleware.cors import CORSMiddleware
 
 logger = get_logger(__name__)
-settings = get_settings()
 init_gunicorn_uvicorn_logger(settings.LOGGER_CONFIG_PATH)
 
 sentry_logging = LoggingIntegration(level=logging.INFO, event_level=logging.ERROR)
@@ -27,12 +26,6 @@ if settings.SENTRY_SDK_DNS:
     )
 
 
-if settings.DEBUG:
-    app.add_middleware(
-        DebugToolbarMiddleware,
-        panels=["core.database.SQLAlchemyPanel_"],
-    )
-
 app.add_middleware(SentryAsgiMiddleware)
 
 app.add_middleware(
@@ -42,6 +35,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # app.add_exception_handler(Exception, http_exception_handler)
 
@@ -57,3 +51,9 @@ app.include_router(jobs.router, tags=["Jobs(求人)"], prefix="/jobs")
 app.include_router(categories.router, tags=["Categories(カテゴリー)"], prefix="/categories")
 app.include_router(tasks.router, tags=["Tasks"], prefix="/tasks")
 app.include_router(develop.router, tags=["Develop"], prefix="/develop")
+
+if settings.DEBUG:
+    app.add_middleware(
+        DebugToolbarMiddleware,
+        panels=["core.database.SQLAlchemyPanel_"],
+    )

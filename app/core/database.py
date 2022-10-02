@@ -1,16 +1,14 @@
 from typing import Generator
 
-from core.config import get_settings
+from core.config import settings
 from core.logger import get_logger
 from debug_toolbar.panels.sqlalchemy import SQLAlchemyPanel
 from fastapi import Request, Response
-from sqlalchemy import create_engine
+from sqlalchemy import MetaData, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 logger = get_logger(__name__)
-
-settings = get_settings()
 
 
 Base = declarative_base()
@@ -61,3 +59,28 @@ def get_db() -> Generator:
     finally:
         if db:
             db.close()
+
+
+def drop_all_tables() -> None:
+    logger.info("start: drop_all_tables")
+    """
+    全てのテーブルおよび型、Roleなどを削除して、初期状態に戻す（開発環境専用）
+    """
+    if settings.ENV != "local":
+        # ローカル環境でしか動作させない
+        logger.info("drop_all_table() is ENV local only.")
+        return None
+
+    metadata = MetaData()
+    metadata.reflect(bind=engine)
+
+    # 外部キーの制御を一時的に無効化
+    engine.execute("SET FOREIGN_KEY_CHECKS = 0")
+
+    # 全テーブルを削除
+    for table in metadata.tables:
+        engine.execute(f"DROP TABLE {table} CASCADE")
+
+    # 外部キーの制御を有効化
+    engine.execute("SET FOREIGN_KEY_CHECKS = 1")
+    logger.info("end: drop_all_tables")

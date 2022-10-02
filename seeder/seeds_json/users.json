@@ -1,0 +1,23 @@
+{
+    "model": "app.models.User",
+    "data": [
+        {
+            "id": "1",
+            "email": "test-user1@example.com",
+            "hashed_password": "$2b$12$mV0czmMSlSBR66ZqiJZ9HuE9z0VKhMqwdH.t2a3TZeXhwtWCuU/gi",
+            "full_name": "user1"
+        },
+        {
+            "id": "2",
+            "email": "test-user2@example.com",
+            "hashed_password": "$2b$12$mV0czmMSlSBR66ZqiJZ9HuE9z0VKhMqwdH.t2a3TZeXhwtWCuU/gi",
+            "full_name": "user2"
+        },
+        {
+            "id": "3",
+            "email": "test-user3@example.com",
+            "hashed_password": "$2b$12$mV0czmMSlSBR66ZqiJZ9HuE9z0VKhMqwdH.t2a3TZeXhwtWCuU/gi",
+            "full_name": "user3"
+        }
+    ]
+}

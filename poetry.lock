@@ -1141,6 +1141,20 @@ mypy = ">=0.790"
 typing-extensions = ">=3.7.4"
 
 [[package]]
+name = "sqlalchemyseed"
+version = "1.0.6"
+description = "SQLAlchemy Seeder"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+SQLAlchemy = ">=1.4"
+
+[package.extras]
+yaml = ["PyYAML (>=5.4)"]
+
+[[package]]
 name = "sqlparse"
 version = "0.4.2"
 description = "A non-validating SQL parser."
@@ -1359,7 +1373,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9.13"
-content-hash = "dee368536f6eb6d44c6553bddbff7f444e68923c7f2a77571cb38d35e837fc5e"
+content-hash = "770561965c85a85be536483ccecc7e2111f08b1cee74f9d355b7778fc22b8a09"
 
 [metadata.files]
 aiofiles = []
@@ -2301,6 +2315,7 @@ sqlalchemy-stubs = [
     {file = "sqlalchemy-stubs-0.4.tar.gz", hash = "sha256:c665d6dd4482ef642f01027fa06c3d5e91befabb219dc71fc2a09e7d7695f7ae"},
     {file = "sqlalchemy_stubs-0.4-py3-none-any.whl", hash = "sha256:5eec7aa110adf9b957b631799a72fef396b23ff99fe296df726645d01e312aa5"},
 ]
+sqlalchemyseed = []
 sqlparse = []
 starlette = [
     {file = "starlette-0.17.1-py3-none-any.whl", hash = "sha256:26a18cbda5e6b651c964c12c88b36d9898481cd428ed6e063f5f29c418f73050"},

@@ -35,6 +35,7 @@ SudachiDict-core = "^20220519"
 SudachiDict-full = "^20220519"
 SudachiDict-small = "^20220519"
 alembic = "^1.8.1"
+sqlalchemyseed = "^1.0.6"
 
 [tool.poetry.dev-dependencies]
 locust = "^2.8.5"
@@ -86,8 +87,11 @@ test = {"cmd" = "pytest", help="pytestの実行"}
 makemigrations = {"shell" = "alembic revision --autogenerate", help="DBマイグレーションファイルの自動作成"}
 migrate = {"shell" = "alembic upgrade heads", help="DBマイグレーション"}
 create-user = {"cmd" = "python commands/user_creation.py", help="ユーザー作成"}
-init-table = {"cmd" = "echo init table", help="テーブルを作成し、seedデータをセットする"}
 pre-commit = {"cmd" = "pre-commit", help="pre-commit処理の実行(commit自体は行わない)"}
+drop-all-tables = {"cmd" = "python seeder/run.py drop_all_tables", help=""}
+import-seed = {"cmd" = "python seeder/run.py import_seed", help=""}
+init-all-tables = ["drop-all-tables", "migrate", "import-seed"]
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

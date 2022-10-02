@@ -1,37 +1,28 @@
 {
-    "database.connections": {
+    "$schema": "https://release-1256208672.cos.ap-guangzhou.myqcloud.com/dbclient/schema.json",
+    "database": {
         "1651840710641": {
-            "host": "db",
-            "dbPath": "",
-            "port": "3306",
+            "key": "1651840710641",
+            "host": "localhost",
+            "port": "3307",
             "user": "docker",
-            "protocol": null,
             "authType": "default",
             "password": "docker",
             "encoding": "utf8",
-            "clientKeyPath": null,
-            "clientCertPath": null,
-            "caPath": null,
-            "database": null,
             "useSSL": false,
             "useClearText": false,
             "usingSSH": false,
             "showHidden": true,
-            "includeDatabases": null,
             "dbType": "MySQL",
             "encrypt": true,
             "hideSystemSchema": true,
             "readonly": false,
             "savePassword": "Forever",
-            "group": null,
             "sort": 10,
             "isCluster": false,
-            "connectionUrl": "",
             "srv": false,
             "esAuth": "none",
             "global": false,
-            "key": "1651840710641",
-            "timezone": "+00:00",
             "ssh": {
                 "host": "",
                 "privateKeyPath": "",
@@ -43,8 +34,10 @@
                     "cipher": []
                 }
             },
+            "connectionKey": "database.connections",
             "name": "fastapi-db-local",
-            "connectionKey": "database.connections"
+            "tooltip": "Host: db, Port: 3306",
+            "index": 1
         }
     }
 }

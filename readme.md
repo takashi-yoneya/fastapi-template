@@ -1,5 +1,6 @@
 FastAPI-実用的テンプレート(FastAPI Template)
 ====
+
 This is a practical template using FastAPI.
 It is dockerized including DB (MySQL) and uvicorn.
 Package management and task runner are implemented using poetry.
@@ -12,12 +13,14 @@ DB(MySQL)とuvicornを含めてdocker化しています。
 poetryを使用して、パッケージ管理およびタスクランナーを実装しています。
 
 # 機能追加要望・改善要望・バグ報告(Feature reports, Improvement reports, Bug reports)
+
 Please send improvement requests and bug reports to Issue.
 Issueからお願いします。可能な限り対応いたします。
 
 
 
 # デモ環境(Heroku Demos)
+
 本リポジトリに、herokuにデプロイするための設定ファイルも含まれています。
 デプロイ済の環境は以下から参照できます。
 ```
@@ -25,27 +28,32 @@ https://fastapi-sample-tk.herokuapp.com/docs
 ```
 
 DB定義(dbdocs)
+
 ```
 https://dbdocs.io/marutoraman/fastapi-sample?table=jobs&schema=public&view=table_structure
 ```
 
 # 機能(Features)
 ## パッケージ管理、タスクランナー管理(Package management, task runner management)
+
 poetryおよびpoeを使用してパッケージやタスクランナーを管理しています。
 詳しい定義内容は、pyproject.tomlを参照してください。
 [tool.poe.tasks] セクションにタスクランナーを定義しています。
 
 ## DBレコードの作成・取得・更新・削除(CRUD)
+
 crud/base.py にCRUDの共通Classを実装しています。
 個別のCRUD実装時は、この共通Classを継承して個別処理を実装してください。
 
 ## 論理削除のCRUD管理(Software delete)
+
 DBレコード削除時に実際には削除せずdeleted_atに削除日付をセットすることで
 論理削除を実装しています。
 
 以下のようにSQLAlchemyのevent機能を使用して、ORM実行後に自動的に論理削除レコードを除外するためのfilterを追加しています。
 これにより、個別のCRUDで論理削除を実装する必要がなくなります。
 include_deleted=Trueとすると、論理削除済レコードも取得できます。
+
 ```python
 @event.listens_for(Session, "do_orm_execute")
 def _add_filtering_deleted_at(execute_state):
@@ -70,6 +78,7 @@ def _add_filtering_deleted_at(execute_state):
 
 ```
 ## 権限(Scopes)
+
 特定のUserのみが実行できるAPIを作成する場合は、
 tableの user.scopes の値とrouterに指定したscopeを一致させてください。
 
@@ -82,6 +91,7 @@ tableの user.scopes の値とrouterに指定したscopeを一致させてくだ
 ```
 
 ## キャメルケースとスネークケースの相互変換(Mutual conversion between CamelCase and SnakeCase)
+
 Pythonではスネークケースが標準ですが、Javascriptではキャメルケースが標準なため
 単純にpydanticでschemaを作成しただけでは、jsonレスポンスにスネークケースを使用せざるをえない問題があります。
 
@@ -97,6 +107,7 @@ class BaseSchema(BaseModel):
 ```
 
 ## バッチ処理(Batch)
+
 サブディレクトリ配下のpyファイルから、別ディレクトリのファイルをimportする場合は
 その前に以下のコードを記述する必要があります。
 
@@ -107,17 +118,19 @@ sys.path.append(str(Path(__file__).absolute().parent.parent))
 batch/__set_base_path__.py に記述し、各ファイルの先頭でimportすることで
 より簡単にimportできるようにしています。
 
-
 ## Settings
+
 core/config.py にて、BaseSettingsを継承して共通設定Classを定義しています。
 .envファイルから自動的に設定を読み込むことができる他、個別に設定を定義することもできます。
 
 ## CORS-ORIGIN
+
 CORS ORIGINは大きく２パターンの設定方法があります。
 allow_originsにlistを指定する方法では、settings.CORS_ORIGINSにurlを指定することで
 任意のORIGINが設定可能です。
 また、https://****.example.com のようにサブドメインを一括で許可したい場合は
 allow_origin_regexに以下のように正規表現でURLパターンを指定してください。
+
 ```python
 app.add_middleware(
     CORSMiddleware,
@@ -129,13 +142,16 @@ app.add_middleware(
 ```
 
 ## ErrorException
+
 exceptions/error_messages.py にエラーメッセージを定義しています。
 APIExceptionと併せて以下のように、呼び出すことで、任意のHTTPコードのエラーレスポンスを作成できます。
+
 ```python
 raise APIException(ErrorMessage.INTERNAL_SERVER_ERROR)
 ```
 
 レスポンス例
+
 ```
 http status code=400
 {
@@ -147,6 +163,7 @@ http status code=400
 ```
 
 ## logging
+
 logger_config.yaml でlogging設定を管理しています。可読性が高くなるようにyamlで記述しています。
 uvironの起動時に```--log-config ./app/logger_config.yaml``` のようにoption指定してlogger設定を行います。
 
@@ -225,95 +242,128 @@ root:
 ```
 
 ## テスト(Testing)
+
 tests/ 配下に、テスト関連の処理を、まとめています。
 
 テスト関数の実行毎にDBをクリーンするため、ステートレスなテストが実行できます。
 tests/test_data/ 配下でテスト用のデータを定義してください。
 
 ## ログの集中管理(Sentry log management)
+
 .envファイルのSENTRY_SDK_DNSを設定すると、error以上のloggingが発生した場合に
 sentryに自動的にloggingされます。
 
 ## DBマイグレーション(DB migrations)
+
 alembic/versions.py にマイグレーション情報を記述すると、DBマイグレーション(移行)を実施することができます。
 以下を実行することで、modelsの定義と実際のDBとの差分から自動的にマイグレーションファイルを作成できます。
+
 ```bash
 poe makemigrations
 ```
 
 以下を実行することで、マイグレーションが実行できます。
+
 ```bash
 poe migrate
 ```
 
+
 ## fastapi-debug-toolbar
+
 .envファイルにてDEBUG=trueとすると、Swaggar画面からdebug-toolbarが起動できます。
 
 SQLAlchemyのクエリやRequestなど、django-debug-toolbarと同等の内容が確認できます。
 
 
 ## CI/CD
+
 push時に、Github Actionsを使用して、ECSに自動デプロイを行うためのサンプルを記述しています。
 以下にAWSの設定情報等をセットします。
 .aws/ecs-task-definition.json
 .github/workflow/aws.yml
 
 ## 自然言語解析(sudachi language analyze)
+
 sudachiアナライザーを使用した日本語言語解析が可能です。
 core/language_analyzer.py に実装しています。
 
 ## Elasticsearch
+
 実験的にElasticsearchのdocker-compose.ymlも定義しています。
 FastAPIとの連携は未対応のため、別途対応予定です。
 
 # インストール&使い方(Installations & How to use)
 
-## Dockerコンテナ内で開発(推奨)
-ポート重複でコンテナが起動できない場合は、docker-compose.ymlを修正してください。
-
-### VSCODEに「Remote Containers」をインストール
-拡張機能「Remote Containers」をインストール
-
 ### .envファイルを準備
 
 .env.exampleを.envにリネームしてください。
 
-### コンテナを起動
-コマンドパレットを開き、「reopen container」と入力して実行
-
-### コンテナ内のコンソールログ確認方法
-リモートエクスプローラー -> CONTAINERS -> {{ コンテナ名 }} -> Show Container Logs　
-
-## ローカルで開発
-ローカルで開発する場合
 ### Poetryのインストール
+
+PoetryをローカルPCにインストールします。
+
+実際の動作はdockerコンテナ内で行われるので動作上必須ではありませんが、VSCODEで開発する場合のインタープリター設定を行うために必要になります。
+
 ```
 curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
 ```
 
 ### 依存パッケージのインストール
+
+依存パッケージをローカルPCにインストールします。
+
 ```
 poetry install
 ```
 
 ### dockerコンテナのビルド & 起動
+
 ```
-docker-compose up --build
+docker compose up --build
+```
+
+### Webコンテナ内に入る
+
+以下のいずれかのコマンドでWebコンテナ内に入ることができます。
+
+```bash
+docker compose run --rm web bash
+```
+
+or
+
+Linux or macOS only
+
+```bash
+make docker-run
+```
+
+### DB初期化、migration、seed投入
+
+コンテナ内で以下を実行することで、DBの初期化、migrate、seedデータ投入までの一連の処理を一括で行うことができます。
+
+```bash
+poe init-all-tables
 ```
 
 ## API管理画面(OpenAPI)表示
+
 ローカル環境
+
 ```
 http://localhost:8888/docs
 ```
 
 Debugモード(F5押下)で起動した場合
 ※Debugモードの場合は、ブレークポイントでローカル変数を確認できます。
+
 ```
 http://localhost:8889/docs
 ```
 
 ## poeタブ入力補完設定(Completion)
+
 ※dockerコンテ内で開発する場合は、Dockerfileに組み込まれているため実行不要です
 bashを使用している場合は、以下のコマンドを実行する。
 これにより、タスクランナー実行時にタブで入力補完が可能になります。
@@ -323,50 +373,63 @@ bashを使用している場合は、以下のコマンドを実行する。
 ```
 
 次回bash起動時に有効化されるが、即時有効化するためには以下を実行します。
+
 ```
 . ~/.bashrc
 ```
 
 # デプロイ(Deploy to heroku)
+
 heroku-cliを使用したherokuへのデプロイ方法を紹介します。
 githubからの自動デプロイはheroku側のセキュリティ問題により停止されているので、手動でherokuにpushします。
 
 ## heroku-cliのインストール
-以下を参考にインストール<br>
+
+以下を参考にインストール
+
 https://devcenter.heroku.com/articles/heroku-cli#install-the-heroku-cli
 
 ## appの作成
+
 APPNAMEは任意の名称を指定（全ユーザーでユニークである必要があります）
+
 ```
 heroku create APPNAME
 ```
 
 ## gitにherokuのリモートリポジトリをセット
+
 ```
 heroku git:remote --app APPNAME
 ```
 
 ## push
+
 ```
 git push heroku master
 ```
 
 ## heroku-cliにheroku-configをインストール
+
 本リポジトリでは、.envファイル経由で設定を読み込んでいるため
 herokuでも.envファイルを有効にする必要があります。
+
 ```bash
 heroku plugins:install heroku-config
 ```
 
 ## .envファイルをpush
+
 ```bash
 heroku config:push
 ```
 
 ## heroku再起動
+
 ```bash
 heroku restart
 ```
 
 # ライセンス(License)
+
 https://choosealicense.com/licenses/mit/
