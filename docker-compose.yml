@@ -43,6 +43,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.web
+    healthcheck:
+      test: "curl -f http://localhost:80/docs || exit 1"
+      interval: 5s
+      timeout: 2s
+      retries: 3
+      start_period: 5s
     depends_on:
       - db
     command: [
@@ -61,6 +67,17 @@ services:
     networks:
       - fastapi_network
 
+    # openapiのclient用のコードを自動生成するコンテナ
+  openapi-generator-server:
+    image: openapitools/openapi-generator-cli
+    depends_on:
+      web:
+        condition: service_healthy
+    volumes:
+      - ./frontend_sample:/fontend_sample
+    command: generate -i http://web/openapi.json -g typescript-axios -o /fontend_sample/src/api-clients --skip-validate-spec
+    networks:
+      - fastapi_network
 
 volumes:
   db_volume:

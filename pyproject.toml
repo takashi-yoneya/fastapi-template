@@ -5,7 +5,7 @@ description = ""
 authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.9.13"
+python = "^3.9.12"
 isort = "^5.10.1"
 pyproject-flake8 = "^0.0.1-alpha.3"
 poethepoet = "^0.13.1"
@@ -36,6 +36,7 @@ SudachiDict-full = "^20220519"
 SudachiDict-small = "^20220519"
 alembic = "^1.8.1"
 sqlalchemyseed = "^1.0.6"
+fastapi-debug-toolbar = {git = "https://github.com/takashi-yoneya/fastapi-debug-toolbar.git", rev = "main"}
 
 [tool.poetry.dev-dependencies]
 locust = "^2.8.5"
@@ -51,7 +52,6 @@ autoflake = "^1.4"
 pre-commit = "^2.18.1"
 codespell = "^2.1.0"
 bandit = "^1.7.4"
-fastapi-debug-toolbar = "^0.2.1"
 
 [tool.black]
 line-length = 119
