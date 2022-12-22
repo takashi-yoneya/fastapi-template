@@ -1,17 +1,16 @@
 from datetime import datetime, timedelta
-from typing import Any, Union
+from typing import Any, Optional, Union
 
-import crud
-import models
-import schemas
-from exceptions.core import APIException
-from exceptions.error_messages import ErrorMessage
 from fastapi import Depends, status
 from fastapi.security import OAuth2PasswordBearer, SecurityScopes
 from jose import jwt
 from passlib.context import CryptContext
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
+
+from app import crud, models, schemas
+from app.exceptions.core import APIException
+from app.exceptions.error_messages import ErrorMessage
 
 from .config import settings
 from .database import get_db
@@ -21,10 +20,10 @@ logger = get_logger(__name__)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 ALGORITHM = "HS256"
-reusable_oauth2 = OAuth2PasswordBearer(tokenUrl="/login/access-token", scopes={"admin": "Admin user only"})
+reusable_oauth2 = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
-def create_access_token(subject: Union[str, Any], expires_delta: timedelta = None) -> str:
+def create_access_token(subject: Union[str, Any], expires_delta: Optional[timedelta] = None) -> str:
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
@@ -67,7 +66,6 @@ def get_current_user(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 error=ErrorMessage.PERMISSION_ERROR,
             )
-    logger.info(user.to_dict())
     return user
 
 

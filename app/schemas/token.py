@@ -1,6 +1,6 @@
 from typing import Optional
 
-from schemas.core import BaseSchema
+from app.schemas.core import BaseSchema
 
 
 class Token(BaseSchema):

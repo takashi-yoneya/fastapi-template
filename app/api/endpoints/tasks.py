@@ -1,10 +1,11 @@
 import asyncio
 import time
 
-from core.database import get_db
-from core.logger import get_logger
 from fastapi import APIRouter, BackgroundTasks, Depends
 from sqlalchemy.orm import Session
+
+from app.core.database import get_db
+from app.core.logger import get_logger
 
 logger = get_logger(__name__)
 

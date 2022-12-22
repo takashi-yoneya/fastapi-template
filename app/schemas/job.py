@@ -2,7 +2,8 @@ import datetime
 from typing import Any, List, Optional
 
 from pydantic import root_validator
-from schemas.core import BaseSchema, PagingMeta
+
+from app.schemas.core import BaseSchema, PagingMeta
 
 
 class JobResponse(BaseSchema):

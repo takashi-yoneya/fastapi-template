@@ -1,5 +1,5 @@
+from core.language_analyer import SudachiDictType, tokenize
 from sudachipy import tokenizer
-from core.language_analyer import tokenize, SudachiDictType
 
 
 def test_tokenize():

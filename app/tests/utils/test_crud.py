@@ -1,8 +1,9 @@
 import gzip
 
-from core.config import settings
-from core.database import Base
 from sqlalchemy.orm import Session
+
+from app.core.config import settings
+from app.core.database import Base
 
 
 def add_test_data(db: Session, objects: list):

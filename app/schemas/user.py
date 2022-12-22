@@ -1,8 +1,9 @@
 from typing import List, Optional
 
 from pydantic import EmailStr
-from schemas.core import BaseSchema
-from schemas.job import JobResponse
+
+from app.schemas.core import BaseSchema, PagingMeta
+from app.schemas.job import JobResponse
 
 
 # Shared properties
@@ -30,3 +31,8 @@ class UserResponse(UserBase):
 
     class Config:
         orm_mode = True
+
+
+class UsersPagedResponse(BaseSchema):
+    data: Optional[list[UserResponse]]
+    meta: Optional[PagingMeta]

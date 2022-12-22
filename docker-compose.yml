@@ -61,21 +61,22 @@ services:
       - 8889:81 # for debug launch
     volumes:
       - .:/backend
+      - /backend/.venv
     links:
       - db
     restart: always
     networks:
       - fastapi_network
 
-    # openapiのclient用のコードを自動生成するコンテナ
-  openapi-generator-server:
+  # openapiのclient用のコードを自動生成するコンテナ
+  openapi-generator:
     image: openapitools/openapi-generator-cli
     depends_on:
       web:
         condition: service_healthy
     volumes:
       - ./frontend_sample:/fontend_sample
-    command: generate -i http://web/openapi.json -g typescript-axios -o /fontend_sample/src/api-clients --skip-validate-spec
+    command: generate -i http://web/openapi.json -g typescript-axios -o /fontend_sample/src/api_clients --skip-validate-spec
     networks:
       - fastapi_network
 

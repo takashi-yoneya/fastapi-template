@@ -80,7 +80,7 @@ class FilterQueryIn(BaseSchema):
             raise ValueError("asc or desc only")
         return v
 
-    def validate_allowed_sort_column(self, allowed_columns: list) -> bool:
+    def validate_allowed_sort_column(self, allowed_columns: list[str]) -> bool:
         if not self.sort:
             return True
         return self.sort in allowed_columns

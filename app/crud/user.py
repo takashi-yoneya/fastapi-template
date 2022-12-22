@@ -1,13 +1,13 @@
-from typing import Any, Optional
+from typing import Optional
 
-import models
-import schemas
-from core.auth import get_password_hash, verify_password
-from crud.base import CRUDBase
 from sqlalchemy.orm import Session
 
+from app import models, schemas
+from app.core.auth import get_password_hash, verify_password
+from app.crud.base import CRUDBase
 
-class CRUDUser(CRUDBase[models.User, schemas.UserCreate, schemas.UserUpdate, Any]):
+
+class CRUDUser(CRUDBase[models.User, schemas.UserCreate, schemas.UserUpdate, schemas.UserResponse]):
     def get_by_email(self, db: Session, *, email: str) -> Optional[models.User]:
         return db.query(models.User).filter(models.User.email == email).first()
 
@@ -37,4 +37,4 @@ class CRUDUser(CRUDBase[models.User, schemas.UserCreate, schemas.UserUpdate, Any
         return user
 
 
-user = CRUDUser(models.User, Any)
+user = CRUDUser(models.User, schemas.UsersPagedResponse)

@@ -1,10 +1,11 @@
-import schemas
-from core import utils
-from core.language_analyzer import tokenize
-from core.logger import get_logger
-from exceptions.core import APIException
-from exceptions.error_messages import ErrorMessage
 from fastapi import APIRouter, Request
+
+from app import schemas
+from app.core import utils
+from app.core.language_analyzer import tokenize
+from app.core.logger import get_logger
+from app.exceptions.core import APIException
+from app.exceptions.error_messages import ErrorMessage
 
 logger = get_logger(__name__)
 

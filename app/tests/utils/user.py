@@ -1,12 +1,13 @@
 from typing import Dict
 
 import crud
-from core.config import settings
 from fastapi.testclient import TestClient
 from models.users import User
 from schemas.user import UserCreate, UserUpdate
 from sqlalchemy.orm import Session
 from tests.utils.utils import random_email, random_lower_string
+
+from app.core.config import settings
 
 
 def user_authentication_headers(*, client: TestClient, email: str, password: str) -> Dict[str, str]:

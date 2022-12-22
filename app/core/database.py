@@ -1,17 +1,18 @@
 from typing import Generator
 
-from core.config import settings
-from core.logger import get_logger
 from debug_toolbar.panels.sqlalchemy import SQLAlchemyPanel
 from fastapi import Request, Response
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session, sessionmaker
+
+from app.core.config import settings
+from app.core.logger import get_logger
 
 logger = get_logger(__name__)
 
-
 Base = declarative_base()
+
 try:
     # if settings.IS_DOCKER_UVICORN:
     engine = create_engine(
@@ -42,7 +43,7 @@ if settings.DEBUG:
                 self.unregister(engine)
 
 
-def get_db() -> Generator:
+def get_db() -> Generator[Session, None, None]:
     """
     endpointからアクセス時に、Dependで呼び出しdbセッションを生成する
     エラーがなければ、commitする

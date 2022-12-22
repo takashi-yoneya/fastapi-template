@@ -1,8 +1,7 @@
-import crud
 import fire
-import models
-import schemas
-from core.database import get_db
+
+from app import crud, models, schemas
+from app.core.database import get_db
 
 from . import __set_base_path__  # noqa
 

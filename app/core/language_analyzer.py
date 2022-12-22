@@ -1,22 +1,22 @@
 import time
 from enum import Enum
-from typing import List
 
-import schemas
 from sudachipy import dictionary, tokenizer
+
+from app import schemas
 
 
 class SudachiDictType(Enum):
-    SMALL: str = "small"
+    # SMALL: str = "small"
     CORE: str = "core"
-    FULL: str = "full"
+    # FULL: str = "full"
 
 
 def tokenize(
     text: str,
     mode: tokenizer.Tokenizer.SplitMode = tokenizer.Tokenizer.SplitMode.C,
     dict_type: SudachiDictType = SudachiDictType.CORE,
-    exclude_part_of_speech: list = ["助詞", "補助記号", "句点", "助動詞"],
+    exclude_part_of_speech: list[str] = ["助詞", "補助記号", "句点", "助動詞"],
 ) -> schemas.AnalyzedLanguage:
     """言語解析
     Args:
@@ -29,8 +29,8 @@ def tokenize(
     start = time.time()
     tokenizer_obj = dictionary.Dictionary(dict_type=dict_type.value).create()
     # mode = tokenizer.Tokenizer.SplitMode.C
-    tokens: List[schemas.AnalyzedlanguageToken] = []
-    excluded_tokens: List[schemas.AnalyzedlanguageToken] = []
+    tokens: list[schemas.AnalyzedlanguageToken] = []
+    excluded_tokens: list[schemas.AnalyzedlanguageToken] = []
     for tokenized_obj in tokenizer_obj.tokenize(text, mode):
         analyzed_token = schemas.AnalyzedlanguageToken(
             surface=tokenized_obj.surface(),

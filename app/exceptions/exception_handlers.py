@@ -1,8 +1,9 @@
 from typing import Any
 from urllib.request import Request
 
-from core.logger import get_logger
 from fastapi.responses import PlainTextResponse
+
+from app.core.logger import get_logger
 
 logger = get_logger(__name__)
 

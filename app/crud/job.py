@@ -1,15 +1,17 @@
-import models
-import schemas
+from typing import Optional
+
 from sqlalchemy.orm import Session
+
+from app import models, schemas
 
 from .base import CRUDBase
 
 
-class CRUDHashtag(CRUDBase[models.Job, schemas.JobCreate, schemas.JobUpdate, schemas.JobsPagedResponse]):
+class CRUDJob(CRUDBase[models.Job, schemas.JobCreate, schemas.JobUpdate, schemas.JobsPagedResponse]):
     SELECT_QUERY = [models.Job.id, models.Job.title, models.Job.updated_at]
 
-    def get(self, db: Session, id: str, include_deleted: bool = False):
-        return super().get(db, id=id, include_deleted=include_deleted, select_query=self.SELECT_QUERY)
+    def get(self, db: Session, id: str, include_deleted: bool = False) -> Optional[models.Job]:
+        return super().get(db, id=id, include_deleted=include_deleted)
 
 
-job = CRUDHashtag(models.Job, schemas.JobsPagedResponse(data=[], meta=None))
+job = CRUDJob(models.Job, schemas.JobsPagedResponse)

@@ -1,10 +1,11 @@
 from typing import Any
 
-from core.logger import get_logger
-from core.utils import get_ulid
-from sqlalchemy import Column, DateTime, String, event, orm
+from sqlalchemy import Column, DateTime, String, event, func, orm
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import current_timestamp
+
+from app.core.logger import get_logger
+from app.core.utils import get_ulid
 
 logger = get_logger(__name__)
 
@@ -12,6 +13,12 @@ logger = get_logger(__name__)
 class ModelBase:
     id = Column(String(32), primary_key=True, default=get_ulid)
     created_at = Column(DateTime, nullable=False, server_default=current_timestamp())
+    updated_at = Column(
+        DateTime,
+        nullable=False,
+        default=current_timestamp(),
+        onupdate=func.utc_timestamp(),
+    )
     deleted_at = Column(DateTime)
 
 

@@ -1,12 +1,11 @@
-import crud
-import models
-import schemas
-from core.auth import get_current_user
-from core.database import get_db
-from exceptions.core import APIException
-from exceptions.error_messages import ErrorMessage
 from fastapi import APIRouter, Depends, Security
 from sqlalchemy.orm import Session
+
+from app import crud, models, schemas
+from app.core.auth import get_current_user
+from app.core.database import get_db
+from app.exceptions.core import APIException
+from app.exceptions.error_messages import ErrorMessage
 
 router = APIRouter()
 

@@ -1,7 +1,8 @@
-from core.database import Base
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, String, Table, Text, func
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.functions import current_timestamp
+
+from app.core.database import Base
 
 from . import ModelBase
 
@@ -19,7 +20,7 @@ class User(Base, ModelBase):
     mysql_charset = ("utf8mb4",)
     mysql_collate = "utf8mb4_unicode_ci"
 
-    full_name = Column(String(64))
+    full_name = Column(String(64), index=True)
     email = Column(String(200), unique=True, index=True, nullable=False)
     email_verified = Column(Boolean, nullable=False, server_default="0")
     hashed_password = Column(Text, nullable=False)
@@ -32,6 +33,3 @@ class User(Base, ModelBase):
         onupdate=func.utc_timestamp(),
     )
     jobs = relationship("Job", secondary=users_jobs, backref="users")
-
-    def to_dict(self) -> dict:
-        return self.__dict__.copy()

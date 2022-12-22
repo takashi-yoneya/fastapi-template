@@ -1,12 +1,13 @@
 from typing import Dict, Generator
 
 import pytest
-from core.config import settings
-from core.database import get_db
 from fastapi.testclient import TestClient
-from main import app
 from sqlalchemy.engine import create_engine
 from sqlalchemy.orm import Session, sessionmaker
+
+from app.core.config import settings
+from app.core.database import get_db
+from app.main import app
 
 from .utils.test_crud import init_tables
 

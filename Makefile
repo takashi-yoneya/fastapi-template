@@ -7,3 +7,30 @@ docker-run:
 .PHONY: chown
 chown:
 	sudo chown -hR ${USER}:${USER} .
+
+
+.PHONY: openapi-generator
+openapi-generator:
+	docker compose run --rm openapi-generator
+
+
+.PHONY: makemigrations
+makemigrations:
+	docker compose run --rm web bash -c "poe makemigrations"
+
+
+.PHONY: migrate
+migrate:
+	docker compose run --rm web bash -c "poe migrate"
+
+.PHONY: pre-commit-all
+pre-commit-all:
+	pre-commit run --all-files
+
+.PHONY: export-requirements-txt
+export-requirements-txt:
+	poetry export -f requirements.txt --output requirements.txt
+
+.PHONY: export-requirements-dev-txt
+export-requirements-dev-txt:
+	poetry export -f requirements.txt --output requirements-dev.txt --dev
