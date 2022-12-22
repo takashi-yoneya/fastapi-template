@@ -29,7 +29,7 @@ pre-commit-all:
 
 .PHONY: export-requirements-txt
 export-requirements-txt:
-	poetry export -f requirements.txt --output requirements.txt
+	poetry export -f requirements.txt --output requirements.txt --without-hashes
 
 .PHONY: export-requirements-dev-txt
 export-requirements-dev-txt:
