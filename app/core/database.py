@@ -16,7 +16,7 @@ Base = declarative_base()
 try:
     # if settings.IS_DOCKER_UVICORN:
     engine = create_engine(
-        settings.DOCKER_DATABASE_URI,
+        settings.DATABASE_URI,
         connect_args={"auth_plugin": "mysql_native_password"},
         pool_pre_ping=True,
     )
