@@ -29,12 +29,6 @@ Issue からお願いします。可能な限り対応いたします。
 https://fastapi-sample-tk.herokuapp.com/docs
 ```
 
-DB 定義(dbdocs)
-
-```
-https://dbdocs.io/marutoraman/fastapi-sample?table=jobs&schema=public&view=table_structure
-```
-
 # 機能(Features)
 
 ## パッケージ管理、タスクランナー管理(Package management, task runner management)
@@ -108,6 +102,30 @@ class BaseSchema(BaseModel):
     class Config:
         alias_generator = to_camel
         allow_population_by_field_name = True
+```
+
+## OpenAPI Generatorを使用してバックエンドの型定義をフロントエンドでも使用する
+
+FastAPIを使用するとエンドポイントを作成した段階でopenapi.jsonが自動生成されます。
+
+OpenAPI-Generatorは、このopenapi.jsonを読み込んで、フロントエンド用の型定義やAPI呼び出し用コードを自動生成する仕組みです。
+
+docker-compose内で定義しており、docker compose upで実行される他、```make openapi-generator```を実行するとopenapi-generatorだけを実行できます。
+
+生成されたコードは、```/fontend_sample/src/api_clients```に格納されます。(-o オプションで変更可能)
+
+```yml
+  # openapiのclient用のコードを自動生成するコンテナ
+  openapi-generator:
+    image: openapitools/openapi-generator-cli
+    depends_on:
+      web:
+        condition: service_healthy
+    volumes:
+      - ./frontend_sample:/fontend_sample
+    command: generate -i http://web/openapi.json -g typescript-axios -o /fontend_sample/src/api_clients --skip-validate-spec
+    networks:
+      - fastapi_network
 ```
 
 ## バッチ処理(Batch)
@@ -339,6 +357,28 @@ Debug モード(F5 押下)で起動した場合
 ```
 http://localhost:8889/docs
 ```
+
+## フロントエンドサンプル(Next.js)
+
+フロントエンドからAPIを呼び出すサンプルを```/fontend_sample```に記述しています。
+
+以下のコマンドでmoduleをインストールできます。
+
+```bash
+cd /fontend_sample
+npm ci
+```
+
+以下のコマンドで、Nextサーバーを立ち上げることができます。
+
+```bash
+npm run dev
+```
+
+```
+http://localhost:3000
+```
+
 
 ## poe タブ入力補完設定(Completion)
 
