@@ -42,7 +42,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile.web
+      dockerfile: Dockerfile
     healthcheck:
       test: "curl -f http://localhost:80/docs || exit 1"
       interval: 5s
