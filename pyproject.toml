@@ -32,6 +32,7 @@ SudachiDict-core = "^20220519"
 alembic = "^1.8.1"
 sqlalchemyseed = "^1.0.6"
 fastapi-debug-toolbar = "^0.3.2"
+mangum = "^0.17.0"
 
 [tool.poetry.dev-dependencies]
 locust = "^2.8.5"
