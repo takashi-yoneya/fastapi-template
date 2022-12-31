@@ -3,6 +3,7 @@ import logging
 import sentry_sdk
 from debug_toolbar.middleware import DebugToolbarMiddleware
 from fastapi import FastAPI
+from mangum import Mangum
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
@@ -18,6 +19,7 @@ init_gunicorn_uvicorn_logger(settings.LOGGER_CONFIG_PATH)
 sentry_logging = LoggingIntegration(level=logging.INFO, event_level=logging.ERROR)
 
 app = FastAPI(title=f"[{settings.ENV}]{settings.TITLE}", version=settings.VERSION, debug=True)
+handler = Mangum(app)
 
 if settings.SENTRY_SDK_DNS:
     sentry_sdk.init(
