@@ -59,5 +59,5 @@ if settings.DEBUG:
         DebugToolbarMiddleware,
         panels=["core.database.SQLAlchemyPanel_"],
     )
-
+print("in handler")
 handler = Mangum(app)
