@@ -1,7 +1,6 @@
 from typing import Optional
 
 from fastapi import APIRouter, Depends, status
-from schemas.core import PagingQueryIn
 from sqlalchemy.orm import Session
 
 from app import crud, models, schemas
@@ -9,6 +8,7 @@ from app.core.database import get_db
 from app.core.logger import get_logger
 from app.exceptions.core import APIException
 from app.exceptions.error_messages import ErrorMessage
+from app.schemas.core import PagingQueryIn
 
 logger = get_logger(__name__)
 

@@ -38,8 +38,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-print(settings.CORS_ORIGINS)
-
 # app.add_exception_handler(Exception, http_exception_handler)
 
 
