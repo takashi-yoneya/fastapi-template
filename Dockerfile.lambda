@@ -1,3 +1,4 @@
+ARG FUNCTION_DIR="/function"
 FROM python:3.9-buster
 
 ENV LANG C.UTF-8
@@ -17,16 +18,17 @@ RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=/opt/poetry python
     ln -s /opt/poetry/bin/poetry && \
     poetry config virtualenvs.create false
 
+# Include global arg in this stage of the build
+ARG FUNCTION_DIR
+# Create function directory
+RUN mkdir -p ${FUNCTION_DIR}
+WORKDIR ${FUNCTION_DIR}/backend
+COPY ./pyproject.toml ./poetry.lock ${FUNCTION_DIR}/backend/
 
-WORKDIR ${LAMBDA_TASK_ROOT}/backend
-COPY ./pyproject.toml ./poetry.lock ${LAMBDA_TASK_ROOT}/backend/
-COPY ./app/main.py ${LAMBDA_TASK_ROOT}
-
-RUN echo ${LAMBDA_TASK_ROOT}
 RUN poetry install --no-root
 RUN pip install awslambdaric
 
-COPY . ${LAMBDA_TASK_ROOT}/backend/
+COPY . ${FUNCTION_DIR}/backend/
 
 ENTRYPOINT [ "/usr/local/bin/python", "-m", "awslambdaric" ]
-CMD ["app.main.handler"]
+CMD ["backend/app/main.handler"]
