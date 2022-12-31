@@ -18,7 +18,13 @@ init_gunicorn_uvicorn_logger(settings.LOGGER_CONFIG_PATH)
 
 sentry_logging = LoggingIntegration(level=logging.INFO, event_level=logging.ERROR)
 
-app = FastAPI(title=f"[{settings.ENV}]{settings.TITLE}", version=settings.VERSION, debug=settings.DEBUG or False)
+app = FastAPI(
+    title=f"[{settings.ENV}]{settings.TITLE}",
+    version=settings.VERSION,
+    debug=settings.DEBUG or False,
+    docs_url="/docs",
+    openapi_url="/openapi.json",
+)
 
 
 if settings.SENTRY_SDK_DNS:
