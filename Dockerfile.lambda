@@ -31,5 +31,5 @@ RUN pip install awslambdaric
 COPY . ${FUNCTION_DIR}/backend/
 
 ENTRYPOINT [ "/usr/local/bin/python", "-m", "awslambdaric" ]
-CMD ["${FUNCTION_DIR}/backend/app/main.handler"]
+CMD ["app/main.handler"]
 # CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
