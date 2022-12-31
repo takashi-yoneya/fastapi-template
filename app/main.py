@@ -62,4 +62,4 @@ if settings.DEBUG:
         panels=["core.database.SQLAlchemyPanel_"],
     )
 
-hander = Mangum(app)
+handler = Mangum(app)

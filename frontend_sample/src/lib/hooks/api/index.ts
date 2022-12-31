@@ -9,12 +9,12 @@ import type {
 } from "react-query";
 import { useQuery, useMutation } from "react-query";
 
-export type UseGetResult<T, U = ErrorResponse> = Omit<
-  UseQueryResult<AxiosResponse<T>, AxiosError<U>>,
+export type UseGetResult<TData, TError = ErrorResponse> = Omit<
+  UseQueryResult<AxiosResponse<TData>, AxiosError<TError>>,
   "data" | "error"
 > & {
-  error?: U;
-  data?: T;
+  data?: TData;
+  error?: TError;
 };
 
 export type UsePostResult<TData, TError = ErrorResponse, TVariables = unknown> =
