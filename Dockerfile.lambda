@@ -31,4 +31,4 @@ RUN pip install awslambdaric
 COPY . ${FUNCTION_DIR}/backend/
 
 ENTRYPOINT [ "/usr/local/bin/python", "-m", "awslambdaric" ]
-CMD ["backend/app/main.handler"]
+CMD ["app/main.handler"]
