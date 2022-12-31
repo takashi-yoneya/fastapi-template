@@ -18,8 +18,8 @@ init_gunicorn_uvicorn_logger(settings.LOGGER_CONFIG_PATH)
 
 sentry_logging = LoggingIntegration(level=logging.INFO, event_level=logging.ERROR)
 
-app = FastAPI(title=f"[{settings.ENV}]{settings.TITLE}", version=settings.VERSION, debug=True)
-handler = Mangum(app)
+app = FastAPI(title=f"[{settings.ENV}]{settings.TITLE}", version=settings.VERSION, debug=settings.DEBUG or False)
+
 
 if settings.SENTRY_SDK_DNS:
     sentry_sdk.init(
@@ -60,3 +60,6 @@ if settings.DEBUG:
         DebugToolbarMiddleware,
         panels=["core.database.SQLAlchemyPanel_"],
     )
+
+
+handler = Mangum(app)
