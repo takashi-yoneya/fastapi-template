@@ -3,7 +3,6 @@ import logging
 import sentry_sdk
 from debug_toolbar.middleware import DebugToolbarMiddleware
 from fastapi import FastAPI
-from mangum import Mangum
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
@@ -59,5 +58,3 @@ if settings.DEBUG:
         DebugToolbarMiddleware,
         panels=["core.database.SQLAlchemyPanel_"],
     )
-print("in handler")
-handler = Mangum(app)

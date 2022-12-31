@@ -26,10 +26,10 @@ WORKDIR ${FUNCTION_DIR}/backend
 COPY ./pyproject.toml ./poetry.lock ${FUNCTION_DIR}/backend/
 
 RUN poetry install --no-root
-RUN pip install awslambdaric
+RUN pip install awslambdaric --target ${FUNCTION_DIR}
 
 COPY . ${FUNCTION_DIR}/backend/
 
 ENTRYPOINT [ "/usr/local/bin/python", "-m", "awslambdaric" ]
-CMD ["app/main.handler"]
+CMD ["app/app.handler"]
 # CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
