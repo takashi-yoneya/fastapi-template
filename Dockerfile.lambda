@@ -26,7 +26,7 @@ WORKDIR ${FUNCTION_DIR}/backend
 COPY ./pyproject.toml ./poetry.lock ${FUNCTION_DIR}/backend/
 
 RUN poetry install --no-root
-RUN pip install awslambdaric --target ${FUNCTION_DIR}
+RUN pip install awslambdaric
 
 COPY . ${FUNCTION_DIR}/backend/
 
