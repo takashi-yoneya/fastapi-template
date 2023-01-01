@@ -22,8 +22,6 @@ app = FastAPI(
     title=f"[{settings.ENV}]{settings.TITLE}",
     version=settings.VERSION,
     debug=settings.DEBUG or False,
-    docs_url="/dev/docs",
-    openapi_url="/dev/openapi.json",
 )
 
 
