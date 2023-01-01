@@ -22,6 +22,7 @@ app = FastAPI(
     title=f"[{settings.ENV}]{settings.TITLE}",
     version=settings.VERSION,
     debug=settings.DEBUG or False,
+    root_path="/dev/",
 )
 
 
