@@ -20,7 +20,7 @@ logger = get_logger(__name__)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 ALGORITHM = "HS256"
-reusable_oauth2 = OAuth2PasswordBearer(tokenUrl="/auth/login")
+reusable_oauth2 = OAuth2PasswordBearer(tokenUrl=f"{settings.API_GATEWAY_STAGE_PATH}/auth/login")
 
 
 def create_access_token(subject: Union[str, Any], expires_delta: Optional[timedelta] = None) -> str:

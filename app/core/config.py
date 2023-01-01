@@ -19,6 +19,7 @@ class Settings(BaseSettings):
     ]
     BASE_DIR_PATH: str = str(Path(__file__).parent.parent.absolute())
     DATABASE_URI: str = ""
+    API_GATEWAY_STAGE_PATH: str = ""
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     SECRET_KEY: str = "secret"
     LOGGER_CONFIG_PATH: str = os.path.join(BASE_DIR_PATH, "logger_config.yaml")
