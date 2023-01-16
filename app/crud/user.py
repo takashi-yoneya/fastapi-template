@@ -7,7 +7,15 @@ from app.core.auth import get_password_hash, verify_password
 from app.crud.base import CRUDBase
 
 
-class CRUDUser(CRUDBase[models.User, schemas.UserCreate, schemas.UserUpdate, schemas.UserResponse]):
+class CRUDUser(
+    CRUDBase[
+        models.User,
+        schemas.UserResponse,
+        schemas.UserCreate,
+        schemas.UserUpdate,
+        schemas.UserResponse,
+    ]
+):
     def get_by_email(self, db: Session, *, email: str) -> Optional[models.User]:
         return db.query(models.User).filter(models.User.email == email).first()
 
@@ -22,13 +30,17 @@ class CRUDUser(CRUDBase[models.User, schemas.UserCreate, schemas.UserUpdate, sch
         db.refresh(db_obj)
         return db_obj
 
-    def update(self, db: Session, *, db_obj: models.User, obj_in: schemas.UserUpdate) -> models.User:
+    def update(
+        self, db: Session, *, db_obj: models.User, obj_in: schemas.UserUpdate
+    ) -> models.User:
         if obj_in.password:
             hashed_password = get_password_hash(obj_in.password)
             db_obj.hashed_password = hashed_password
         return super().update(db, db_obj=db_obj, obj_in=obj_in)
 
-    def authenticate(self, db: Session, *, email: str, password: str) -> Optional[models.User]:
+    def authenticate(
+        self, db: Session, *, email: str, password: str
+    ) -> Optional[models.User]:
         user = self.get_by_email(db, email=email)
         if not user:
             return None
@@ -37,4 +49,8 @@ class CRUDUser(CRUDBase[models.User, schemas.UserCreate, schemas.UserUpdate, sch
         return user
 
 
-user = CRUDUser(models.User, schemas.UsersPagedResponse)
+user = CRUDUser(
+    models.User,
+    response_schema_class=schemas.UserResponse,
+    list_response_class=schemas.UsersPagedResponse,
+)

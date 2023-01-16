@@ -20,7 +20,9 @@ class JobCreate(BaseSchema):
     title: str
     description: Optional[str]
     data_type: Optional[int] = 0
-    _VALIDATION_REQUIRED_CONFIGS: dict[str, Any] = {"data_type": {"case": 1, "required_fields": ["description"]}}
+    _VALIDATION_REQUIRED_CONFIGS: dict[str, Any] = {
+        "data_type": {"case": 1, "required_fields": ["description"]}
+    }
 
     @root_validator
     def validate_description(cls, values: dict[str, Any]) -> dict[str, Any]:

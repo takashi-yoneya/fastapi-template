@@ -4,7 +4,9 @@ from typing import Any, Generic, List, Optional, Type, TypeVar
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
+from sqlalchemy.inspection import inspect
 from sqlalchemy.orm import Session, query
+from sqlalchemy.orm.properties import ColumnProperty
 
 from app import schemas
 from app.core.database import Base
@@ -19,9 +21,23 @@ ResponseSchemaType = TypeVar("ResponseSchemaType", bound=BaseModel)
 ListResponseSchemaType = TypeVar("ListResponseSchemaType", bound=BaseModel)
 
 
-class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType, ListResponseSchemaType]):
-    def __init__(self, model: Type[ModelType], list_response_class: Type[ListResponseSchemaType]):
+class CRUDBase(
+    Generic[
+        ModelType,
+        ResponseSchemaType,
+        CreateSchemaType,
+        UpdateSchemaType,
+        ListResponseSchemaType,
+    ]
+):
+    def __init__(
+        self,
+        model: Type[ModelType],
+        response_schema_class: Type[ResponseSchemaType],
+        list_response_class: Type[ListResponseSchemaType],
+    ):
         self.model = model
+        self.response_schema_class = response_schema_class
         self.list_response_class = list_response_class
 
     def get(
@@ -30,18 +46,22 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType, ListRespon
         id: Any,
         include_deleted: bool = False,
     ) -> Optional[ModelType]:
-        # for field in response_schema.dict():
+        # ResponseSchemaに含まれるfieldのみをsqlalchemyのselect区に指定することで、パフォーマンスを向上させる
+        schema_columns = list(schemas.TodoResponse.__fields__.keys())
+        mapper = inspect(self.model)
+        # ColumnPropertyのみを対象とする(relationshipはselect区に指定できないため)
+        select_columns = [
+            attr
+            for attr in mapper.attrs
+            if isinstance(attr, ColumnProperty) and attr.key in schema_columns
+        ]
+        query = db.query(*select_columns)
 
-        # for field in response_schema.dict():
-        #     if field in self.model.__dict__:
-        #         setattr(self.model, field, update_dict[field])
-        # if not select_query:
-        #     query = db.query(self.model)
-        # else:
-        #     query = db.query(*select_query)
-        query = db.query(self.model)
-
-        return query.filter(self.model.id == id).execution_options(include_deleted=include_deleted).first()
+        return (
+            query.filter(self.model.id == id)
+            .execution_options(include_deleted=include_deleted)
+            .first()
+        )
 
     def get_list(
         self,
@@ -96,10 +116,14 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType, ListRespon
 
         return db_obj
 
-    def update(self, db: Session, *, db_obj: ModelType, obj_in: UpdateSchemaType) -> ModelType:
+    def update(
+        self, db: Session, *, db_obj: ModelType, obj_in: UpdateSchemaType
+    ) -> ModelType:
         # obj_inでセットされたスキーマをmodelの各カラムにUpdate
         db_obj_dict = jsonable_encoder(db_obj)
-        update_dict = obj_in.dict(exclude_unset=True)  # exclude_unset=Trueとすることで、未指定のカラムはUpdateしない
+        update_dict = obj_in.dict(
+            exclude_unset=True
+        )  # exclude_unset=Trueとすることで、未指定のカラムはUpdateしない
         for field in db_obj_dict:
             if field in update_dict:
                 setattr(db_obj, field, update_dict[field])

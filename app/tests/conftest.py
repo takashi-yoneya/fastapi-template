@@ -85,7 +85,9 @@ def client() -> Generator:
 
 @pytest.fixture
 def auth_headers(client: TestClient, db: Session) -> Dict[str, str]:
-    return authentication_token_from_email(client=client, email=settings.TEST_USER_EMAIL, db=db)
+    return authentication_token_from_email(
+        client=client, email=settings.TEST_USER_EMAIL, db=db
+    )
 
 
 # def TestSession():

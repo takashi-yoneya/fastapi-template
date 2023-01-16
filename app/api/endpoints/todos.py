@@ -16,7 +16,9 @@ router = APIRouter()
 
 
 @router.get("/{id}", response_model=schemas.TodoResponse, operation_id="get_todo_by_id")
-def get_job(id: str, include_deleted: bool = False, db: Session = Depends(get_db)) -> schemas.TodoResponse:
+def get_job(
+    id: str, include_deleted: bool = False, db: Session = Depends(get_db)
+) -> schemas.TodoResponse:
     todo = crud.todo.get(db, id=id, include_deleted=include_deleted)
     if not todo:
         raise APIException(ErrorMessage.ID_NOT_FOUND)
@@ -38,7 +40,9 @@ def get_todos(
 
 
 @router.post("", response_model=schemas.TodoResponse, operation_id="create_todo")
-def create_todo(data_in: schemas.TodoCreate, db: Session = Depends(get_db)) -> schemas.TodoResponse:
+def create_todo(
+    data_in: schemas.TodoCreate, db: Session = Depends(get_db)
+) -> schemas.TodoResponse:
     return crud.todo.create(db, data_in)
 
 
@@ -54,7 +58,9 @@ def update_todo(
     return crud.todo.update(db, db_obj=todo, obj_in=data_in)
 
 
-@router.post("/{id}/tags", response_model=schemas.TodoResponse, operation_id="add_tags_to_todo")
+@router.post(
+    "/{id}/tags", response_model=schemas.TodoResponse, operation_id="add_tags_to_todo"
+)
 def add_tags_to_todo(
     id: str,
     tags_in: list[schemas.TagCreate],
@@ -67,7 +73,9 @@ def add_tags_to_todo(
     # return crud.todo.update(db, db_obj=todo, obj_in=data_in)
 
 
-@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT, operation_id="delete_todo")
+@router.delete(
+    "/{id}", status_code=status.HTTP_204_NO_CONTENT, operation_id="delete_todo"
+)
 def delete_todo(
     id: str,
     db: Session = Depends(get_db),

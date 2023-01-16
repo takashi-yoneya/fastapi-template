@@ -34,10 +34,9 @@
                     "cipher": []
                 }
             },
-            "connectionKey": "database.connections",
+            "connectionKey": "database",
             "name": "fastapi-db-local",
-            "tooltip": "Host: db, Port: 3306",
-            "index": 1
+            "tooltip": "Host: localhost, Port: 3307"
         }
     }
 }

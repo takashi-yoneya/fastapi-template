@@ -22,7 +22,9 @@ def get_count(db: Session = Depends(get_db)) -> List[models.Job]:
 
 
 @router.get("/{id}", response_model=schemas.JobResponse, operation_id="get_job_by_id")
-def get_job(id: str, include_deleted: bool = False, db: Session = Depends(get_db)) -> models.Job:
+def get_job(
+    id: str, include_deleted: bool = False, db: Session = Depends(get_db)
+) -> models.Job:
     job = crud.job.get(db, id=id, include_deleted=include_deleted)
     if not job:
         raise APIException(ErrorMessage.ID_NOT_FOUND)

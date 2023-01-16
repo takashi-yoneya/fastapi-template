@@ -10,7 +10,9 @@ from tests.utils.utils import random_email, random_lower_string
 from app.core.config import settings
 
 
-def user_authentication_headers(*, client: TestClient, email: str, password: str) -> Dict[str, str]:
+def user_authentication_headers(
+    *, client: TestClient, email: str, password: str
+) -> Dict[str, str]:
     data = {"username": email, "password": password}
 
     r = client.post("/login/access-token", data=data)
@@ -28,7 +30,9 @@ def create_random_user(db: Session) -> User:
     return user
 
 
-def authentication_token_from_email(*, client: TestClient, email: str, db: Session) -> Dict[str, str]:
+def authentication_token_from_email(
+    *, client: TestClient, email: str, db: Session
+) -> Dict[str, str]:
     """
     Return a valid token for the user with given email.
     If the user doesn't exist it is created first.
