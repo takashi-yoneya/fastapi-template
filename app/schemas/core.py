@@ -1,8 +1,10 @@
+from enum import Enum
 from typing import Any, Optional
 
 from fastapi import Query
 from humps import camel
 from pydantic import BaseModel, validator
+from sqlalchemy import desc
 
 
 def to_camel(string: str) -> str:
@@ -44,6 +46,7 @@ class PagingMeta(BaseSchema):
     current_page: int
     total_page_count: int
     total_data_count: int
+    per_page: int
 
 
 class PagingQueryIn(BaseSchema):
@@ -65,9 +68,28 @@ class PagingQueryIn(BaseSchema):
             else 0
         )
 
-    def set_paging_query(self, query: Any) -> Any:
+    def apply_to_query(self, query: Any) -> Any:
         offset = self.get_offset()
         return query.offset(offset).limit(self.per_page)
+
+
+class SortDirectionEnum(Enum):
+    asc: str = "asc"
+    desc: str = "desc"
+
+
+class SortQueryIn(BaseSchema):
+    sort_field: Optional[Any] = Query(None)
+    direction: SortDirectionEnum = Query(SortDirectionEnum.asc)
+
+    def apply_to_query(self, query: Any, order_by_clause: Optional[Any] = None) -> Any:
+        if not order_by_clause:
+            return query
+
+        if self.direction == SortDirectionEnum.desc:
+            return query.order_by(desc(order_by_clause))
+        else:
+            return query.order_by(order_by_clause)
 
 
 class FilterQueryIn(BaseSchema):

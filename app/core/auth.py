@@ -62,7 +62,7 @@ def get_current_user(
             status_code=status.HTTP_403_FORBIDDEN,
             error=ErrorMessage.CouldNotValidateCredentials,
         )
-    user = crud.user.get(db, id=token_data.sub)
+    user = crud.user.get_db_obj_by_id(db, id=token_data.sub)
     if not user:
         raise APIException(ErrorMessage.NOT_FOUND("User"))
     user_scopes = user.scopes.split(",") if user.scopes else []

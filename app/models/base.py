@@ -29,7 +29,7 @@ def _add_filtering_deleted_at(execute_state: Any) -> None:
     以下のようにすると、論理削除済のデータも含めて取得可能
     query(...).filter(...).execution_options(include_deleted=True)
     """
-    logger.info(execute_state)
+    # logger.info(execute_state)
     if (
         execute_state.is_select
         and not execute_state.is_column_load
@@ -44,4 +44,4 @@ def _add_filtering_deleted_at(execute_state: Any) -> None:
             )
         )
 
-        logger.info(execute_state.statement)
+        # logger.info(execute_state.statement)

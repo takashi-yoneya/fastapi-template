@@ -63,7 +63,7 @@ app.include_router(tasks.router, tags=["Tasks"], prefix="/tasks")
 if settings.DEBUG:
     app.add_middleware(
         DebugToolbarMiddleware,
-        panels=["core.database.SQLAlchemyPanel_"],
+        panels=["debug_toolbar.panels.sqlalchemy.SQLAlchemyPanel"],
     )
 
 

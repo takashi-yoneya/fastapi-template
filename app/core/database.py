@@ -1,7 +1,5 @@
 from typing import Generator
 
-from debug_toolbar.panels.sqlalchemy import SQLAlchemyPanel
-from fastapi import Request, Response
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, sessionmaker
@@ -12,35 +10,16 @@ from app.core.logger import get_logger
 logger = get_logger(__name__)
 
 Base = declarative_base()
-
 try:
-    # if settings.IS_DOCKER_UVICORN:
     engine = create_engine(
-        settings.DATABASE_URI,
+        settings.get_database_url(),
         connect_args={"auth_plugin": "mysql_native_password"},
         pool_pre_ping=True,
     )
     logger.info(engine)
-    # else:
-    # engine = create_engine(settings.DATABASE_URI, pool_pre_ping=True)
-
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    session_factory = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 except Exception as e:
-    import traceback
-
-    traceback.print_exc()
-    print(e)
-    print("DB connection failed")
-
-if settings.DEBUG:
-
-    class SQLAlchemyPanel_(SQLAlchemyPanel):
-        async def process_request(self, request: Request) -> Response:
-            self.register(engine)
-            try:
-                return await super().process_request(request)
-            finally:
-                self.unregister(engine)
+    logger.error(f"DB connection error. detail={e}")
 
 
 def get_db() -> Generator[Session, None, None]:
@@ -51,7 +30,7 @@ def get_db() -> Generator[Session, None, None]:
     """
     db = None
     try:
-        db = SessionLocal()
+        db = session_factory()
         yield db
         db.commit()
     except Exception:

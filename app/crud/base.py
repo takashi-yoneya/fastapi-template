@@ -1,11 +1,12 @@
 import datetime
 import math
-from typing import Any, Generic, List, Optional, Type, TypeVar
+from enum import Enum
+from typing import Any, Generic, List, Optional, Type, TypeVar, Union
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.inspection import inspect
-from sqlalchemy.orm import Session, query
+from sqlalchemy.orm import Session
 from sqlalchemy.orm.properties import ColumnProperty
 
 from app import schemas
@@ -40,14 +41,9 @@ class CRUDBase(
         self.response_schema_class = response_schema_class
         self.list_response_class = list_response_class
 
-    def get(
-        self,
-        db: Session,
-        id: Any,
-        include_deleted: bool = False,
-    ) -> Optional[ModelType]:
-        # ResponseSchemaに含まれるfieldのみをsqlalchemyのselect区に指定することで、パフォーマンスを向上させる
-        schema_columns = list(schemas.TodoResponse.__fields__.keys())
+    def _get_select_columns(self) -> list[ColumnProperty]:
+        """ResponseSchemaに含まれるfieldのみをsqlalchemyのselect用のobjectとして返す"""
+        schema_columns = list(self.response_schema_class.__fields__.keys())
         mapper = inspect(self.model)
         # ColumnPropertyのみを対象とする(relationshipはselect区に指定できないため)
         select_columns = [
@@ -55,61 +51,103 @@ class CRUDBase(
             for attr in mapper.attrs
             if isinstance(attr, ColumnProperty) and attr.key in schema_columns
         ]
-        query = db.query(*select_columns)
 
-        return (
-            query.filter(self.model.id == id)
+        return select_columns
+
+    def _filter_model_exists_fields(self, data_dict: dict[str, Any]) -> dict[str, Any]:
+        """data_dictを与え、modelに存在するfieldだけをfilterして返す"""
+        data_fields = list(data_dict.keys())
+        mapper = inspect(self.model)
+        exists_data_dict = {}
+        for attr in mapper.attrs:
+            if isinstance(attr, ColumnProperty) and attr.key in data_fields:
+                exists_data_dict[attr.key] = data_dict[attr.key]
+
+        return exists_data_dict
+
+    def _get_order_by_clause(
+        self, sort_field: Union[Any, Enum]
+    ) -> Optional[ColumnProperty]:
+        sort_field_value = (
+            sort_field.value if isinstance(sort_field, Enum) else sort_field
+        )
+        # ColumnPropertyのみを対象とする(relationshipはselect区に指定できないため)
+        mapper = inspect(self.model)
+        order_by_clause = [
+            attr
+            for attr in mapper.attrs
+            if isinstance(attr, ColumnProperty) and attr.key == sort_field_value
+        ]
+
+        return order_by_clause[0] if order_by_clause else None
+
+    def get_db_obj_by_id(
+        self,
+        db: Session,
+        id: Any,
+        include_deleted: bool = False,
+    ) -> Optional[ModelType]:
+        db_obj = (
+            db.query(self.model)
+            .filter(self.model.id == id)
             .execution_options(include_deleted=include_deleted)
             .first()
         )
+        return db_obj
 
-    def get_list(
+    def get_db_obj_list(
         self,
         db: Session,
-        filtered_query: Optional[query.Query] = None,
-        return_deleted_data: bool = False,
+        where_clause: list[Any] = [],
+        sort_query_in: Optional[schemas.SortQueryIn] = None,
+        include_deleted: bool = False,
     ) -> List[ModelType]:
-        if filtered_query:
-            query = filtered_query
-        else:
-            query = db.query(self.model)
+        query = db.query(self.model).filter(*where_clause)
+        if sort_query_in:
+            order_by_clause = self._get_order_by_clause(sort_query_in.sort_field)
+            query = sort_query_in.apply_to_query(query, order_by_clause=order_by_clause)
+        db_obj_list = query.execution_options(include_deleted=include_deleted).all()
 
-        return query.all()
+        return db_obj_list
 
     def get_paged_list(
         self,
         db: Session,
-        paging: PagingQueryIn,
-        filtered_query: Optional[query.Query] = None,
+        paging_query_in: PagingQueryIn,
+        where_clause: list[Any] = [],
+        sort_query_in: Optional[schemas.SortQueryIn] = None,
+        include_deleted: bool = False,
     ) -> ListResponseSchemaType:
         """
         Notes:
-            filtered_queryにフィルタ済のqueryを渡すとページングした結果を返す
-            return_deleted_data=Trueの場合は、削除フラグ=Trueのデータも返す
+            include_deleted=Trueの場合は、削除フラグ=Trueのデータも返す
         """
-        # offset = (page - 1) * per_page if page and page >= 1 else 0
+        total_count = db.query(self.model).filter(*where_clause).count()
 
-        if filtered_query:
-            query = filtered_query
-        else:
-            query = self.model
-
-        # list_response = self.list_response.copy()
-        total_data_count = query.count()
-        query = paging.set_paging_query(query)
+        select_columns = self._get_select_columns()
+        query = db.query(*select_columns).filter(*where_clause)
+        if sort_query_in:
+            order_by_clause = self._get_order_by_clause(sort_query_in.sort_field)
+            query = sort_query_in.apply_to_query(query, order_by_clause=order_by_clause)
+        query = paging_query_in.apply_to_query(query)
+        query = query.execution_options(include_deleted=include_deleted)
         data = query.all()
         meta = schemas.PagingMeta(
-            total_data_count=total_data_count,
-            current_page=paging.page,
-            total_page_count=int(math.ceil(total_data_count / paging.per_page)),
+            total_data_count=total_count,
+            current_page=paging_query_in.page,
+            total_page_count=int(math.ceil(total_count / paging_query_in.per_page)),
+            per_page=paging_query_in.per_page,
         )
         list_response = self.list_response_class(data=data, meta=meta)
+
         return list_response
 
-    def create(self, db: Session, obj_in: CreateSchemaType) -> ModelType:
+    def create(self, db: Session, create_schema: CreateSchemaType) -> ModelType:
         # by_alias=Falseにしないとalias側(CamenCase)が採用されてしまう
-        obj_in_data = jsonable_encoder(obj_in, by_alias=False)
-        db_obj = self.model(**obj_in_data)
+        create_dict = jsonable_encoder(create_schema, by_alias=False)
+        exists_create_dict = self._filter_model_exists_fields(create_dict)
+        db_obj = self.model(**exists_create_dict)
+        print(db_obj.__dict__)
         db.add(db_obj)
         db.flush()
         db.refresh(db_obj)
@@ -117,11 +155,11 @@ class CRUDBase(
         return db_obj
 
     def update(
-        self, db: Session, *, db_obj: ModelType, obj_in: UpdateSchemaType
+        self, db: Session, *, db_obj: ModelType, update_schema: UpdateSchemaType
     ) -> ModelType:
         # obj_inでセットされたスキーマをmodelの各カラムにUpdate
         db_obj_dict = jsonable_encoder(db_obj)
-        update_dict = obj_in.dict(
+        update_dict = update_schema.dict(
             exclude_unset=True
         )  # exclude_unset=Trueとすることで、未指定のカラムはUpdateしない
         for field in db_obj_dict:
@@ -137,6 +175,7 @@ class CRUDBase(
         if db_obj.deleted_at:
             raise APIException(ErrorMessage.ALREADY_DELETED)
         db_obj.deleted_at = datetime.datetime.now()
+        print(db_obj)
         db.add(db_obj)
         db.flush()
         db.refresh(db_obj)

@@ -36,6 +36,9 @@ class Settings(BaseSettings):
         "mysql+mysqlconnector://docker:docker@db/docker"  # Docker内部ネットワークで疎通する場合のURI
     )
 
+    def get_database_url(self) -> str:
+        return self.DATABASE_URI + "?charset=utf8mb4"
+
     class Config:
         env_file = ".env"
 

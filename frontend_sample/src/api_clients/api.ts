@@ -115,7 +115,27 @@ export interface PagingMeta {
    * @memberof PagingMeta
    */
   totalDataCount: number;
+  /**
+   *
+   * @type {number}
+   * @memberof PagingMeta
+   */
+  perPage: number;
 }
+/**
+ * An enumeration.
+ * @export
+ * @enum {string}
+ */
+
+export const SortDirectionEnum = {
+  Asc: "asc",
+  Desc: "desc",
+} as const;
+
+export type SortDirectionEnum =
+  typeof SortDirectionEnum[keyof typeof SortDirectionEnum];
+
 /**
  *
  * @export
@@ -239,13 +259,21 @@ export interface TodoResponse {
    * @memberof TodoResponse
    */
   updatedAt?: string;
-  /**
-   *
-   * @type {string}
-   * @memberof TodoResponse
-   */
-  deletedAt?: string;
 }
+/**
+ * An enumeration.
+ * @export
+ * @enum {string}
+ */
+
+export const TodoSortFieldEnum = {
+  CreatedAt: "created_at",
+  Title: "title",
+} as const;
+
+export type TodoSortFieldEnum =
+  typeof TodoSortFieldEnum[keyof typeof TodoSortFieldEnum];
+
 /**
  *
  * @export
@@ -1256,6 +1284,8 @@ export const TodosApiAxiosParamCreator = function (
      * @param {string} [q]
      * @param {number} [page]
      * @param {number} [perPage]
+     * @param {TodoSortFieldEnum} [sortField]
+     * @param {SortDirectionEnum} [direction]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -1263,6 +1293,8 @@ export const TodosApiAxiosParamCreator = function (
       q?: string,
       page?: number,
       perPage?: number,
+      sortField?: TodoSortFieldEnum,
+      direction?: SortDirectionEnum,
       options: AxiosRequestConfig = {}
     ): Promise<RequestArgs> => {
       const localVarPath = `/todos`;
@@ -1291,6 +1323,14 @@ export const TodosApiAxiosParamCreator = function (
 
       if (perPage !== undefined) {
         localVarQueryParameter["perPage"] = perPage;
+      }
+
+      if (sortField !== undefined) {
+        localVarQueryParameter["sortField"] = sortField;
+      }
+
+      if (direction !== undefined) {
+        localVarQueryParameter["direction"] = direction;
       }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -1436,7 +1476,7 @@ export const TodosApiFp = function (configuration?: Configuration) {
       id: string,
       options?: AxiosRequestConfig
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.deleteTodo(
         id,
@@ -1482,6 +1522,8 @@ export const TodosApiFp = function (configuration?: Configuration) {
      * @param {string} [q]
      * @param {number} [page]
      * @param {number} [perPage]
+     * @param {TodoSortFieldEnum} [sortField]
+     * @param {SortDirectionEnum} [direction]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -1489,6 +1531,8 @@ export const TodosApiFp = function (configuration?: Configuration) {
       q?: string,
       page?: number,
       perPage?: number,
+      sortField?: TodoSortFieldEnum,
+      direction?: SortDirectionEnum,
       options?: AxiosRequestConfig
     ): Promise<
       (
@@ -1500,6 +1544,8 @@ export const TodosApiFp = function (configuration?: Configuration) {
         q,
         page,
         perPage,
+        sortField,
+        direction,
         options
       );
       return createRequestFunction(
@@ -1589,7 +1635,7 @@ export const TodosApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteTodo(id: string, options?: any): AxiosPromise<void> {
+    deleteTodo(id: string, options?: any): AxiosPromise<any> {
       return localVarFp
         .deleteTodo(id, options)
         .then((request) => request(axios, basePath));
@@ -1617,6 +1663,8 @@ export const TodosApiFactory = function (
      * @param {string} [q]
      * @param {number} [page]
      * @param {number} [perPage]
+     * @param {TodoSortFieldEnum} [sortField]
+     * @param {SortDirectionEnum} [direction]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
@@ -1624,10 +1672,12 @@ export const TodosApiFactory = function (
       q?: string,
       page?: number,
       perPage?: number,
+      sortField?: TodoSortFieldEnum,
+      direction?: SortDirectionEnum,
       options?: any
     ): AxiosPromise<TodosPagedResponse> {
       return localVarFp
-        .getTodos(q, page, perPage, options)
+        .getTodos(q, page, perPage, sortField, direction, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1729,6 +1779,8 @@ export class TodosApi extends BaseAPI {
    * @param {string} [q]
    * @param {number} [page]
    * @param {number} [perPage]
+   * @param {TodoSortFieldEnum} [sortField]
+   * @param {SortDirectionEnum} [direction]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof TodosApi
@@ -1737,10 +1789,12 @@ export class TodosApi extends BaseAPI {
     q?: string,
     page?: number,
     perPage?: number,
+    sortField?: TodoSortFieldEnum,
+    direction?: SortDirectionEnum,
     options?: AxiosRequestConfig
   ) {
     return TodosApiFp(this.configuration)
-      .getTodos(q, page, perPage, options)
+      .getTodos(q, page, perPage, sortField, direction, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

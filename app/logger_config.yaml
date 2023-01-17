@@ -2,43 +2,45 @@ version: 1
 disable_existing_loggers: false
 
 formatters:
-    json:
-        format: "%(asctime)s %(name)s %(levelname)s  %(message)s %(filename)s %(module)s %(funcName)s %(lineno)d"
-        class: pythonjsonlogger.jsonlogger.JsonFormatter
+  json:
+    format: "%(asctime)s %(name)s %(levelname)s  %(message)s %(filename)s %(module)s %(funcName)s %(lineno)d"
+    class: pythonjsonlogger.jsonlogger.JsonFormatter
+  normal:
+    format: "%(asctime)s %(name)s %(levelname)s  %(message)s %(filename)s %(module)s %(funcName)s %(lineno)d"
 
 handlers:
-    console:
-        class: logging.StreamHandler
-        level: DEBUG
-        formatter: json
-        stream: ext://sys.stdout
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: normal # json形式にしたい場合はjsonと記述する
+    stream: ext://sys.stdout
 
 loggers:
-    backend:
-        level: INFO
-        handlers: [console]
-        propagate: false
-
-    gunicorn.error:
-        level: DEBUG
-        handlers: [console]
-        propagate: false
-
-    uvicorn.access:
-        level: INFO
-        handlers: [console]
-        propagate: false
-
-    sqlalchemy.engine:
-        level: INFO
-        handlers: [console]
-        propagate: false
-
-    alembic.runtime.migration:
-        level: INFO
-        handlers: [console]
-        propagate: false
-
-root:
+  backend:
     level: INFO
     handlers: [console]
+    propagate: false
+
+  gunicorn.error:
+    level: DEBUG
+    handlers: [console]
+    propagate: false
+
+  uvicorn.access:
+    level: INFO
+    handlers: [console]
+    propagate: false
+
+  sqlalchemy.engine:
+    level: INFO
+    handlers: [console]
+    propagate: false
+
+  alembic.runtime.migration:
+    level: INFO
+    handlers: [console]
+    propagate: false
+
+root:
+  level: INFO
+  handlers: [console]
