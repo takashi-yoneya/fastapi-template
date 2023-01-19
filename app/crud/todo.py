@@ -63,6 +63,7 @@ class CRUDTodo(
     # def get(self, db: Session, id: str, include_deleted: bool = False):
     #     schema_columns = list(schemas.TodoResponse.__fields__.keys())
 
+
 todo = CRUDTodo(
     models.Todo,
     response_schema_class=schemas.TodoResponse,

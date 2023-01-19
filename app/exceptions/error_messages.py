@@ -1,10 +1,13 @@
 from typing import Any, Optional
 
+from starlette import status
+
 
 class BaseMessage:
     """メッセージクラスのベース"""
 
     text: str
+    status_code: int = status.HTTP_400_BAD_REQUEST
 
     def __init__(self, param: Optional[Any] = None) -> None:
         self.param = param
@@ -25,6 +28,7 @@ class ErrorMessage:
 
     # 共通
     class INTERNAL_SERVER_ERROR(BaseMessage):
+        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
         text = "システムエラーが発生しました、管理者に問い合わせてください"
 
     class FAILURE_LOGIN(BaseMessage):
@@ -34,6 +38,7 @@ class ErrorMessage:
         text = "{}が見つかりません"
 
     class ID_NOT_FOUND(BaseMessage):
+        status_code = status.HTTP_404_NOT_FOUND
         text = "このidは見つかりません"
 
     class PARAM_IS_NOT_SET(BaseMessage):
@@ -53,6 +58,7 @@ class ErrorMessage:
         text = "現在のパスワードが間違っています"
 
     class INCORRECT_EMAIL_OR_PASSWORD(BaseMessage):
+        status_code = status.HTTP_403_FORBIDDEN
         text = "メールアドレスまたはパスワードが正しくありません"
 
     class PERMISSION_ERROR(BaseMessage):

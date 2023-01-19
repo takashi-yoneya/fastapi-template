@@ -14,17 +14,8 @@ class APIException(HTTPException):
         status_code: int = default_status_code,
         headers: Optional[Dict[str, Any]] = None,
     ) -> None:
-        self.status_code = status_code
-        # self.detail =
         self.headers = headers
 
-        # msg_paramsにセットしたパラメータをtextに展開する
-        # try:
-        #     error_code = error_obj
-        #     error_obj.text
-        #     message = error["error_code"].text.format(error["msg_param"])
-        # except:
-        #     message = error["error_code"].text
         try:
             error_obj = error()
         except Exception:
@@ -34,6 +25,11 @@ class APIException(HTTPException):
             message = error_obj.text.format(error_obj.param)
         except Exception:
             message = error_obj.text
+
+        try:
+            self.status_code = error_obj.status_code
+        except Exception:
+            self.status_code = status_code
 
         self.detail = {"error_code": str(error_obj), "error_msg": message}
 
