@@ -65,4 +65,5 @@ class ErrorMessage:
         text = "実行権限がありません"
 
     class CouldNotValidateCredentials(BaseMessage):
+        status_code = status.HTTP_403_FORBIDDEN
         text = "認証エラー"

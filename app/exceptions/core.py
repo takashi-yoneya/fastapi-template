@@ -15,7 +15,6 @@ class APIException(HTTPException):
         headers: Optional[Dict[str, Any]] = None,
     ) -> None:
         self.headers = headers
-
         try:
             error_obj = error()
         except Exception:
@@ -32,5 +31,5 @@ class APIException(HTTPException):
             self.status_code = status_code
 
         self.detail = {"error_code": str(error_obj), "error_msg": message}
-
+        print(self.detail)
         super().__init__(self.status_code, self.detail)

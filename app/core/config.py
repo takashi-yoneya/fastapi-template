@@ -18,23 +18,14 @@ class Settings(BaseSettings):
         "http://localhost:3333",
     ]
     BASE_DIR_PATH: str = str(Path(__file__).parent.parent.absolute())
+    ROOT_DIR_PATH: str = str(Path(__file__).parent.parent.parent.absolute())
     DATABASE_URI: str = ""
     API_GATEWAY_STAGE_PATH: str = ""
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     SECRET_KEY: str = "secret"
     LOGGER_CONFIG_PATH: str = os.path.join(BASE_DIR_PATH, "logger_config.yaml")
     SENTRY_SDK_DNS: str = ""
-
-    TEST_USER_EMAIL: str = "test-user@example.com"
-    TEST_USER_PASSWORD: str = "test-user"
-    TEST_DATABASE_URI: str = ""
-    TEST_SQL_DATA_PATH: str = os.path.join(
-        BASE_DIR_PATH, "tests", "test_data", "dump.sql.gz"
-    )
-
-    DOCKER_DATABASE_URI: str = (
-        "mysql+mysqlconnector://docker:docker@db/docker"  # Docker内部ネットワークで疎通する場合のURI
-    )
+    MIGRATIONS_DIR_PATH: str = os.path.join(ROOT_DIR_PATH, "alembic")
 
     def get_database_url(self) -> str:
         return self.DATABASE_URI + "?charset=utf8mb4"

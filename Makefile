@@ -34,3 +34,7 @@ export-requirements-txt:
 .PHONY: export-requirements-dev-txt
 export-requirements-dev-txt:
 	poetry export -f requirements.txt --output requirements-dev.txt --dev
+
+.PHONY: test
+test:
+	docker compose run --rm web bash -c "poe test"

@@ -21,7 +21,7 @@ logger = get_logger(__name__)
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 ALGORITHM = "HS256"
 reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.API_GATEWAY_STAGE_PATH}/auth/login"
+    tokenUrl=f"{settings.API_GATEWAY_STAGE_PATH}/auth/login", auto_error=False
 )
 
 
@@ -52,6 +52,10 @@ def get_current_user(
     db: Session = Depends(get_db),
     token: str = Depends(reusable_oauth2),
 ) -> models.User:
+    if not token:
+        # raise HTTPException(status_code=403)
+        raise APIException(ErrorMessage.CouldNotValidateCredentials)
+
     try:
         logger.info(token)
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
@@ -59,8 +63,7 @@ def get_current_user(
         token_data = schemas.TokenPayload(**payload)
     except (jwt.JWTError, ValidationError):
         raise APIException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            error=ErrorMessage.CouldNotValidateCredentials,
+            ErrorMessage.CouldNotValidateCredentials,
         )
     user = crud.user.get_db_obj_by_id(db, id=token_data.sub)
     if not user:
