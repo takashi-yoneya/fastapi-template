@@ -104,28 +104,28 @@ class BaseSchema(BaseModel):
         allow_population_by_field_name = True
 ```
 
-## OpenAPI Generatorを使用してバックエンドの型定義をフロントエンドでも使用する
+## OpenAPI Generator を使用してバックエンドの型定義をフロントエンドでも使用する
 
-FastAPIを使用するとエンドポイントを作成した段階でopenapi.jsonが自動生成されます。
+FastAPI を使用するとエンドポイントを作成した段階で openapi.json が自動生成されます。
 
-OpenAPI-Generatorは、このopenapi.jsonを読み込んで、フロントエンド用の型定義やAPI呼び出し用コードを自動生成する仕組みです。
+OpenAPI-Generator は、この openapi.json を読み込んで、フロントエンド用の型定義や API 呼び出し用コードを自動生成する仕組みです。
 
-docker-compose内で定義しており、docker compose upで実行される他、```make openapi-generator```を実行するとopenapi-generatorだけを実行できます。
+docker-compose 内で定義しており、docker compose up で実行される他、`make openapi-generator`を実行すると openapi-generator だけを実行できます。
 
-生成されたコードは、```/fontend_sample/src/api_clients```に格納されます。(-o オプションで変更可能)
+生成されたコードは、`/fontend_sample/src/api_clients`に格納されます。(-o オプションで変更可能)
 
 ```yml
-  # openapiのclient用のコードを自動生成するコンテナ
-  openapi-generator:
-    image: openapitools/openapi-generator-cli
-    depends_on:
-      web:
-        condition: service_healthy
-    volumes:
-      - ./frontend_sample:/fontend_sample
-    command: generate -i http://web/openapi.json -g typescript-axios -o /fontend_sample/src/api_clients --skip-validate-spec
-    networks:
-      - fastapi_network
+# openapiのclient用のコードを自動生成するコンテナ
+openapi-generator:
+  image: openapitools/openapi-generator-cli
+  depends_on:
+    web:
+      condition: service_healthy
+  volumes:
+    - ./frontend_sample:/fontend_sample
+  command: generate -i http://web/openapi.json -g typescript-axios -o /fontend_sample/src/api_clients --skip-validate-spec
+  networks:
+    - fastapi_network
 ```
 
 ## バッチ処理(Batch)
@@ -240,8 +240,127 @@ root:
 
 tests/ 配下に、テスト関連の処理を、まとめています。
 
-テスト関数の実行毎に DB をクリーンするため、ステートレスなテストが実行できます。
-tests/test_data/ 配下でテスト用のデータを定義してください。
+実行時は、`make test`で実行できます。個々のテストケースを実行する場合は`make docker-run`でコンテナに入った後に`pytest tests/any/test/path.py`のようにファイルやディレクトリを指定して実行できます。
+
+pytest.fixture を使用して、テスト関数毎に DB の初期化処理を実施しているため、毎回クリーンな DB を使用してステートレスなテストが可能です。
+
+DB サーバーは docker で起動する DB コンテナを共用しますが、同じデータベースを使用してしまうと、テスト時にデータがクリアされてしまうので、別名のデータベースを作成しています。
+
+pytest では conftest.py に記述した内容は自動的に読み込まれるため、conftest.py にテストの前処理を記述しています。
+
+tests/conftest.py には、テスト全体で使用する設定の定義や DB や HTTP クライアントの定義を行っていおます。
+
+conftest.py は実行するテストファイルのある階層とそれより上の階層にあるものしか実行されないため、以下の例で test_todos.py を実行した場合は、`tests/todos/conftest.py` と `tests/conftest.py` のみが実行されます。
+
+```
+test/
+  conftest.py
+  -- todos/
+   -- conftest.py
+   -- test_todos.py
+  -- any-test/
+   -- conftest.py
+   -- test_any-test.py
+```
+
+この仕様を活かして、todos/などの個々のテストケースのディレクトリ配下の conftest.py では、以下のように対象のテストケースのみで使用するデータのインポートを定義しています。
+
+```python
+@pytest.fixture
+def data_set(db: Session):
+    insert_todos(db)
+
+
+def insert_todos(db: Session):
+    now = datetime.datetime.now()
+    data = [
+        models.Todo(
+            id=str(i),
+            title=f"test-title-{i}",
+            description=f"test-description-{i}",
+            created_at=now - datetime.timedelta(days=i),
+        )
+        for i in range(1, 25)
+    ]
+    db.add_all(data)
+    db.commit()
+```
+
+fixture で定義した data_set は、以下のようにテスト関数の引数に指定することで、テスト関数の前提処理として実行することができます。
+
+引数に、`authed_client: Client`を指定することで、ログイン認証済の HTTP クライアントが取得できます。`client: Client`を指定した場合は、未認証の HTTP クライアントが取得できます。
+
+API エンドポイント経由のテストではなく、db セッションを直接指定するテストの場合は、`db: Session`を引数に指定することで、テスト用の db セッションを取得できます。
+
+```python
+    def test_get_by_id(
+        self,
+        authed_client: Client,
+        id: str,
+        expected_status: int,
+        expected_data: Optional[dict],
+        expected_error: Optional[dict],
+        data_set: None, # <-- here
+    ) -> None:
+        self.assert_get_by_id(
+            client=authed_client,
+            id=id,
+            expected_status=expected_status,
+            expected_data=expected_data,
+        )
+```
+
+```tests/base.py```にAPIテスト用のベースClassが定義されているので、これを継承することで、簡単にテスト関数を構築することができます。
+
+以下の例では、TestBaseクラスを継承して、TestTodosクラスを作成しています。ENDPOINT_URIにテスト対象のAPIエンドポイントのURIを指定することで、CRUD全体で使用できます。
+
+pytestのmarametrizeを使用しており、１つのテスト関数で複数のテストケースを定義できます。
+
+
+
+```python
+class TestTodos(TestBase):
+    ENDPOINT_URI = "/todos"
+
+    """create
+    """
+
+    _params_create_todo = {
+        "success": (
+            TodoCreate(
+                title="test-create-title", description="test-create-description"
+            ).dict(by_alias=True),
+            status.HTTP_200_OK,
+            dict(title="test-create-title", description="test-create-description"),
+            None,
+        ),
+    }
+
+    @pytest.mark.parametrize(
+        [
+            "data_in",
+            "expected_status",
+            "expected_data",
+            "expected_error",
+        ],
+        list(_params_create_todo.values()),
+        ids=list(_params_create_todo.keys()),
+    )
+    def test_create(
+        self,
+        authed_client: Client,
+        data_in: dict,
+        expected_status: int,
+        expected_data: Optional[dict],
+        expected_error: Optional[dict],
+    ) -> None:
+        self.assert_create(
+            client=authed_client,
+            data_in=data_in,
+            expected_status=expected_status,
+            expected_data=expected_data,
+        )
+```
 
 ## ログの集中管理(Sentry log management)
 
@@ -360,16 +479,16 @@ http://localhost:8889/docs
 
 ## フロントエンドサンプル(Next.js)
 
-フロントエンドからAPIを呼び出すサンプルを```/fontend_sample```に記述しています。
+フロントエンドから API を呼び出すサンプルを`/fontend_sample`に記述しています。
 
-以下のコマンドでmoduleをインストールできます。
+以下のコマンドで module をインストールできます。
 
 ```bash
 cd /fontend_sample
 npm ci
 ```
 
-以下のコマンドで、Nextサーバーを立ち上げることができます。
+以下のコマンドで、Next サーバーを立ち上げることができます。
 
 ```bash
 npm run dev
@@ -378,7 +497,6 @@ npm run dev
 ```
 http://localhost:3000
 ```
-
 
 ## poe タブ入力補完設定(Completion)
 
