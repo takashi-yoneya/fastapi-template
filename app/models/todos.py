@@ -1,37 +1,21 @@
-from sqlalchemy import (
-    Column,
-    DateTime,
-    ForeignKey,
-    Integer,
-    String,
-    Table,
-    Text,
-    UniqueConstraint,
-)
-from sqlalchemy.orm import relationship
+from datetime import datetime
 
-from app.core.database import Base
+from sqlalchemy import DateTime, String, Text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from . import ModelBase
-
-todos_tags = Table(
-    "todos_tags",
-    Base.metadata,
-    Column("id", Integer, autoincrement=True, primary_key=True),
-    Column("todo_id", ForeignKey("todos.id"), index=True),
-    Column("tag_id", ForeignKey("tags.id"), index=True),
-    UniqueConstraint("todo_id", "tag_id", name="ix_todos_tags_todo_id_tag_id"),
-)
+from app.models.base import Base, ModelBaseMixin
 
 
-class Todo(Base, ModelBase):
+class Todo(ModelBaseMixin, Base):
 
     __tablename__ = "todos"
     mysql_charset = ("utf8mb4",)
     mysql_collate = "utf8mb4_unicode_ci"
 
-    title = Column(String(100), index=True)
-    description = Column(Text)
-    completed_at = Column(DateTime)
+    title: Mapped[str] = mapped_column(String(100), index=True)
+    description: Mapped[str] = mapped_column(Text)
+    completed_at: Mapped[datetime] = mapped_column(DateTime)
 
-    tags = relationship("Tag", secondary=todos_tags, backref="todos")
+    tags: Mapped[list] = relationship(
+        "Tag", secondary="todos_tags", back_populates="todos"
+    )

@@ -30,13 +30,13 @@ class CRUDUser(
         db.refresh(db_obj)
         return db_obj
 
-    def update(
+    def update(  # type: ignore[override]
         self, db: Session, *, db_obj: models.User, obj_in: schemas.UserUpdate
     ) -> models.User:
         if obj_in.password:
             hashed_password = get_password_hash(obj_in.password)
             db_obj.hashed_password = hashed_password
-        return super().update(db, db_obj=db_obj, obj_in=obj_in)
+        return super().update(db, db_obj=db_obj, update_schema=obj_in)
 
     def authenticate(
         self, db: Session, *, email: str, password: str

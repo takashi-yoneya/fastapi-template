@@ -17,7 +17,7 @@ class CRUDTodo(
         schemas.TodosPagedResponse,
     ]
 ):
-    def get_paged_list(
+    def get_paged_list(  # type: ignore[override]
         self,
         db: Session,
         paging_query_in: schemas.PagingQueryIn,

@@ -57,37 +57,6 @@ export interface HTTPValidationError {
 /**
  *
  * @export
- * @interface JobResponse
- */
-export interface JobResponse {
-  /**
-   *
-   * @type {string}
-   * @memberof JobResponse
-   */
-  id: string;
-  /**
-   *
-   * @type {string}
-   * @memberof JobResponse
-   */
-  title?: string;
-  /**
-   *
-   * @type {Array<string>}
-   * @memberof JobResponse
-   */
-  hashtags?: Array<string>;
-  /**
-   *
-   * @type {string}
-   * @memberof JobResponse
-   */
-  deletedAt?: string;
-}
-/**
- *
- * @export
  * @interface LocationInner
  */
 export interface LocationInner {}
@@ -392,12 +361,6 @@ export interface UserResponse {
    * @memberof UserResponse
    */
   emailVerified: boolean;
-  /**
-   *
-   * @type {Array<JobResponse>}
-   * @memberof UserResponse
-   */
-  jobs?: Array<JobResponse>;
 }
 /**
  *

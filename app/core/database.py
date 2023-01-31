@@ -1,20 +1,21 @@
 from typing import Generator
 
 from sqlalchemy import MetaData, create_engine
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.sql import text
 
 from app.core.config import settings
 from app.core.logger import get_logger
 
 logger = get_logger(__name__)
 
-Base = declarative_base()
+
 try:
     engine = create_engine(
         settings.get_database_url(),
         connect_args={"auth_plugin": "mysql_native_password"},
         pool_pre_ping=True,
+        echo=False,
     )
     logger.info(engine)
     session_factory = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -54,13 +55,14 @@ def drop_all_tables() -> None:
     metadata = MetaData()
     metadata.reflect(bind=engine)
 
-    # 外部キーの制御を一時的に無効化
-    engine.execute("SET FOREIGN_KEY_CHECKS = 0")
+    with engine.connect() as conn:
+        # 外部キーの制御を一時的に無効化
+        conn.execute(text("SET FOREIGN_KEY_CHECKS = 0"))
 
-    # 全テーブルを削除
-    for table in metadata.tables:
-        engine.execute(f"DROP TABLE {table} CASCADE")
+        # 全テーブルを削除
+        for table in metadata.tables:
+            conn.execute(text(f"DROP TABLE {table} CASCADE"))
 
-    # 外部キーの制御を有効化
-    engine.execute("SET FOREIGN_KEY_CHECKS = 1")
-    logger.info("end: drop_all_tables")
+        # 外部キーの制御を有効化
+        conn.execute(text("SET FOREIGN_KEY_CHECKS = 1"))
+        logger.info("end: drop_all_tables")

@@ -1,5 +1,4 @@
 from .core import BaseSchema, PagingMeta, PagingQueryIn, SortQueryIn
-from .job import JobCreate, JobResponse, JobsPagedResponse, JobUpdate
 from .language_analyzer import AnalyzedLanguage, AnalyzedlanguageToken
 from .request_info import RequestInfoResponse
 from .tag import TagCreate, TagResponse, TagsPagedResponse, TagUpdate

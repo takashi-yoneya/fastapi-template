@@ -7,14 +7,14 @@ from tests.testing_utils import assert_dict_part
 
 
 class TestBase:
-    ENDPOINT_URI: str = ...
+    ENDPOINT_URI: str = ""
 
     def assert_create(
         self,
         client: Client,
-        data_in: dict,
+        data_in: dict[str, Any],
         expected_status: int,
-        expected_data: Optional[dict],
+        expected_data: Optional[dict[str, Any]],
     ):
         res = client.post(self.ENDPOINT_URI, json=data_in)
         assert res.status_code == expected_status
@@ -26,9 +26,9 @@ class TestBase:
         self,
         client: Client,
         id: str,
-        data_in: dict,
+        data_in: dict[str, Any],
         expected_status: int,
-        expected_data: Optional[dict],
+        expected_data: Optional[dict[str, Any]],
     ):
         res = client.patch(f"{self.ENDPOINT_URI}/{id}", json=data_in)
         assert res.status_code == expected_status
@@ -41,7 +41,7 @@ class TestBase:
         client: Client,
         id: str,
         expected_status: int,
-        expected_data: Optional[dict],
+        expected_data: Optional[dict[str, Any]],
     ):
         res = client.get(f"{self.ENDPOINT_URI}/{id}")
         assert res.status_code == expected_status
@@ -54,8 +54,8 @@ class TestBase:
         client: Client,
         params: dict[str, Any],
         expected_status: int,
-        expected_first_data: dict,
-        expected_paging_meta: dict,
+        expected_first_data: dict[str, Any],
+        expected_paging_meta: dict[str, Any],
     ):
         res = client.get(self.ENDPOINT_URI, params=params)
         assert res.status_code == expected_status

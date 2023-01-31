@@ -1,5 +1,4 @@
-from .base import ModelBase
-from .jobs import Job
 from .tags import Tag
 from .todos import Todo
+from .todos_tags import TodoTag
 from .users import User

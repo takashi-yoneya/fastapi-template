@@ -92,7 +92,10 @@ def engine(
 ):
     """fixture: db-engineの作成およびmigrate"""
     logger.debug("fixture:engine")
-    uri = f"mysql://{settings.TEST_DB_USER}:@{settings.TEST_DB_HOST}:{settings.TEST_DB_PORT}/{settings.TEST_DB_NAME}?charset=utf8mb4"
+    uri = (
+        f"mysql://{settings.TEST_DB_USER}:"
+        f"@{settings.TEST_DB_HOST}:{settings.TEST_DB_PORT}/{settings.TEST_DB_NAME}?charset=utf8mb4"
+    )
     settings.DATABASE_URI = uri
     engine = create_engine(uri, echo=False, poolclass=NullPool)
 

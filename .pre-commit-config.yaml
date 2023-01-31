@@ -35,8 +35,8 @@ repos:
     rev: v0.942
     hooks:
       - id: mypy
-        exclude: ^app/tests/|^alembic/
-        additional_dependencies: [pydantic, sqlalchemy-stubs==0.4, types-PyYAML==6.0.7]
+        exclude: ^tests/|^alembic/
+        additional_dependencies: [pydantic, sqlalchemy, types-PyYAML==6.0.7]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.2.0

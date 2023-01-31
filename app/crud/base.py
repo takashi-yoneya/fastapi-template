@@ -10,9 +10,9 @@ from sqlalchemy.orm import Session
 from sqlalchemy.orm.properties import ColumnProperty
 
 from app import schemas
-from app.core.database import Base
 from app.exceptions.core import APIException
 from app.exceptions.error_messages import ErrorMessage
+from app.models.base import Base
 from app.schemas.core import PagingQueryIn
 
 ModelType = TypeVar("ModelType", bound=Base)

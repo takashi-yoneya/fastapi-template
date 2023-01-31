@@ -24,6 +24,3 @@ COPY ./pyproject.toml ./poetry.lock /backend/
 RUN poetry install --no-root
 # poe scriptsのcompletionを設定
 RUN poe _bash_completion >> /root/.bashrc
-
-# 環境毎の差異に対応するため、uvicornの起動は、docker-composeやtask-definitionで行う
-CMD ["app.main.handler"]

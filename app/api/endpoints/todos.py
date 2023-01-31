@@ -41,10 +41,7 @@ def get_todos(
 def create_todo(
     data_in: schemas.TodoCreate, db: Session = Depends(get_db)
 ) -> schemas.TodoResponse:
-    try:
-        return crud.todo.create(db, data_in)
-    except Exception as e:
-        logger.exception(e)
+    return crud.todo.create(db, data_in)
 
 
 @router.patch("/{id}", response_model=schemas.TodoResponse, operation_id="update_todo")
@@ -56,10 +53,8 @@ def update_todo(
     todo = crud.todo.get_db_obj_by_id(db, id=id)
     if not todo:
         raise APIException(ErrorMessage.ID_NOT_FOUND)
-    try:
-        return crud.todo.update(db, db_obj=todo, update_schema=data_in)
-    except Exception as e:
-        logger.error(e)
+
+    return crud.todo.update(db, db_obj=todo, update_schema=data_in)
 
 
 @router.post(
@@ -70,11 +65,10 @@ def add_tags_to_todo(
     tags_in: list[schemas.TagCreate],
     db: Session = Depends(get_db),
 ) -> schemas.TodoResponse:
-    todo = crud.todo.get(db, id=id)
+    todo = crud.todo.get_db_obj_by_id(db, id=id)
     if not todo:
         raise APIException(ErrorMessage.ID_NOT_FOUND)
     return crud.todo.add_tags_to_todo(db, todo=todo, tags_in=tags_in)
-    # return crud.todo.update(db, db_obj=todo, obj_in=data_in)
 
 
 @router.delete("/{id}", status_code=status.HTTP_200_OK, operation_id="delete_todo")

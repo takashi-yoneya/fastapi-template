@@ -44,6 +44,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    environment:
+      SQLALCHEMY_WARN_20: 1
     healthcheck:
       test: "curl -f http://localhost:80/docs || exit 1"
       interval: 5s

@@ -23,6 +23,10 @@ makemigrations:
 migrate:
 	docker compose run --rm web bash -c "poe migrate"
 
+.PHONY: drop-all-tables
+drop-all-tables:
+	docker compose run --rm web bash -c "poe drop-all-tables"
+
 .PHONY: pre-commit-all
 pre-commit-all:
 	pre-commit run --all-files

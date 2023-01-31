@@ -21,20 +21,20 @@ loggers:
     handlers: [console]
     propagate: false
 
-  gunicorn.error:
-    level: DEBUG
-    handlers: [console]
-    propagate: false
+  # gunicorn.error:
+  #   level: DEBUG
+  #   handlers: [console]
+  #   propagate: false
 
-  uvicorn.access:
-    level: INFO
-    handlers: [console]
-    propagate: false
+  # uvicorn.access:
+  #   level: INFO
+  #   handlers: [console]
+  #   propagate: false
 
-  sqlalchemy.engine:
-    level: INFO
-    handlers: [console]
-    propagate: false
+  # sqlalchemy.engine:
+  #   level: DEBUG
+  #   handlers: [console]
+  #   propagate: false
 
   alembic.runtime.migration:
     level: INFO

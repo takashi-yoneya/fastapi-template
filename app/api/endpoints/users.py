@@ -23,7 +23,7 @@ def get_user_me(
     dependencies=[Security(get_current_user, scopes=["admin"])],
 )
 def get_user(id: str, db: Session = Depends(get_db)) -> models.User:
-    user = crud.user.get(db, id=id)
+    user = crud.user.get_db_obj_by_id(db, id=id)
     if not user:
         raise APIException(ErrorMessage.ID_NOT_FOUND)
     return user

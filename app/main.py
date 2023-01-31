@@ -1,4 +1,5 @@
 import logging
+import os
 
 import sentry_sdk
 from debug_toolbar.middleware import DebugToolbarMiddleware
@@ -11,10 +12,13 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.api.endpoints import auth, tasks, todos, users
 from app.core.config import settings
-from app.core.logger import get_logger, init_gunicorn_uvicorn_logger
+from app.core.logger import get_logger
+
+os.environ["SQLALCHEMY_WARN_20"] = "1"
 
 logger = get_logger(__name__)
-init_gunicorn_uvicorn_logger(settings.LOGGER_CONFIG_PATH)
+# init_gunicorn_uvicorn_logger(settings.LOGGER_CONFIG_PATH)
+
 
 sentry_logging = LoggingIntegration(level=logging.INFO, event_level=logging.ERROR)
 
@@ -55,10 +59,7 @@ def get_info() -> dict[str, str]:
 app.include_router(auth.router, tags=["Auth"], prefix="/auth")
 app.include_router(users.router, tags=["Users"], prefix="/users")
 app.include_router(todos.router, tags=["Todos"], prefix="/todos")
-# app.include_router(jobs.router, tags=["Jobs"], prefix="/jobs")
-# app.include_router(categories.router, tags=["Categories(カテゴリー)"], prefix="/categories")
 app.include_router(tasks.router, tags=["Tasks"], prefix="/tasks")
-# app.include_router(develop.router, tags=["Develop"], prefix="/develop")
 
 if settings.DEBUG:
     app.add_middleware(

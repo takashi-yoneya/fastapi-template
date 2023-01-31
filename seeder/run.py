@@ -33,7 +33,7 @@ def drop_all_tables() -> None:
 def import_seed() -> None:
     logger.info("start: import_seed")
     seeds_json_files = list(Path(__file__).parent.glob("seeds_json/*.json"))
-    db: Session = database.SessionLocal()
+    db: Session = database.session_factory()
     try:
         truncate_tables(db)
 
