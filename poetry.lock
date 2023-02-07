@@ -1,4 +1,19 @@
 [[package]]
+name = "aiomysql"
+version = "0.1.1"
+description = "MySQL driver for asyncio."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+PyMySQL = ">=1.0"
+
+[package.extras]
+sa = ["sqlalchemy (>=1.0,<1.4)"]
+rsa = ["PyMySQL[rsa] (>=1.0)"]
+
+[[package]]
 name = "alembic"
 version = "1.8.1"
 description = "A database migration tool for SQLAlchemy."
@@ -936,6 +951,18 @@ python-versions = ">=3.7"
 jupyter = ["ipython"]
 
 [[package]]
+name = "pymysql"
+version = "1.0.2"
+description = "Pure Python MySQL Driver"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.extras]
+ed25519 = ["PyNaCl (>=1.4.0)"]
+rsa = ["cryptography"]
+
+[[package]]
 name = "pyparsing"
 version = "3.0.9"
 description = "pyparsing module - Classes and methods to define and execute parsing grammars"
@@ -965,6 +992,21 @@ tomli = ">=1.0.0"
 
 [package.extras]
 testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "xmlschema"]
+
+[[package]]
+name = "pytest-asyncio"
+version = "0.20.3"
+description = "Pytest support for asyncio"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+pytest = ">=6.1.0"
+
+[package.extras]
+docs = ["sphinx (>=5.3)", "sphinx-rtd-theme (>=1.0)"]
+testing = ["coverage (>=6.2)", "hypothesis (>=5.7.1)", "flaky (>=3.5.0)", "mypy (>=0.931)", "pytest-trio (>=0.7.0)"]
 
 [[package]]
 name = "pytest-mysql"
@@ -1430,9 +1472,10 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9.12"
-content-hash = "4214eb10af080d8caa0672fc1d129cfcc81c564a334896b9c18bc056b2ee051a"
+content-hash = "ce3b302828c2f67776bf2bc272adada25f0a16918a275d0069f036a30a7e4190"
 
 [metadata.files]
+aiomysql = []
 alembic = []
 anyio = [
     {file = "anyio-3.6.1-py3-none-any.whl", hash = "sha256:cb29b9c70620506a9a8f87a309591713446953302d7d995344d0d7c6c0c9a7be"},
@@ -1737,11 +1780,16 @@ pycparser = [
 pydantic = []
 pyflakes = []
 pyinstrument = []
+pymysql = [
+    {file = "PyMySQL-1.0.2-py3-none-any.whl", hash = "sha256:41fc3a0c5013d5f039639442321185532e3e2c8924687abe6537de157d403641"},
+    {file = "PyMySQL-1.0.2.tar.gz", hash = "sha256:816927a350f38d56072aeca5dfb10221fe1dc653745853d30a216637f5d7ad36"},
+]
 pyparsing = [
     {file = "pyparsing-3.0.9-py3-none-any.whl", hash = "sha256:5026bae9a10eeaefb61dab2f09052b9f4307d44aee4eda64b309723d8d206bbc"},
     {file = "pyparsing-3.0.9.tar.gz", hash = "sha256:2b020ecf7d21b687f219b71ecad3631f644a47f01403fa1d1036b0c6416d70fb"},
 ]
 pytest = []
+pytest-asyncio = []
 pytest-mysql = []
 python-dotenv = [
     {file = "python-dotenv-0.20.0.tar.gz", hash = "sha256:b7e3b04a59693c42c36f9ab1cc2acc46fa5df8c78e178fc33a8d4cd05c8d498f"},

@@ -22,7 +22,7 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 # .envにセットされたDB設定を使用
 uri = config.get_main_option("sqlalchemy.url")
-config.set_main_option("sqlalchemy.url", uri or settings.DATABASE_URI)
+config.set_main_option("sqlalchemy.url", uri or settings.get_database_url())
 
 target_metadata = Base.metadata
 

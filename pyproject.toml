@@ -35,6 +35,8 @@ mangum = "^0.17.0"
 pytest-mysql = "^2.3.1"
 httpx = "^0.23.3"
 SQLAlchemy = {extras = ["mypy"], version = "^2.0.0"}
+aiomysql = "^0.1.1"
+pytest-asyncio = "^0.20.3"
 
 [tool.poetry.dev-dependencies]
 locust = "^2.8.5"
@@ -60,14 +62,6 @@ multi_line_output = 3
 include_trailing_comma = true
 force_grid_wrap = 0
 
-
-
-# [tool.mypy]
-# python_version = "3.9"
-# plugins = "pydantic.mypy, sqlmypy"
-# ignore_missing_imports = true
-# disallow_untyped_defs = true
-# exclude = "alembic/|tests/"
 
 [tool.poe.tasks]
 test = {"cmd" = "pytest", help="pytestの実行"}

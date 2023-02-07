@@ -2,18 +2,18 @@ from __future__ import annotations
 
 import datetime
 
-import pytest
+import pytest_asyncio
 from sqlalchemy.orm import Session
 
 from app import models
 
 
-@pytest.fixture
-def data_set(db: Session):
-    insert_todos(db)
+@pytest_asyncio.fixture
+async def data_set(db: Session):
+    await insert_todos(db)
 
 
-def insert_todos(db: Session):
+async def insert_todos(db: Session):
     now = datetime.datetime.now()
     data = [
         models.Todo(
@@ -25,4 +25,4 @@ def insert_todos(db: Session):
         for i in range(1, 25)
     ]
     db.add_all(data)
-    db.commit()
+    await db.commit()

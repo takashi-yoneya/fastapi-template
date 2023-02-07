@@ -1,23 +1,25 @@
 import logging
 import os
-from typing import Any, Generator
+from typing import Any, AsyncGenerator
 
 import pytest
+import pytest_asyncio
 from fastapi import status
-from fastapi.testclient import TestClient
+from httpx import AsyncClient
 from pytest_mysql import factories
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
 
 import alembic.command
 import alembic.config
 from app import schemas
 from app.core.config import Settings
-from app.core.database import get_db
+from app.core.database import get_async_db
 from app.main import app
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
@@ -35,7 +37,7 @@ class TestSettings(Settings):
     # TEST_DB_PASSWORD: str = "pass"
     TEST_DB_NAME: str = "test"  # 一時的なテストDBを作成するので、アプリのDBとは別名にする
 
-    TEST_USER_EMAIL: str = "test-user@example.com"
+    TEST_USER_EMAIL: str = "test-use1@example.com"
     TEST_USER_PASSWORD: str = "test-user"
     # TEST_SQL_DATA_PATH: str = os.path.join(BASE_DIR_PATH, "tests", "test_data", "dump.sql.gz")
 
@@ -86,73 +88,81 @@ def migrate(
     alembic.command.upgrade(config, revision)
 
 
-@pytest.fixture
-def engine(
+@pytest_asyncio.fixture
+async def engine(
     mysql: Any,
-):
+) -> AsyncEngine:
     """fixture: db-engineの作成およびmigrate"""
     logger.debug("fixture:engine")
     uri = (
+        f"mysql+aiomysql://{settings.TEST_DB_USER}:"
+        f"@{settings.TEST_DB_HOST}:{settings.TEST_DB_PORT}/{settings.TEST_DB_NAME}?charset=utf8mb4"
+    )
+    sync_uri = (
         f"mysql://{settings.TEST_DB_USER}:"
         f"@{settings.TEST_DB_HOST}:{settings.TEST_DB_PORT}/{settings.TEST_DB_NAME}?charset=utf8mb4"
     )
     settings.DATABASE_URI = uri
-    engine = create_engine(uri, echo=False, poolclass=NullPool)
-
-    with engine.begin() as conn:
+    engine = create_async_engine(uri, echo=False, poolclass=NullPool)
+    sync_engine = create_engine(sync_uri, echo=False, poolclass=NullPool)
+    with sync_engine.begin() as conn:
         migrate(
             migrations_path=settings.MIGRATIONS_DIR_PATH,
             versions_path=os.path.join(settings.MIGRATIONS_DIR_PATH, "versions"),
             alembic_ini_path=os.path.join(settings.ROOT_DIR_PATH, "alembic.ini"),
             connection=conn,
-            uri=uri,
+            uri=sync_uri,
         )
         logger.debug("migration end")
 
     return engine
 
 
-@pytest.fixture
-def db(
-    engine,
-) -> Generator[Session, None, None]:
+@pytest_asyncio.fixture
+async def db(
+    engine: AsyncEngine,
+) -> AsyncGenerator[AsyncSession, None]:
     """fixture: db-sessionの作成"""
     logger.debug("fixture:db")
-    test_session_factory = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    test_session_factory = sessionmaker(
+        autocommit=False, autoflush=False, bind=engine, class_=AsyncSession
+    )
 
-    with test_session_factory() as session:
+    async with test_session_factory() as session:
         yield session
-        session.commit()
+        # session.commit()
 
 
-@pytest.fixture
-def client(engine) -> Generator[TestClient, None, None]:
+@pytest_asyncio.fixture
+async def client(engine: AsyncEngine) -> AsyncClient:
     """fixture: HTTP-Clientの作成"""
     logger.debug("fixture:client")
-    test_session_factory = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    test_session_factory = sessionmaker(
+        autocommit=False, autoflush=False, bind=engine, class_=AsyncSession
+    )
 
-    def override_get_db() -> Session:
-        with test_session_factory() as session:
+    async def override_get_db() -> AsyncGenerator[AsyncSession, None]:
+        async with test_session_factory() as session:
             yield session
-            session.commit()
+            # session.commit()
 
     # get_dbをTest用のDBを使用するようにoverrideする
-    app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[get_async_db] = override_get_db
     app.debug = False
-    yield TestClient(app=app, base_url="http://test")
+    return AsyncClient(app=app, base_url="http://test")
 
 
-@pytest.fixture
-def authed_client(client: TestClient) -> TestClient:
+@pytest_asyncio.fixture
+async def authed_client(client: AsyncClient) -> AsyncClient:
     # print(client.__dict__)
     """fixture: clietnに認証情報をセット"""
     logger.debug("fixture:authed_headers")
-    res = client.post(
+    res = await client.post(
         "/users",
         json=TEST_USER_CREATE_SCHEMA.dict(),
     )
     assert res.status_code == status.HTTP_200_OK
-    res = client.post(
+    res = await client.post(
         "/auth/login",
         data={
             "username": settings.TEST_USER_EMAIL,
@@ -164,13 +174,13 @@ def authed_client(client: TestClient) -> TestClient:
     client.headers = {"authorization": f"Bearer {access_token}"}
 
     # テスト全体で使用するので、グローバル変数とする
-    res = client.get("users/me")
+    res = await client.get("users/me")
     assert res.json().get("id")
     pytest.USER_ID = res.json().get("id")
 
     return client
 
 
-@pytest.fixture
-def USER_ID(authed_client):
-    return pytest.USER_ID
+# @pytest.fixture
+# def USER_ID(authed_client):
+#     return pytest.USER_ID

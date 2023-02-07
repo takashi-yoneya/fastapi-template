@@ -3,8 +3,8 @@ from typing import Optional
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from app import crud, schemas
-from app.core.database import get_db
+from app import crud_v2, schemas
+from app.core.database import get_async_db
 from app.core.logger import get_logger
 from app.exceptions.core import APIException
 from app.exceptions.error_messages import ErrorMessage
@@ -16,69 +16,79 @@ router = APIRouter()
 
 
 @router.get("/{id}", response_model=schemas.TodoResponse, operation_id="get_todo_by_id")
-def get_job(
-    id: str, include_deleted: bool = False, db: Session = Depends(get_db)
+async def get_job(
+    id: str, include_deleted: bool = False, db: Session = Depends(get_async_db)
 ) -> schemas.TodoResponse:
-    todo = crud.todo.get_db_obj_by_id(db, id=id, include_deleted=include_deleted)
+    todo = await crud_v2.todo.get_db_obj_by_id(
+        db, id=id, include_deleted=include_deleted
+    )
+    print(todo)
     if not todo:
         raise APIException(ErrorMessage.ID_NOT_FOUND)
     return todo
 
 
-@router.get("", response_model=schemas.TodosPagedResponse, operation_id="get_todos")
-def get_todos(
+@router.get(
+    "", response_model=schemas.TodosPagedResponse, operation_id="get_paged_todos"
+)
+async def get_paged_todos(
     q: Optional[str] = None,
     paging_query_in: PagingQueryIn = Depends(),
     sort_query_in: schemas.TodoSortQueryIn = Depends(),
-    db: Session = Depends(get_db),
+    include_deleted: bool = False,
+    db: Session = Depends(get_async_db),
 ) -> schemas.TodosPagedResponse:
-    return crud.todo.get_paged_list(
-        db, q=q, paging_query_in=paging_query_in, sort_query_in=sort_query_in
+    return await crud_v2.todo.get_paged_list(
+        db,
+        q=q,
+        paging_query_in=paging_query_in,
+        sort_query_in=sort_query_in,
+        include_deleted=include_deleted,
     )
 
 
 @router.post("", response_model=schemas.TodoResponse, operation_id="create_todo")
-def create_todo(
-    data_in: schemas.TodoCreate, db: Session = Depends(get_db)
+async def create_todo(
+    data_in: schemas.TodoCreate, db: Session = Depends(get_async_db)
 ) -> schemas.TodoResponse:
-    return crud.todo.create(db, data_in)
+    return await crud_v2.todo.create(db, data_in)
 
 
 @router.patch("/{id}", response_model=schemas.TodoResponse, operation_id="update_todo")
-def update_todo(
+async def update_todo(
     id: str,
     data_in: schemas.TodoUpdate,
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_async_db),
 ) -> schemas.TodoResponse:
-    todo = crud.todo.get_db_obj_by_id(db, id=id)
+    todo = await crud_v2.todo.get_db_obj_by_id(db, id=id)
     if not todo:
         raise APIException(ErrorMessage.ID_NOT_FOUND)
 
-    return crud.todo.update(db, db_obj=todo, update_schema=data_in)
+    return await crud_v2.todo.update(db, db_obj=todo, update_schema=data_in)
 
 
 @router.post(
     "/{id}/tags", response_model=schemas.TodoResponse, operation_id="add_tags_to_todo"
 )
-def add_tags_to_todo(
+async def add_tags_to_todo(
     id: str,
     tags_in: list[schemas.TagCreate],
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_async_db),
 ) -> schemas.TodoResponse:
-    todo = crud.todo.get_db_obj_by_id(db, id=id)
+    todo = await crud_v2.todo.get_db_obj_by_id(db, id=id)
     if not todo:
         raise APIException(ErrorMessage.ID_NOT_FOUND)
-    return crud.todo.add_tags_to_todo(db, todo=todo, tags_in=tags_in)
+    return await crud_v2.todo.add_tags_to_todo(db, todo=todo, tags_in=tags_in)
 
 
 @router.delete("/{id}", status_code=status.HTTP_200_OK, operation_id="delete_todo")
-def delete_todo(
+async def delete_todo(
     id: str,
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_async_db),
 ) -> None:
-    todo = crud.todo.get_db_obj_by_id(db, id=id)
+    todo = await crud_v2.todo.get_db_obj_by_id(db, id=id)
     if not todo:
         raise APIException(ErrorMessage.ID_NOT_FOUND)
-    crud.todo.delete(db, db_obj=todo)
+    await crud_v2.todo.delete(db, db_obj=todo)
 
     return None

@@ -1,17 +1,23 @@
 from typing import Any, Optional
 
 import pytest
-from httpx import Client
+from httpx import AsyncClient
 from starlette import status
 
 from app.schemas.core import PagingMeta
 from app.schemas.todo import TodoCreate, TodoUpdate
-from tests.base import TestBase
+from tests.base import (
+    assert_create,
+    assert_get_by_id,
+    assert_get_paged_list,
+    assert_update,
+)
 
 """ create """
 
 
-class TestTodos(TestBase):
+@pytest.mark.asyncio
+class TestTodos:
     ENDPOINT_URI = "/todos"
 
     """create
@@ -29,24 +35,20 @@ class TestTodos(TestBase):
     }
 
     @pytest.mark.parametrize(
-        [
-            "data_in",
-            "expected_status",
-            "expected_data",
-            "expected_error",
-        ],
+        "data_in, expected_status,expected_data,expected_error",
         list(_params_create_todo.values()),
         ids=list(_params_create_todo.keys()),
     )
-    def test_create(
+    async def test_create(
         self,
-        authed_client: Client,
+        authed_client: AsyncClient,
         data_in: dict,
         expected_status: int,
         expected_data: Optional[dict],
         expected_error: Optional[dict],
     ) -> None:
-        self.assert_create(
+        await assert_create(
+            self.ENDPOINT_URI,
             client=authed_client,
             data_in=data_in,
             expected_status=expected_status,
@@ -88,9 +90,9 @@ class TestTodos(TestBase):
         list(_params_update_todo.values()),
         ids=list(_params_update_todo.keys()),
     )
-    def test_update(
+    async def test_update(
         self,
-        authed_client: Client,
+        authed_client: AsyncClient,
         id: str,
         data_in: dict,
         expected_status: int,
@@ -98,7 +100,8 @@ class TestTodos(TestBase):
         expected_error: Optional[dict],
         data_set: None,
     ) -> None:
-        self.assert_update(
+        await assert_update(
+            self.ENDPOINT_URI,
             client=authed_client,
             id=id,
             data_in=data_in,
@@ -134,16 +137,17 @@ class TestTodos(TestBase):
         list(_params_get_todo_by_id.values()),
         ids=list(_params_get_todo_by_id.keys()),
     )
-    def test_get_by_id(
+    async def test_get_by_id(
         self,
-        authed_client: Client,
+        authed_client: AsyncClient,
         id: str,
         expected_status: int,
         expected_data: Optional[dict],
         expected_error: Optional[dict],
         data_set: None,
     ) -> None:
-        self.assert_get_by_id(
+        await assert_get_by_id(
+            self.ENDPOINT_URI,
             client=authed_client,
             id=id,
             expected_status=expected_status,
@@ -176,9 +180,9 @@ class TestTodos(TestBase):
         list(_params_get_paged_list.values()),
         ids=list(_params_get_paged_list.keys()),
     )
-    def test_get_paged_list(
+    async def test_get_paged_list(
         self,
-        authed_client: Client,
+        authed_client: AsyncClient,
         params: dict[str, Any],
         expected_status: int,
         expected_first_data: Optional[dict],
@@ -186,74 +190,11 @@ class TestTodos(TestBase):
         expected_error: Optional[dict],
         data_set: None,
     ) -> None:
-        self.assert_get_paged_list(
+        await assert_get_paged_list(
+            self.ENDPOINT_URI,
             client=authed_client,
             params=params,
             expected_status=expected_status,
             expected_first_data=expected_first_data,
             expected_paging_meta=expected_paging_meta,
         )
-
-
-# def test_get_user_report(
-#     authed_client: Client,
-#     base_data: None,
-# ) -> None:
-#     res = authed_client.get("/user_report/1")
-#     assert res.status_code == status.HTTP_200_OK
-
-#     res = authed_client.get("/user_report/100")
-#     assert res.status_code == status.HTTP_400_BAD_REQUEST
-
-
-# def test_get_paged_user_reports(
-#     authed_client: Client,
-#     base_data: None,
-# ) -> None:
-#     res = authed_client.get("/user_report")
-#     assert res.status_code == status.HTTP_200_OK
-
-
-# def test_delete_user_report(
-#     authed_client: Client,
-#     base_data: None,
-# ) -> None:
-#     res = authed_client.delete("/user_report/1")
-#     assert res.status_code == status.HTTP_200_OK
-
-#     res = authed_client.delete("/user_report/1")
-#     assert res.status_code == status.HTTP_400_BAD_REQUEST
-
-
-# params_update_user_report = {
-#     "normal": (
-#         "/user_report/1",
-#         UserReportUpdate(status="inprogress").dict(),
-#         status.HTTP_200_OK,
-#     ),
-#     "bad_request": (
-#         "/user_report/100",
-#         UserReportUpdate(status="inprogress").dict(),
-#         status.HTTP_400_BAD_REQUEST,
-#     ),
-# }
-
-
-# @pytest.mark.parametrize(
-#     [
-#         "url",
-#         "data_in",
-#         "expected_status",
-#     ],
-#     list(params_update_user_report.values()),
-#     ids=list(params_update_user_report.keys()),
-# )
-# def test_update_user_report(
-#     authed_client: Client,
-#     base_data: None,
-#     data_in: dict,
-#     expected_status: int,
-#     url: str,
-# ) -> None:
-#     res = authed_client.patch(url, json=data_in)
-#     assert res.status_code == expected_status

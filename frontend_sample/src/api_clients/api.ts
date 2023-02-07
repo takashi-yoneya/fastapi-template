@@ -1191,6 +1191,81 @@ export const TodosApiAxiosParamCreator = function (
     },
     /**
      *
+     * @summary Get Paged Todos
+     * @param {string} [q]
+     * @param {boolean} [includeDeleted]
+     * @param {number} [page]
+     * @param {number} [perPage]
+     * @param {TodoSortFieldEnum} [sortField]
+     * @param {SortDirectionEnum} [direction]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getPagedTodos: async (
+      q?: string,
+      includeDeleted?: boolean,
+      page?: number,
+      perPage?: number,
+      sortField?: TodoSortFieldEnum,
+      direction?: SortDirectionEnum,
+      options: AxiosRequestConfig = {}
+    ): Promise<RequestArgs> => {
+      const localVarPath = `/todos`;
+      // use dummy base URL string because the URL constructor only accepts absolute URLs.
+      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+      let baseOptions;
+      if (configuration) {
+        baseOptions = configuration.baseOptions;
+      }
+
+      const localVarRequestOptions = {
+        method: "GET",
+        ...baseOptions,
+        ...options,
+      };
+      const localVarHeaderParameter = {} as any;
+      const localVarQueryParameter = {} as any;
+
+      if (q !== undefined) {
+        localVarQueryParameter["q"] = q;
+      }
+
+      if (includeDeleted !== undefined) {
+        localVarQueryParameter["include_deleted"] = includeDeleted;
+      }
+
+      if (page !== undefined) {
+        localVarQueryParameter["page"] = page;
+      }
+
+      if (perPage !== undefined) {
+        localVarQueryParameter["perPage"] = perPage;
+      }
+
+      if (sortField !== undefined) {
+        localVarQueryParameter["sortField"] = sortField;
+      }
+
+      if (direction !== undefined) {
+        localVarQueryParameter["direction"] = direction;
+      }
+
+      setSearchParams(localVarUrlObj, localVarQueryParameter);
+      let headersFromBaseOptions =
+        baseOptions && baseOptions.headers ? baseOptions.headers : {};
+      localVarRequestOptions.headers = {
+        ...localVarHeaderParameter,
+        ...headersFromBaseOptions,
+        ...options.headers,
+      };
+
+      return {
+        url: toPathString(localVarUrlObj),
+        options: localVarRequestOptions,
+      };
+    },
+    /**
+     *
      * @summary Get Job
      * @param {string} id
      * @param {boolean} [includeDeleted]
@@ -1225,75 +1300,6 @@ export const TodosApiAxiosParamCreator = function (
 
       if (includeDeleted !== undefined) {
         localVarQueryParameter["include_deleted"] = includeDeleted;
-      }
-
-      setSearchParams(localVarUrlObj, localVarQueryParameter);
-      let headersFromBaseOptions =
-        baseOptions && baseOptions.headers ? baseOptions.headers : {};
-      localVarRequestOptions.headers = {
-        ...localVarHeaderParameter,
-        ...headersFromBaseOptions,
-        ...options.headers,
-      };
-
-      return {
-        url: toPathString(localVarUrlObj),
-        options: localVarRequestOptions,
-      };
-    },
-    /**
-     *
-     * @summary Get Todos
-     * @param {string} [q]
-     * @param {number} [page]
-     * @param {number} [perPage]
-     * @param {TodoSortFieldEnum} [sortField]
-     * @param {SortDirectionEnum} [direction]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getTodos: async (
-      q?: string,
-      page?: number,
-      perPage?: number,
-      sortField?: TodoSortFieldEnum,
-      direction?: SortDirectionEnum,
-      options: AxiosRequestConfig = {}
-    ): Promise<RequestArgs> => {
-      const localVarPath = `/todos`;
-      // use dummy base URL string because the URL constructor only accepts absolute URLs.
-      const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-      let baseOptions;
-      if (configuration) {
-        baseOptions = configuration.baseOptions;
-      }
-
-      const localVarRequestOptions = {
-        method: "GET",
-        ...baseOptions,
-        ...options,
-      };
-      const localVarHeaderParameter = {} as any;
-      const localVarQueryParameter = {} as any;
-
-      if (q !== undefined) {
-        localVarQueryParameter["q"] = q;
-      }
-
-      if (page !== undefined) {
-        localVarQueryParameter["page"] = page;
-      }
-
-      if (perPage !== undefined) {
-        localVarQueryParameter["perPage"] = perPage;
-      }
-
-      if (sortField !== undefined) {
-        localVarQueryParameter["sortField"] = sortField;
-      }
-
-      if (direction !== undefined) {
-        localVarQueryParameter["direction"] = direction;
       }
 
       setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -1454,6 +1460,48 @@ export const TodosApiFp = function (configuration?: Configuration) {
     },
     /**
      *
+     * @summary Get Paged Todos
+     * @param {string} [q]
+     * @param {boolean} [includeDeleted]
+     * @param {number} [page]
+     * @param {number} [perPage]
+     * @param {TodoSortFieldEnum} [sortField]
+     * @param {SortDirectionEnum} [direction]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    async getPagedTodos(
+      q?: string,
+      includeDeleted?: boolean,
+      page?: number,
+      perPage?: number,
+      sortField?: TodoSortFieldEnum,
+      direction?: SortDirectionEnum,
+      options?: AxiosRequestConfig
+    ): Promise<
+      (
+        axios?: AxiosInstance,
+        basePath?: string
+      ) => AxiosPromise<TodosPagedResponse>
+    > {
+      const localVarAxiosArgs = await localVarAxiosParamCreator.getPagedTodos(
+        q,
+        includeDeleted,
+        page,
+        perPage,
+        sortField,
+        direction,
+        options
+      );
+      return createRequestFunction(
+        localVarAxiosArgs,
+        globalAxios,
+        BASE_PATH,
+        configuration
+      );
+    },
+    /**
+     *
      * @summary Get Job
      * @param {string} id
      * @param {boolean} [includeDeleted]
@@ -1470,45 +1518,6 @@ export const TodosApiFp = function (configuration?: Configuration) {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getTodoById(
         id,
         includeDeleted,
-        options
-      );
-      return createRequestFunction(
-        localVarAxiosArgs,
-        globalAxios,
-        BASE_PATH,
-        configuration
-      );
-    },
-    /**
-     *
-     * @summary Get Todos
-     * @param {string} [q]
-     * @param {number} [page]
-     * @param {number} [perPage]
-     * @param {TodoSortFieldEnum} [sortField]
-     * @param {SortDirectionEnum} [direction]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    async getTodos(
-      q?: string,
-      page?: number,
-      perPage?: number,
-      sortField?: TodoSortFieldEnum,
-      direction?: SortDirectionEnum,
-      options?: AxiosRequestConfig
-    ): Promise<
-      (
-        axios?: AxiosInstance,
-        basePath?: string
-      ) => AxiosPromise<TodosPagedResponse>
-    > {
-      const localVarAxiosArgs = await localVarAxiosParamCreator.getTodos(
-        q,
-        page,
-        perPage,
-        sortField,
-        direction,
         options
       );
       return createRequestFunction(
@@ -1605,6 +1614,39 @@ export const TodosApiFactory = function (
     },
     /**
      *
+     * @summary Get Paged Todos
+     * @param {string} [q]
+     * @param {boolean} [includeDeleted]
+     * @param {number} [page]
+     * @param {number} [perPage]
+     * @param {TodoSortFieldEnum} [sortField]
+     * @param {SortDirectionEnum} [direction]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     */
+    getPagedTodos(
+      q?: string,
+      includeDeleted?: boolean,
+      page?: number,
+      perPage?: number,
+      sortField?: TodoSortFieldEnum,
+      direction?: SortDirectionEnum,
+      options?: any
+    ): AxiosPromise<TodosPagedResponse> {
+      return localVarFp
+        .getPagedTodos(
+          q,
+          includeDeleted,
+          page,
+          perPage,
+          sortField,
+          direction,
+          options
+        )
+        .then((request) => request(axios, basePath));
+    },
+    /**
+     *
      * @summary Get Job
      * @param {string} id
      * @param {boolean} [includeDeleted]
@@ -1618,29 +1660,6 @@ export const TodosApiFactory = function (
     ): AxiosPromise<TodoResponse> {
       return localVarFp
         .getTodoById(id, includeDeleted, options)
-        .then((request) => request(axios, basePath));
-    },
-    /**
-     *
-     * @summary Get Todos
-     * @param {string} [q]
-     * @param {number} [page]
-     * @param {number} [perPage]
-     * @param {TodoSortFieldEnum} [sortField]
-     * @param {SortDirectionEnum} [direction]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     */
-    getTodos(
-      q?: string,
-      page?: number,
-      perPage?: number,
-      sortField?: TodoSortFieldEnum,
-      direction?: SortDirectionEnum,
-      options?: any
-    ): AxiosPromise<TodosPagedResponse> {
-      return localVarFp
-        .getTodos(q, page, perPage, sortField, direction, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1719,6 +1738,41 @@ export class TodosApi extends BaseAPI {
 
   /**
    *
+   * @summary Get Paged Todos
+   * @param {string} [q]
+   * @param {boolean} [includeDeleted]
+   * @param {number} [page]
+   * @param {number} [perPage]
+   * @param {TodoSortFieldEnum} [sortField]
+   * @param {SortDirectionEnum} [direction]
+   * @param {*} [options] Override http request option.
+   * @throws {RequiredError}
+   * @memberof TodosApi
+   */
+  public getPagedTodos(
+    q?: string,
+    includeDeleted?: boolean,
+    page?: number,
+    perPage?: number,
+    sortField?: TodoSortFieldEnum,
+    direction?: SortDirectionEnum,
+    options?: AxiosRequestConfig
+  ) {
+    return TodosApiFp(this.configuration)
+      .getPagedTodos(
+        q,
+        includeDeleted,
+        page,
+        perPage,
+        sortField,
+        direction,
+        options
+      )
+      .then((request) => request(this.axios, this.basePath));
+  }
+
+  /**
+   *
    * @summary Get Job
    * @param {string} id
    * @param {boolean} [includeDeleted]
@@ -1733,31 +1787,6 @@ export class TodosApi extends BaseAPI {
   ) {
     return TodosApiFp(this.configuration)
       .getTodoById(id, includeDeleted, options)
-      .then((request) => request(this.axios, this.basePath));
-  }
-
-  /**
-   *
-   * @summary Get Todos
-   * @param {string} [q]
-   * @param {number} [page]
-   * @param {number} [perPage]
-   * @param {TodoSortFieldEnum} [sortField]
-   * @param {SortDirectionEnum} [direction]
-   * @param {*} [options] Override http request option.
-   * @throws {RequiredError}
-   * @memberof TodosApi
-   */
-  public getTodos(
-    q?: string,
-    page?: number,
-    perPage?: number,
-    sortField?: TodoSortFieldEnum,
-    direction?: SortDirectionEnum,
-    options?: AxiosRequestConfig
-  ) {
-    return TodosApiFp(this.configuration)
-      .getTodos(q, page, perPage, sortField, direction, options)
       .then((request) => request(this.axios, this.basePath));
   }
 

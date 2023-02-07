@@ -1,5 +1,4 @@
 import logging
-import os
 
 import sentry_sdk
 from debug_toolbar.middleware import DebugToolbarMiddleware
@@ -13,8 +12,6 @@ from starlette.middleware.cors import CORSMiddleware
 from app.api.endpoints import auth, tasks, todos, users
 from app.core.config import settings
 from app.core.logger import get_logger
-
-os.environ["SQLALCHEMY_WARN_20"] = "1"
 
 logger = get_logger(__name__)
 # init_gunicorn_uvicorn_logger(settings.LOGGER_CONFIG_PATH)

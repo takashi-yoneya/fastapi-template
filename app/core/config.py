@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     BASE_DIR_PATH: str = str(Path(__file__).parent.parent.absolute())
     ROOT_DIR_PATH: str = str(Path(__file__).parent.parent.parent.absolute())
     DATABASE_URI: str = ""
+    DATABASE_ASYNC_URI: str = ""
     API_GATEWAY_STAGE_PATH: str = ""
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     SECRET_KEY: str = "secret"
@@ -27,8 +28,11 @@ class Settings(BaseSettings):
     SENTRY_SDK_DNS: str = ""
     MIGRATIONS_DIR_PATH: str = os.path.join(ROOT_DIR_PATH, "alembic")
 
-    def get_database_url(self) -> str:
-        return self.DATABASE_URI + "?charset=utf8mb4"
+    def get_database_url(self, is_async: bool = False) -> str:
+        if is_async:
+            return self.DATABASE_ASYNC_URI + "?charset=utf8mb4"
+        else:
+            return self.DATABASE_URI + "?charset=utf8mb4"
 
     class Config:
         env_file = ".env"

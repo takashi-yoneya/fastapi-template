@@ -5,8 +5,8 @@ repos:
       - id: isort
         additional_dependencies: [toml]
 
-  - repo: https://github.com/myint/autoflake
-    rev: v1.4
+  - repo: https://github.com/PyCQA/autoflake
+    rev: v2.0.1
     hooks:
       - id: autoflake
         args:

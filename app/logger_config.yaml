@@ -26,10 +26,10 @@ loggers:
   #   handlers: [console]
   #   propagate: false
 
-  # uvicorn.access:
-  #   level: INFO
-  #   handlers: [console]
-  #   propagate: false
+  uvicorn.access:
+    level: INFO
+    handlers: [console]
+    propagate: false
 
   # sqlalchemy.engine:
   #   level: DEBUG

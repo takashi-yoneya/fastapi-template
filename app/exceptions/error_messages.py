@@ -47,6 +47,9 @@ class ErrorMessage:
     class ALREADY_DELETED(BaseMessage):
         text = "既に削除済です"
 
+    class SOFT_DELETE_NOT_SUPPORTED(BaseMessage):
+        text = "論理削除には未対応です"
+
     class COLUMN_NOT_ALLOWED(BaseMessage):
         text = "このカラムは指定できません"
 
