@@ -31,12 +31,6 @@ logger.info("root-conftest")
 class TestSettings(Settings):
     """テストのみで使用する設定を記述"""
 
-    TEST_DB_HOST: str = "db"
-    TEST_DB_USER: str = "root"
-    TEST_DB_PORT: int = 3306
-    # TEST_DB_PASSWORD: str = "pass"
-    TEST_DB_NAME: str = "test"  # 一時的なテストDBを作成するので、アプリのDBとは別名にする
-
     TEST_USER_EMAIL: str = "test-use1@example.com"
     TEST_USER_PASSWORD: str = "test-user"
     # TEST_SQL_DATA_PATH: str = os.path.join(BASE_DIR_PATH, "tests", "test_data", "dump.sql.gz")
@@ -49,9 +43,9 @@ settings = TestSettings()
 
 logger.debug("start:mysql_proc")
 db_proc = factories.mysql_noproc(
-    host=settings.TEST_DB_HOST,
-    port=settings.TEST_DB_PORT,
-    user=settings.TEST_DB_USER,
+    host=settings.DB_HOST,
+    port=settings.DB_PORT,
+    user=settings.DB_USER_NAME,
 )
 mysql = factories.mysql("db_proc")
 logger.debug("end:mysql_proc")
@@ -103,7 +97,7 @@ async def engine(
     #     f"mysql://{settings.TEST_DB_USER}:"
     #     f"@{settings.TEST_DB_HOST}:{settings.TEST_DB_PORT}/{settings.TEST_DB_NAME}?charset=utf8mb4"
     # )
-    settings.DATABASE_URI = uri
+    # settings.DATABASE_URI = uri
     engine = create_async_engine(uri, echo=False, poolclass=NullPool)
 
     # migrate(alembic)はasyncに未対応なため、sync-engineを使用する
