@@ -20,6 +20,9 @@ Issue からお願いします。可能な限り対応いたします。
 
 - Python 3.9+
 
+# SQLAlchemy2.0(Async)対応版
+master-sqlalchemy2 ブランチを参照してください。
+
 # デモ環境(Heroku Demos)
 
 本リポジトリに、heroku にデプロイするための設定ファイルも含まれています。
