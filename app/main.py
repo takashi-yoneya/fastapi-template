@@ -13,9 +13,18 @@ from app.api.endpoints import auth, tasks, todos, users
 from app.core.config import settings
 from app.core.logger import get_logger
 
-logger = get_logger(__name__)
-# init_gunicorn_uvicorn_logger(settings.LOGGER_CONFIG_PATH)
+# loggingセットアップ
 
+logger = get_logger(__name__)
+
+
+class NoParsingFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        return not record.getMessage().find("/docs") >= 0
+
+
+# /docsのログが大量に表示されるのを防ぐ
+logging.getLogger("uvicorn.access").addFilter(NoParsingFilter())
 
 sentry_logging = LoggingIntegration(level=logging.INFO, event_level=logging.ERROR)
 

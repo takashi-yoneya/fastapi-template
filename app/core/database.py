@@ -69,7 +69,7 @@ async def get_async_db() -> AsyncGenerator[AsyncSession, None]:
         except Exception:
             await db.rollback()
         finally:
-            db.close()
+            await db.close()
 
 
 def drop_all_tables() -> None:

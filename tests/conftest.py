@@ -94,16 +94,21 @@ async def engine(
 ) -> AsyncEngine:
     """fixture: db-engineの作成およびmigrate"""
     logger.debug("fixture:engine")
-    uri = (
-        f"mysql+aiomysql://{settings.TEST_DB_USER}:"
-        f"@{settings.TEST_DB_HOST}:{settings.TEST_DB_PORT}/{settings.TEST_DB_NAME}?charset=utf8mb4"
-    )
-    sync_uri = (
-        f"mysql://{settings.TEST_DB_USER}:"
-        f"@{settings.TEST_DB_HOST}:{settings.TEST_DB_PORT}/{settings.TEST_DB_NAME}?charset=utf8mb4"
-    )
+    # uri = (
+    #     f"mysql+aiomysql://{settings.TEST_DB_USER}:"
+    #     f"@{settings.TEST_DB_HOST}:{settings.TEST_DB_PORT}/{settings.TEST_DB_NAME}?charset=utf8mb4"
+    # )
+    uri = settings.get_database_url(is_async=True)
+    # sync_uri = (
+    #     f"mysql://{settings.TEST_DB_USER}:"
+    #     f"@{settings.TEST_DB_HOST}:{settings.TEST_DB_PORT}/{settings.TEST_DB_NAME}?charset=utf8mb4"
+    # )
     settings.DATABASE_URI = uri
     engine = create_async_engine(uri, echo=False, poolclass=NullPool)
+
+    # migrate(alembic)はasyncに未対応なため、sync-engineを使用する
+    sync_uri = settings.get_database_url()
+    print(sync_uri)
     sync_engine = create_engine(sync_uri, echo=False, poolclass=NullPool)
     with sync_engine.begin() as conn:
         migrate(

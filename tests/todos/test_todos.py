@@ -13,8 +13,6 @@ from tests.base import (
     assert_update,
 )
 
-""" create """
-
 
 @pytest.mark.asyncio
 class TestTodos:
@@ -35,7 +33,7 @@ class TestTodos:
     }
 
     @pytest.mark.parametrize(
-        "data_in, expected_status,expected_data,expected_error",
+        ["data_in", "expected_status", "expected_data", "expected_error"],
         list(_params_create_todo.values()),
         ids=list(_params_create_todo.keys()),
     )
