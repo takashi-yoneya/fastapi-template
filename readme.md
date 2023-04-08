@@ -20,8 +20,8 @@ Issue からお願いします。可能な限り対応いたします。
 
 - Python 3.9+
 
-# SQLAlchemy2.0(Async)対応版
-master-sqlalchemy2 ブランチを参照してください。
+# SQLAlchemy1.4(sync)版　（旧バージョン）
+SQLAlchemy1.4(sync)版は旧バージョンのため、今後Updateの予定はありませんが、使用したい場合はmaster-old-sqlalchemy14 ブランチを参照してください。
 
 # デモ環境(Heroku Demos)
 
