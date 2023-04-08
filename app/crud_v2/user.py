@@ -21,7 +21,7 @@ class CRUDUser(
         self, db: AsyncSession, *, email: str
     ) -> Optional[models.User]:
         stmt = select(models.User).where(models.User.email == email)
-        return (await db.execute(stmt)).first()
+        return (await db.execute(stmt)).scalars().first()
         # return db.query(models.User).filter(models.User.email == email).first()
 
     async def create(self, db: AsyncSession, obj_in: schemas.UserCreate) -> models.User:
@@ -31,7 +31,7 @@ class CRUDUser(
             full_name=obj_in.full_name,
         )
         db.add(db_obj)
-        await db.commit()
+        await db.flush()
         await db.refresh(db_obj)
         return db_obj
 

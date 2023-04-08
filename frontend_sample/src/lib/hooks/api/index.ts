@@ -17,17 +17,20 @@ export type UseGetResult<TData, TError = ErrorResponse> = Omit<
   error?: TError;
 };
 
-export type UsePostResult<TData, TError = ErrorResponse, TVariables = unknown> =
-  Omit<
-    UseMutationResult<AxiosResponse<TData>, AxiosError<TError>, TVariables>,
-    "mutateAsync"
-  > & {
-    mutateAsync: (
-      variables: TVariables,
-      onSuccess?: (data: TData) => unknown,
-      onFailure?: (error?: TError) => unknown
-    ) => Promise<unknown>;
-  };
+export type UsePostResult<
+  TData,
+  TError = ErrorResponse,
+  TVariables = unknown,
+> = Omit<
+  UseMutationResult<AxiosResponse<TData>, AxiosError<TError>, TVariables>,
+  "mutateAsync"
+> & {
+  mutateAsync: (
+    variables: TVariables,
+    onSuccess?: (data: TData) => unknown,
+    onFailure?: (error?: TError) => unknown,
+  ) => Promise<unknown>;
+};
 
 export type ErrorResponse = {
   errorCode?: string;
@@ -37,7 +40,7 @@ export type ErrorResponse = {
 export const useGet = <TData, TError = ErrorResponse>(
   key: unknown[] | string,
   queryFn: QueryFunction<AxiosResponse<TData>>,
-  options?: UseQueryOptions<AxiosResponse<TData>, AxiosError<TError>>
+  options?: UseQueryOptions<AxiosResponse<TData>, AxiosError<TError>>,
 ): UseGetResult<TData, TError> => {
   const result = useQuery<
     AxiosResponse<TData>,
@@ -61,7 +64,7 @@ export const usePost = <TData, TError = ErrorResponse, TVariables = unknown>(
   options?: Omit<
     UseMutationOptions<AxiosResponse<TData>, AxiosError<TError>, TVariables>,
     "mutationFn" | "mutationKey"
-  >
+  >,
 ): UsePostResult<TData, TError, TVariables> => {
   const result = useMutation<
     AxiosResponse<TData>,
@@ -73,7 +76,7 @@ export const usePost = <TData, TError = ErrorResponse, TVariables = unknown>(
     mutateAsync: async (
       variables: TVariables,
       onSuccess?: (data: TData) => unknown,
-      onFailure?: (error?: TError) => unknown
+      onFailure?: (error?: TError) => unknown,
     ) =>
       result
         .mutateAsync(variables)

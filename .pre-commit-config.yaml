@@ -1,12 +1,12 @@
 repos:
   - repo: https://github.com/timothycrosley/isort
-    rev: 5.10.1
+    rev: 5.12.0
     hooks:
       - id: isort
         additional_dependencies: [toml]
 
   - repo: https://github.com/PyCQA/autoflake
-    rev: v2.0.1
+    rev: v2.0.2
     hooks:
       - id: autoflake
         args:
@@ -18,28 +18,28 @@ repos:
           - --remove-unused-variables
 
   - repo: https://github.com/psf/black
-    rev: 22.3.0
+    rev: 23.3.0
     hooks:
       - id: black
         args:
           - app/
 
-  - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.9.2
+  - repo: https://github.com/PyCQA/flake8
+    rev: 6.0.0
     hooks:
       - id: flake8
         args:
           - app/
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.942
+    rev: v1.2.0
     hooks:
       - id: mypy
         exclude: ^tests/|^alembic/
         additional_dependencies: [pydantic, sqlalchemy, types-PyYAML==6.0.7]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v4.4.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -47,7 +47,7 @@ repos:
       - id: check-added-large-files
 
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v2.3.0
+    rev: v3.0.0-alpha.6
     hooks:
       - id: prettier
         entry: prettier --write
@@ -55,7 +55,7 @@ repos:
         exclude: (^frontend_sample/public/)
 
   - repo: https://github.com/python-poetry/poetry
-    rev: "1.3.2"
+    rev: "1.4.0"
     hooks:
       - id: poetry-check
       - id: poetry-lock

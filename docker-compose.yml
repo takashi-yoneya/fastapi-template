@@ -19,26 +19,6 @@ services:
       - fastapi_network
     volumes:
       - db_volume:/var/lib/mysql
-      #- ./docker/dump_sql/seed.sql.gz:/docker-entrypoint-initdb.d/install_docker.sql.gz
-
-  # test_db:
-  #   image: mysql:8.0
-  #   restart: always
-  #   # command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-  #   command: >
-  #     mysqld --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
-  #   ports:
-  #     - "3308:3306" # port重複防止のため、local側は3306以外とする
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: docker
-  #     MYSQL_DATABASE: docker
-  #     MYSQL_USER: docker
-  #     MYSQL_PASSWORD: docker
-  #   networks:
-  #     - fastapi_network
-  #     # volumes:
-  #     #   - db_volume:/var/lib/mysql
-  #     #- ./docker/dump_sql/seed.sql.gz:/docker-entrypoint-initdb.d/install_docker.sql.gz
 
   web:
     build:

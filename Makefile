@@ -31,6 +31,10 @@ drop-all-tables:
 pre-commit-all:
 	pre-commit run --all-files
 
+.PHONY: pre-commit-update
+pre-commit-update:
+	pre-commit autoupdate
+
 .PHONY: export-requirements-txt
 export-requirements-txt:
 	poetry export -f requirements.txt --output requirements.txt --without-hashes

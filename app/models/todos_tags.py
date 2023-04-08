@@ -5,7 +5,6 @@ from app.models.base import Base, ModelBaseMixinWithoutDeletedAt
 
 
 class TodoTag(ModelBaseMixinWithoutDeletedAt, Base):
-
     __tablename__ = "todos_tags"
     mysql_charset = ("utf8mb4",)
     mysql_collate = "utf8mb4_unicode_ci"
