@@ -12,12 +12,9 @@
  * Do not edit the class manually.
  */
 
-import { Configuration } from "./configuration";
-import globalAxios, {
-  AxiosPromise,
-  AxiosInstance,
-  AxiosRequestConfig,
-} from "axios";
+import type { Configuration } from "./configuration";
+import type { AxiosPromise, AxiosInstance, AxiosRequestConfig } from "axios";
+import globalAxios from "axios";
 // Some imports not used depending on template conditions
 // @ts-ignore
 import {
@@ -32,14 +29,9 @@ import {
   toPathString,
   createRequestFunction,
 } from "./common";
+import type { RequestArgs } from "./base";
 // @ts-ignore
-import {
-  BASE_PATH,
-  COLLECTION_FORMATS,
-  RequestArgs,
-  BaseAPI,
-  RequiredError,
-} from "./base";
+import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError } from "./base";
 
 /**
  *
@@ -103,7 +95,7 @@ export const SortDirectionEnum = {
 } as const;
 
 export type SortDirectionEnum =
-  typeof SortDirectionEnum[keyof typeof SortDirectionEnum];
+  (typeof SortDirectionEnum)[keyof typeof SortDirectionEnum];
 
 /**
  *
@@ -241,7 +233,7 @@ export const TodoSortFieldEnum = {
 } as const;
 
 export type TodoSortFieldEnum =
-  typeof TodoSortFieldEnum[keyof typeof TodoSortFieldEnum];
+  (typeof TodoSortFieldEnum)[keyof typeof TodoSortFieldEnum];
 
 /**
  *
@@ -412,7 +404,7 @@ export interface ValidationError {
  * @export
  */
 export const AuthApiAxiosParamCreator = function (
-  configuration?: Configuration
+  configuration?: Configuration,
 ) {
   return {
     /**
@@ -434,7 +426,7 @@ export const AuthApiAxiosParamCreator = function (
       scope?: string,
       clientId?: string,
       clientSecret?: string,
-      options: AxiosRequestConfig = {}
+      options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'username' is not null or undefined
       assertParamExists("loginAccessTokenAuthLoginPost", "username", username);
@@ -528,7 +520,7 @@ export const AuthApiFp = function (configuration?: Configuration) {
       scope?: string,
       clientId?: string,
       clientSecret?: string,
-      options?: AxiosRequestConfig
+      options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Token>
     > {
@@ -540,13 +532,13 @@ export const AuthApiFp = function (configuration?: Configuration) {
           scope,
           clientId,
           clientSecret,
-          options
+          options,
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
   };
@@ -559,7 +551,7 @@ export const AuthApiFp = function (configuration?: Configuration) {
 export const AuthApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
-  axios?: AxiosInstance
+  axios?: AxiosInstance,
 ) {
   const localVarFp = AuthApiFp(configuration);
   return {
@@ -582,7 +574,7 @@ export const AuthApiFactory = function (
       scope?: string,
       clientId?: string,
       clientSecret?: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<Token> {
       return localVarFp
         .loginAccessTokenAuthLoginPost(
@@ -592,7 +584,7 @@ export const AuthApiFactory = function (
           scope,
           clientId,
           clientSecret,
-          options
+          options,
         )
         .then((request) => request(axios, basePath));
     },
@@ -626,7 +618,7 @@ export class AuthApi extends BaseAPI {
     scope?: string,
     clientId?: string,
     clientSecret?: string,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig,
   ) {
     return AuthApiFp(this.configuration)
       .loginAccessTokenAuthLoginPost(
@@ -636,7 +628,7 @@ export class AuthApi extends BaseAPI {
         scope,
         clientId,
         clientSecret,
-        options
+        options,
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -647,7 +639,7 @@ export class AuthApi extends BaseAPI {
  * @export
  */
 export const InfoApiAxiosParamCreator = function (
-  configuration?: Configuration
+  configuration?: Configuration,
 ) {
   return {
     /**
@@ -657,7 +649,7 @@ export const InfoApiAxiosParamCreator = function (
      * @throws {RequiredError}
      */
     getInfoGet: async (
-      options: AxiosRequestConfig = {}
+      options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       const localVarPath = `/`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -706,18 +698,21 @@ export const InfoApiFp = function (configuration?: Configuration) {
      * @throws {RequiredError}
      */
     async getInfoGet(
-      options?: AxiosRequestConfig
+      options?: AxiosRequestConfig,
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
+      (
+        axios?: AxiosInstance,
+        basePath?: string,
+      ) => AxiosPromise<{ [key: string]: string }>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getInfoGet(
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
   };
@@ -730,7 +725,7 @@ export const InfoApiFp = function (configuration?: Configuration) {
 export const InfoApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
-  axios?: AxiosInstance
+  axios?: AxiosInstance,
 ) {
   const localVarFp = InfoApiFp(configuration);
   return {
@@ -740,7 +735,7 @@ export const InfoApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getInfoGet(options?: any): AxiosPromise<any> {
+    getInfoGet(options?: any): AxiosPromise<{ [key: string]: string }> {
       return localVarFp
         .getInfoGet(options)
         .then((request) => request(axios, basePath));
@@ -774,7 +769,7 @@ export class InfoApi extends BaseAPI {
  * @export
  */
 export const TasksApiAxiosParamCreator = function (
-  configuration?: Configuration
+  configuration?: Configuration,
 ) {
   return {
     /**
@@ -786,13 +781,13 @@ export const TasksApiAxiosParamCreator = function (
      */
     execLongProcessAsyncTasksLongProcessAsyncPost: async (
       id: string,
-      options: AxiosRequestConfig = {}
+      options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
       assertParamExists(
         "execLongProcessAsyncTasksLongProcessAsyncPost",
         "id",
-        id
+        id,
       );
       const localVarPath = `/tasks/long-process/async`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -837,13 +832,13 @@ export const TasksApiAxiosParamCreator = function (
      */
     execLongProcessThreadTasksLongProcessThreadPost: async (
       id: string,
-      options: AxiosRequestConfig = {}
+      options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
       assertParamExists(
         "execLongProcessThreadTasksLongProcessThreadPost",
         "id",
-        id
+        id,
       );
       const localVarPath = `/tasks/long-process/thread`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -898,20 +893,20 @@ export const TasksApiFp = function (configuration?: Configuration) {
      */
     async execLongProcessAsyncTasksLongProcessAsyncPost(
       id: string,
-      options?: AxiosRequestConfig
+      options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.execLongProcessAsyncTasksLongProcessAsyncPost(
           id,
-          options
+          options,
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -923,20 +918,20 @@ export const TasksApiFp = function (configuration?: Configuration) {
      */
     async execLongProcessThreadTasksLongProcessThreadPost(
       id: string,
-      options?: AxiosRequestConfig
+      options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.execLongProcessThreadTasksLongProcessThreadPost(
           id,
-          options
+          options,
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
   };
@@ -949,7 +944,7 @@ export const TasksApiFp = function (configuration?: Configuration) {
 export const TasksApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
-  axios?: AxiosInstance
+  axios?: AxiosInstance,
 ) {
   const localVarFp = TasksApiFp(configuration);
   return {
@@ -962,7 +957,7 @@ export const TasksApiFactory = function (
      */
     execLongProcessAsyncTasksLongProcessAsyncPost(
       id: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<any> {
       return localVarFp
         .execLongProcessAsyncTasksLongProcessAsyncPost(id, options)
@@ -977,7 +972,7 @@ export const TasksApiFactory = function (
      */
     execLongProcessThreadTasksLongProcessThreadPost(
       id: string,
-      options?: any
+      options?: any,
     ): AxiosPromise<any> {
       return localVarFp
         .execLongProcessThreadTasksLongProcessThreadPost(id, options)
@@ -1003,7 +998,7 @@ export class TasksApi extends BaseAPI {
    */
   public execLongProcessAsyncTasksLongProcessAsyncPost(
     id: string,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig,
   ) {
     return TasksApiFp(this.configuration)
       .execLongProcessAsyncTasksLongProcessAsyncPost(id, options)
@@ -1020,7 +1015,7 @@ export class TasksApi extends BaseAPI {
    */
   public execLongProcessThreadTasksLongProcessThreadPost(
     id: string,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig,
   ) {
     return TasksApiFp(this.configuration)
       .execLongProcessThreadTasksLongProcessThreadPost(id, options)
@@ -1033,7 +1028,7 @@ export class TasksApi extends BaseAPI {
  * @export
  */
 export const TodosApiAxiosParamCreator = function (
-  configuration?: Configuration
+  configuration?: Configuration,
 ) {
   return {
     /**
@@ -1047,7 +1042,7 @@ export const TodosApiAxiosParamCreator = function (
     addTagsToTodo: async (
       id: string,
       tagCreate: Array<TagCreate>,
-      options: AxiosRequestConfig = {}
+      options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
       assertParamExists("addTagsToTodo", "id", id);
@@ -1055,7 +1050,7 @@ export const TodosApiAxiosParamCreator = function (
       assertParamExists("addTagsToTodo", "tagCreate", tagCreate);
       const localVarPath = `/todos/{id}/tags`.replace(
         `{${"id"}}`,
-        encodeURIComponent(String(id))
+        encodeURIComponent(String(id)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1085,7 +1080,7 @@ export const TodosApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         tagCreate,
         localVarRequestOptions,
-        configuration
+        configuration,
       );
 
       return {
@@ -1102,7 +1097,7 @@ export const TodosApiAxiosParamCreator = function (
      */
     createTodo: async (
       todoCreate: TodoCreate,
-      options: AxiosRequestConfig = {}
+      options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'todoCreate' is not null or undefined
       assertParamExists("createTodo", "todoCreate", todoCreate);
@@ -1135,7 +1130,7 @@ export const TodosApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         todoCreate,
         localVarRequestOptions,
-        configuration
+        configuration,
       );
 
       return {
@@ -1152,13 +1147,13 @@ export const TodosApiAxiosParamCreator = function (
      */
     deleteTodo: async (
       id: string,
-      options: AxiosRequestConfig = {}
+      options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
       assertParamExists("deleteTodo", "id", id);
       const localVarPath = `/todos/{id}`.replace(
         `{${"id"}}`,
-        encodeURIComponent(String(id))
+        encodeURIComponent(String(id)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1208,7 +1203,7 @@ export const TodosApiAxiosParamCreator = function (
       perPage?: number,
       sortField?: TodoSortFieldEnum,
       direction?: SortDirectionEnum,
-      options: AxiosRequestConfig = {}
+      options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       const localVarPath = `/todos`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1275,13 +1270,13 @@ export const TodosApiAxiosParamCreator = function (
     getTodoById: async (
       id: string,
       includeDeleted?: boolean,
-      options: AxiosRequestConfig = {}
+      options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
       assertParamExists("getTodoById", "id", id);
       const localVarPath = `/todos/{id}`.replace(
         `{${"id"}}`,
-        encodeURIComponent(String(id))
+        encodeURIComponent(String(id)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1327,7 +1322,7 @@ export const TodosApiAxiosParamCreator = function (
     updateTodo: async (
       id: string,
       todoUpdate: TodoUpdate,
-      options: AxiosRequestConfig = {}
+      options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
       assertParamExists("updateTodo", "id", id);
@@ -1335,7 +1330,7 @@ export const TodosApiAxiosParamCreator = function (
       assertParamExists("updateTodo", "todoUpdate", todoUpdate);
       const localVarPath = `/todos/{id}`.replace(
         `{${"id"}}`,
-        encodeURIComponent(String(id))
+        encodeURIComponent(String(id)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1365,7 +1360,7 @@ export const TodosApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         todoUpdate,
         localVarRequestOptions,
-        configuration
+        configuration,
       );
 
       return {
@@ -1394,20 +1389,20 @@ export const TodosApiFp = function (configuration?: Configuration) {
     async addTagsToTodo(
       id: string,
       tagCreate: Array<TagCreate>,
-      options?: AxiosRequestConfig
+      options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<TodoResponse>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.addTagsToTodo(
         id,
         tagCreate,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -1419,19 +1414,19 @@ export const TodosApiFp = function (configuration?: Configuration) {
      */
     async createTodo(
       todoCreate: TodoCreate,
-      options?: AxiosRequestConfig
+      options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<TodoResponse>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.createTodo(
         todoCreate,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -1443,19 +1438,19 @@ export const TodosApiFp = function (configuration?: Configuration) {
      */
     async deleteTodo(
       id: string,
-      options?: AxiosRequestConfig
+      options?: AxiosRequestConfig,
     ): Promise<
-      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
+      (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.deleteTodo(
         id,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -1477,11 +1472,11 @@ export const TodosApiFp = function (configuration?: Configuration) {
       perPage?: number,
       sortField?: TodoSortFieldEnum,
       direction?: SortDirectionEnum,
-      options?: AxiosRequestConfig
+      options?: AxiosRequestConfig,
     ): Promise<
       (
         axios?: AxiosInstance,
-        basePath?: string
+        basePath?: string,
       ) => AxiosPromise<TodosPagedResponse>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getPagedTodos(
@@ -1491,13 +1486,13 @@ export const TodosApiFp = function (configuration?: Configuration) {
         perPage,
         sortField,
         direction,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -1511,20 +1506,20 @@ export const TodosApiFp = function (configuration?: Configuration) {
     async getTodoById(
       id: string,
       includeDeleted?: boolean,
-      options?: AxiosRequestConfig
+      options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<TodoResponse>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getTodoById(
         id,
         includeDeleted,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -1538,20 +1533,20 @@ export const TodosApiFp = function (configuration?: Configuration) {
     async updateTodo(
       id: string,
       todoUpdate: TodoUpdate,
-      options?: AxiosRequestConfig
+      options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<TodoResponse>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.updateTodo(
         id,
         todoUpdate,
-        options
+        options,
       );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
   };
@@ -1564,7 +1559,7 @@ export const TodosApiFp = function (configuration?: Configuration) {
 export const TodosApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
-  axios?: AxiosInstance
+  axios?: AxiosInstance,
 ) {
   const localVarFp = TodosApiFp(configuration);
   return {
@@ -1579,7 +1574,7 @@ export const TodosApiFactory = function (
     addTagsToTodo(
       id: string,
       tagCreate: Array<TagCreate>,
-      options?: any
+      options?: any,
     ): AxiosPromise<TodoResponse> {
       return localVarFp
         .addTagsToTodo(id, tagCreate, options)
@@ -1594,7 +1589,7 @@ export const TodosApiFactory = function (
      */
     createTodo(
       todoCreate: TodoCreate,
-      options?: any
+      options?: any,
     ): AxiosPromise<TodoResponse> {
       return localVarFp
         .createTodo(todoCreate, options)
@@ -1607,7 +1602,7 @@ export const TodosApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteTodo(id: string, options?: any): AxiosPromise<any> {
+    deleteTodo(id: string, options?: any): AxiosPromise<void> {
       return localVarFp
         .deleteTodo(id, options)
         .then((request) => request(axios, basePath));
@@ -1631,7 +1626,7 @@ export const TodosApiFactory = function (
       perPage?: number,
       sortField?: TodoSortFieldEnum,
       direction?: SortDirectionEnum,
-      options?: any
+      options?: any,
     ): AxiosPromise<TodosPagedResponse> {
       return localVarFp
         .getPagedTodos(
@@ -1641,7 +1636,7 @@ export const TodosApiFactory = function (
           perPage,
           sortField,
           direction,
-          options
+          options,
         )
         .then((request) => request(axios, basePath));
     },
@@ -1656,7 +1651,7 @@ export const TodosApiFactory = function (
     getTodoById(
       id: string,
       includeDeleted?: boolean,
-      options?: any
+      options?: any,
     ): AxiosPromise<TodoResponse> {
       return localVarFp
         .getTodoById(id, includeDeleted, options)
@@ -1673,7 +1668,7 @@ export const TodosApiFactory = function (
     updateTodo(
       id: string,
       todoUpdate: TodoUpdate,
-      options?: any
+      options?: any,
     ): AxiosPromise<TodoResponse> {
       return localVarFp
         .updateTodo(id, todoUpdate, options)
@@ -1701,7 +1696,7 @@ export class TodosApi extends BaseAPI {
   public addTagsToTodo(
     id: string,
     tagCreate: Array<TagCreate>,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig,
   ) {
     return TodosApiFp(this.configuration)
       .addTagsToTodo(id, tagCreate, options)
@@ -1756,7 +1751,7 @@ export class TodosApi extends BaseAPI {
     perPage?: number,
     sortField?: TodoSortFieldEnum,
     direction?: SortDirectionEnum,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig,
   ) {
     return TodosApiFp(this.configuration)
       .getPagedTodos(
@@ -1766,7 +1761,7 @@ export class TodosApi extends BaseAPI {
         perPage,
         sortField,
         direction,
-        options
+        options,
       )
       .then((request) => request(this.axios, this.basePath));
   }
@@ -1783,7 +1778,7 @@ export class TodosApi extends BaseAPI {
   public getTodoById(
     id: string,
     includeDeleted?: boolean,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig,
   ) {
     return TodosApiFp(this.configuration)
       .getTodoById(id, includeDeleted, options)
@@ -1802,7 +1797,7 @@ export class TodosApi extends BaseAPI {
   public updateTodo(
     id: string,
     todoUpdate: TodoUpdate,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig,
   ) {
     return TodosApiFp(this.configuration)
       .updateTodo(id, todoUpdate, options)
@@ -1815,7 +1810,7 @@ export class TodosApi extends BaseAPI {
  * @export
  */
 export const UsersApiAxiosParamCreator = function (
-  configuration?: Configuration
+  configuration?: Configuration,
 ) {
   return {
     /**
@@ -1827,7 +1822,7 @@ export const UsersApiAxiosParamCreator = function (
      */
     createUserUsersPost: async (
       userCreate: UserCreate,
-      options: AxiosRequestConfig = {}
+      options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'userCreate' is not null or undefined
       assertParamExists("createUserUsersPost", "userCreate", userCreate);
@@ -1860,7 +1855,7 @@ export const UsersApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         userCreate,
         localVarRequestOptions,
-        configuration
+        configuration,
       );
 
       return {
@@ -1875,7 +1870,7 @@ export const UsersApiAxiosParamCreator = function (
      * @throws {RequiredError}
      */
     getUserMeUsersMeGet: async (
-      options: AxiosRequestConfig = {}
+      options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       const localVarPath = `/users/me`;
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
@@ -1899,7 +1894,7 @@ export const UsersApiAxiosParamCreator = function (
         localVarHeaderParameter,
         "OAuth2PasswordBearer",
         [],
-        configuration
+        configuration,
       );
 
       setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -1925,13 +1920,13 @@ export const UsersApiAxiosParamCreator = function (
      */
     getUserUsersIdGet: async (
       id: string,
-      options: AxiosRequestConfig = {}
+      options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
       assertParamExists("getUserUsersIdGet", "id", id);
       const localVarPath = `/users/{id}`.replace(
         `{${"id"}}`,
-        encodeURIComponent(String(id))
+        encodeURIComponent(String(id)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1954,7 +1949,7 @@ export const UsersApiAxiosParamCreator = function (
         localVarHeaderParameter,
         "OAuth2PasswordBearer",
         [],
-        configuration
+        configuration,
       );
 
       setSearchParams(localVarUrlObj, localVarQueryParameter);
@@ -1982,7 +1977,7 @@ export const UsersApiAxiosParamCreator = function (
     updateUserUsersIdPut: async (
       id: string,
       userUpdate: UserUpdate,
-      options: AxiosRequestConfig = {}
+      options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
       assertParamExists("updateUserUsersIdPut", "id", id);
@@ -1990,7 +1985,7 @@ export const UsersApiAxiosParamCreator = function (
       assertParamExists("updateUserUsersIdPut", "userUpdate", userUpdate);
       const localVarPath = `/users/{id}`.replace(
         `{${"id"}}`,
-        encodeURIComponent(String(id))
+        encodeURIComponent(String(id)),
       );
       // use dummy base URL string because the URL constructor only accepts absolute URLs.
       const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2013,7 +2008,7 @@ export const UsersApiAxiosParamCreator = function (
         localVarHeaderParameter,
         "OAuth2PasswordBearer",
         [],
-        configuration
+        configuration,
       );
 
       localVarHeaderParameter["Content-Type"] = "application/json";
@@ -2029,7 +2024,7 @@ export const UsersApiAxiosParamCreator = function (
       localVarRequestOptions.data = serializeDataIfNeeded(
         userUpdate,
         localVarRequestOptions,
-        configuration
+        configuration,
       );
 
       return {
@@ -2056,20 +2051,20 @@ export const UsersApiFp = function (configuration?: Configuration) {
      */
     async createUserUsersPost(
       userCreate: UserCreate,
-      options?: AxiosRequestConfig
+      options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponse>
     > {
       const localVarAxiosArgs =
         await localVarAxiosParamCreator.createUserUsersPost(
           userCreate,
-          options
+          options,
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -2079,7 +2074,7 @@ export const UsersApiFp = function (configuration?: Configuration) {
      * @throws {RequiredError}
      */
     async getUserMeUsersMeGet(
-      options?: AxiosRequestConfig
+      options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponse>
     > {
@@ -2089,7 +2084,7 @@ export const UsersApiFp = function (configuration?: Configuration) {
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -2101,7 +2096,7 @@ export const UsersApiFp = function (configuration?: Configuration) {
      */
     async getUserUsersIdGet(
       id: string,
-      options?: AxiosRequestConfig
+      options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponse>
     > {
@@ -2111,7 +2106,7 @@ export const UsersApiFp = function (configuration?: Configuration) {
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
     /**
@@ -2125,7 +2120,7 @@ export const UsersApiFp = function (configuration?: Configuration) {
     async updateUserUsersIdPut(
       id: string,
       userUpdate: UserUpdate,
-      options?: AxiosRequestConfig
+      options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponse>
     > {
@@ -2133,13 +2128,13 @@ export const UsersApiFp = function (configuration?: Configuration) {
         await localVarAxiosParamCreator.updateUserUsersIdPut(
           id,
           userUpdate,
-          options
+          options,
         );
       return createRequestFunction(
         localVarAxiosArgs,
         globalAxios,
         BASE_PATH,
-        configuration
+        configuration,
       );
     },
   };
@@ -2152,7 +2147,7 @@ export const UsersApiFp = function (configuration?: Configuration) {
 export const UsersApiFactory = function (
   configuration?: Configuration,
   basePath?: string,
-  axios?: AxiosInstance
+  axios?: AxiosInstance,
 ) {
   const localVarFp = UsersApiFp(configuration);
   return {
@@ -2165,7 +2160,7 @@ export const UsersApiFactory = function (
      */
     createUserUsersPost(
       userCreate: UserCreate,
-      options?: any
+      options?: any,
     ): AxiosPromise<UserResponse> {
       return localVarFp
         .createUserUsersPost(userCreate, options)
@@ -2205,7 +2200,7 @@ export const UsersApiFactory = function (
     updateUserUsersIdPut(
       id: string,
       userUpdate: UserUpdate,
-      options?: any
+      options?: any,
     ): AxiosPromise<UserResponse> {
       return localVarFp
         .updateUserUsersIdPut(id, userUpdate, options)
@@ -2231,7 +2226,7 @@ export class UsersApi extends BaseAPI {
    */
   public createUserUsersPost(
     userCreate: UserCreate,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig,
   ) {
     return UsersApiFp(this.configuration)
       .createUserUsersPost(userCreate, options)
@@ -2277,7 +2272,7 @@ export class UsersApi extends BaseAPI {
   public updateUserUsersIdPut(
     id: string,
     userUpdate: UserUpdate,
-    options?: AxiosRequestConfig
+    options?: AxiosRequestConfig,
   ) {
     return UsersApiFp(this.configuration)
       .updateUserUsersIdPut(id, userUpdate, options)

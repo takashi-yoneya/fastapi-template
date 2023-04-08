@@ -6,14 +6,14 @@ from fastapi.security import OAuth2PasswordBearer, SecurityScopes
 from jose import jwt
 from passlib.context import CryptContext
 from pydantic import ValidationError
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from app import crud, models, schemas
+from app import crud_v2, models, schemas
 from app.exceptions.core import APIException
 from app.exceptions.error_messages import ErrorMessage
 
 from .config import settings
-from .database import get_db
+from .database import get_async_db
 from .logger import get_logger
 
 logger = get_logger(__name__)
@@ -47,9 +47,9 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def get_current_user(
+async def get_current_user(
     security_scopes: SecurityScopes,
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_async_db),
     token: str = Depends(reusable_oauth2),
 ) -> models.User:
     if not token:
@@ -57,15 +57,13 @@ def get_current_user(
         raise APIException(ErrorMessage.CouldNotValidateCredentials)
 
     try:
-        logger.info(token)
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
-        logger.info(payload)
         token_data = schemas.TokenPayload(**payload)
     except (jwt.JWTError, ValidationError):
         raise APIException(
             ErrorMessage.CouldNotValidateCredentials,
         )
-    user = crud.user.get_db_obj_by_id(db, id=token_data.sub)
+    user = await crud_v2.user.get_db_obj_by_id(db, id=token_data.sub)
     if not user:
         raise APIException(ErrorMessage.NOT_FOUND("User"))
     user_scopes = user.scopes.split(",") if user.scopes else []

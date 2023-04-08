@@ -12,7 +12,6 @@ def to_camel(string: str) -> str:
 
 
 class BaseSchema(BaseModel):
-
     # @validator("*", pre=True)
     # def cast_someone(cls, v):
     #     '''

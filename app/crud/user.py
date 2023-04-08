@@ -26,7 +26,7 @@ class CRUDUser(
             full_name=obj_in.full_name,
         )
         db.add(db_obj)
-        db.commit()
+        db.flush()
         db.refresh(db_obj)
         return db_obj
 

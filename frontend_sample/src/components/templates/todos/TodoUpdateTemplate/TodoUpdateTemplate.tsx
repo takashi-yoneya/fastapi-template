@@ -20,7 +20,7 @@ const TodoUpdateTemplate: FC = () => {
         [name]: value,
       });
     },
-    [setRequestData, requestData]
+    [setRequestData, requestData],
   );
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const TodoUpdateTemplate: FC = () => {
       (error) => {
         setIsSuccess(false);
         console.log("error.", error);
-      }
+      },
     );
   };
   return (

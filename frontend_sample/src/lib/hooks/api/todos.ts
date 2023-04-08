@@ -12,7 +12,7 @@ import { TodosApiClient } from "api_clients/client";
 
 export const useGetTodoById = (id?: string): UseGetResult<TodoResponse> =>
   useGet([`/todos`, id], async () =>
-    id ? TodosApiClient.getTodoById(id) : Promise.reject()
+    id ? TodosApiClient.getTodoById(id) : Promise.reject(),
   );
 
 type GetJobsProps = {
@@ -22,11 +22,11 @@ type GetJobsProps = {
 };
 
 export const useGetTodos = (
-  props: GetJobsProps
+  props: GetJobsProps,
 ): UseGetResult<TodosPagedResponse> => {
   const { q, page, perPage } = props;
   return useGet([`/todos`, q, page, perPage], async () =>
-    TodosApiClient.getTodos(q, page, perPage)
+    TodosApiClient.getTodos(q, page, perPage),
   );
 };
 
@@ -36,13 +36,13 @@ export const useCreateTodo = (): UsePostResult<
   TodoCreate
 > =>
   usePost([`/todos`], async (request: TodoCreate) =>
-    TodosApiClient.createTodo(request)
+    TodosApiClient.createTodo(request),
   );
 
 export const useUpdateTodo = (
-  id?: string
+  id?: string,
 ): UsePostResult<TodoResponse, ErrorResponse, TodoUpdate> => {
   return usePost([`/todos`, id], async (request: TodoUpdate) =>
-    id ? TodosApiClient.updateTodo(id, request) : Promise.reject()
+    id ? TodosApiClient.updateTodo(id, request) : Promise.reject(),
   );
 };

@@ -5,7 +5,6 @@ from app.models.base import Base, ModelBaseMixin
 
 
 class Tag(ModelBaseMixin, Base):
-
     __tablename__ = "tags"
     mysql_charset = ("utf8mb4",)
     mysql_collate = "utf8mb4_unicode_ci"

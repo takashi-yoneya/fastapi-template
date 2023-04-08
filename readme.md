@@ -401,11 +401,6 @@ push 時に、Github Actions を使用して、ECS に自動デプロイを行�
 .aws/ecs-task-definition.json
 .github/workflow/aws.yml
 
-## 自然言語解析(sudachi language analyze)
-
-sudachi アナライザーを使用した日本語言語解析が可能です。
-core/language_analyzer.py に実装しています。
-
 ## Elasticsearch
 
 実験的に Elasticsearch の docker-compose.yml も定義しています。

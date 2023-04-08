@@ -25,7 +25,7 @@ const TodoCreateTemplate: FC = () => {
         [name]: value,
       });
     },
-    [setRequestData, requestData]
+    [setRequestData, requestData],
   );
 
   const handleClickUpdateButton = async (): Promise<void> => {
@@ -39,7 +39,7 @@ const TodoCreateTemplate: FC = () => {
       (error) => {
         setIsSuccess(false);
         console.log("error.", error);
-      }
+      },
     );
   };
   return (

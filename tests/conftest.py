@@ -31,7 +31,7 @@ logger.info("root-conftest")
 class TestSettings(Settings):
     """テストのみで使用する設定を記述"""
 
-    TEST_USER_EMAIL: str = "test-use1@example.com"
+    TEST_USER_EMAIL: str = "test-user1@example.com"
     TEST_USER_PASSWORD: str = "test-user"
     # TEST_SQL_DATA_PATH: str = os.path.join(BASE_DIR_PATH, "tests", "test_data", "dump.sql.gz")
 
@@ -129,7 +129,7 @@ async def db(
 
     async with test_session_factory() as session:
         yield session
-        # session.commit()
+        await session.commit()
 
 
 @pytest_asyncio.fixture
@@ -143,7 +143,7 @@ async def client(engine: AsyncEngine) -> AsyncClient:
     async def override_get_db() -> AsyncGenerator[AsyncSession, None]:
         async with test_session_factory() as session:
             yield session
-            # session.commit()
+            await session.commit()
 
     # get_dbをTest用のDBを使用するようにoverrideする
     app.dependency_overrides[get_async_db] = override_get_db
@@ -153,7 +153,6 @@ async def client(engine: AsyncEngine) -> AsyncClient:
 
 @pytest_asyncio.fixture
 async def authed_client(client: AsyncClient) -> AsyncClient:
-    # print(client.__dict__)
     """fixture: clietnに認証情報をセット"""
     logger.debug("fixture:authed_headers")
     res = await client.post(
@@ -161,6 +160,7 @@ async def authed_client(client: AsyncClient) -> AsyncClient:
         json=TEST_USER_CREATE_SCHEMA.dict(),
     )
     assert res.status_code == status.HTTP_200_OK
+
     res = await client.post(
         "/auth/login",
         data={

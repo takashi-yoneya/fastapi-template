@@ -2,32 +2,32 @@ import datetime
 
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from app import crud, schemas
+from app import crud_v2, schemas
 from app.core import auth
 from app.core.config import settings
-from app.core.database import get_db
+from app.core.database import get_async_db
 from app.exceptions.core import APIException
 from app.exceptions.error_messages import ErrorMessage
 
 router = APIRouter()
 
 
-@router.post("/login", response_model=schemas.Token)
-def login_access_token(
-    db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()
+@router.post("/login")
+async def login_access_token(
+    db: AsyncSession = Depends(get_async_db),
+    form_data: OAuth2PasswordRequestForm = Depends(),
 ) -> schemas.Token:
     """
     OAuth2 compatible token login, get an access token for future requests
     """
-    user = crud.user.authenticate(
+    user = await crud_v2.user.authenticate(
         db, email=form_data.username, password=form_data.password
     )
     if not user:
         raise APIException(ErrorMessage.FAILURE_LOGIN)
-    # elif not crud.user.is_active(user):
-    #     raise HTTPException(status_code=400, detail="Inactive user")
+
     access_token_expires = datetime.timedelta(
         minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
     )
