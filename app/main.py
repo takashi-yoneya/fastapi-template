@@ -54,7 +54,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# app.add_exception_handler(Exception, http_exception_handler)
 
 
 @app.get("/", tags=["info"])

@@ -32,6 +32,8 @@ SQLAlchemy1.4(sync)版は旧バージョンのため、今後Updateの予定は�
 https://fastapi-sample-tk.herokuapp.com/docs
 ```
 
+# プロジェクト構造(Project Structures)
+
 # 機能(Features)
 
 ## パッケージ管理、タスクランナー管理(Package management, task runner management)
@@ -391,6 +393,10 @@ poe migrate
 
 SQLAlchemy のクエリや Request など、django-debug-toolbar と同等の内容が確認できます。
 
+## Linter
+ruffというrustで構築された高速なLinterを使用しています。
+pre-commitで実行することを想定しています。
+
 ## CI/CD
 
 push 時に、Github Actions を使用して、ECS に自動デプロイを行うためのサンプルを記述しています。
@@ -473,6 +479,13 @@ Debug モード(F5 押下)で起動した場合
 
 ```
 http://localhost:8889/docs
+```
+
+## pre-commit
+commit前にlinter等のチェックを自動で行う場合は,pre-commitをインストール後に、以下コマンドでpre-commitを有効化することで、commit時に自動的にチェックができるようになります。
+
+```bash
+pre-commit install
 ```
 
 ## フロントエンドサンプル(Next.js)

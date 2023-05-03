@@ -1,4 +1,3 @@
-from typing import Optional
 
 from sqlalchemy import or_
 from sqlalchemy.dialects.mysql import insert
@@ -18,14 +17,14 @@ class CRUDTodo(
         schemas.TodoCreate,
         schemas.TodoUpdate,
         schemas.TodosPagedResponse,
-    ]
+    ],
 ):
     async def get_paged_list(  # type: ignore[override]
         self,
         db: AsyncSession,
         paging_query_in: schemas.PagingQueryIn,
-        q: Optional[str] = None,
-        sort_query_in: Optional[schemas.SortQueryIn] = None,
+        q: str | None = None,
+        sort_query_in: schemas.SortQueryIn | None = None,
         include_deleted: bool = False,
     ) -> schemas.TodosPagedResponse:
         where_clause = (
@@ -33,7 +32,7 @@ class CRUDTodo(
                 or_(
                     models.Todo.title.ilike(f"%{q}%"),
                     models.Todo.description.ilike(f"%{q}%"),
-                )
+                ),
             ]
             if q
             else []
@@ -47,7 +46,7 @@ class CRUDTodo(
         )
 
     def add_tags_to_todo(
-        self, db: Session, todo: models.Todo, tags_in: list[schemas.TagCreate]
+        self, db: Session, todo: models.Todo, tags_in: list[schemas.TagCreate],
     ) -> models.Todo:
         tags = crud_v2.tag.upsert_tags(db, tags_in=tags_in)
         todos_tags_data = [{"todo_id": todo.id, "tag_id": tag.id} for tag in tags]

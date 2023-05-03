@@ -3,9 +3,8 @@ from __future__ import annotations
 import datetime
 
 import pytest_asyncio
-from sqlalchemy.orm import Session
-
 from app import models
+from sqlalchemy.orm import Session
 
 
 @pytest_asyncio.fixture

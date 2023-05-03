@@ -1,11 +1,11 @@
-from typing import Any, Optional
+from typing import Any
 
 import pytest
+from app.schemas.core import PagingMeta
+from app.schemas.todo import TodoCreate, TodoUpdate
 from httpx import AsyncClient
 from starlette import status
 
-from app.schemas.core import PagingMeta
-from app.schemas.todo import TodoCreate, TodoUpdate
 from tests.base import (
     assert_create,
     assert_get_by_id,
@@ -27,7 +27,7 @@ class TestTodos:
                 title="test-create-title", description="test-create-description"
             ).dict(by_alias=True),
             status.HTTP_200_OK,
-            dict(title="test-create-title", description="test-create-description"),
+            {"title": "test-create-title", "description": "test-create-description"},
             None,
         ),
     }
@@ -42,8 +42,8 @@ class TestTodos:
         authed_client: AsyncClient,
         data_in: dict,
         expected_status: int,
-        expected_data: Optional[dict],
-        expected_error: Optional[dict],
+        expected_data: dict | None,
+        expected_error: dict | None,
     ) -> None:
         await assert_create(
             self.ENDPOINT_URI,
@@ -63,7 +63,7 @@ class TestTodos:
                 title="test-update-title", description="test-update-description"
             ).dict(by_alias=True),
             status.HTTP_200_OK,
-            dict(title="test-update-title", description="test-update-description"),
+            {"title": "test-update-title", "description": "test-update-description"},
             None,
         ),
         "error_id_not_found": (
@@ -94,8 +94,8 @@ class TestTodos:
         id: str,
         data_in: dict,
         expected_status: int,
-        expected_data: Optional[dict],
-        expected_error: Optional[dict],
+        expected_data: dict | None,
+        expected_error: dict | None,
         data_set: None,
     ) -> None:
         await assert_update(
@@ -114,7 +114,7 @@ class TestTodos:
         "success": (
             "1",
             status.HTTP_200_OK,
-            dict(title="test-title-1", description="test-description-1"),
+            {"title": "test-title-1", "description": "test-description-1"},
             None,
         ),
         "error_id_not_found": (
@@ -140,8 +140,8 @@ class TestTodos:
         authed_client: AsyncClient,
         id: str,
         expected_status: int,
-        expected_data: Optional[dict],
-        expected_error: Optional[dict],
+        expected_data: dict | None,
+        expected_error: dict | None,
         data_set: None,
     ) -> None:
         await assert_get_by_id(
@@ -157,9 +157,9 @@ class TestTodos:
 
     _params_get_paged_list = {
         "success": (
-            dict(q="", perPage=10),
+            {"q": "", "perPage": 10},
             status.HTTP_200_OK,
-            dict(title="test-title-24", description="test-description-24"),
+            {"title": "test-title-24", "description": "test-description-24"},
             PagingMeta(
                 current_page=1, total_page_count=3, total_data_count=24, per_page=10
             ).dict(by_alias=True),
@@ -183,9 +183,9 @@ class TestTodos:
         authed_client: AsyncClient,
         params: dict[str, Any],
         expected_status: int,
-        expected_first_data: Optional[dict],
+        expected_first_data: dict | None,
         expected_paging_meta: dict,
-        expected_error: Optional[dict],
+        expected_error: dict | None,
         data_set: None,
     ) -> None:
         await assert_get_paged_list(

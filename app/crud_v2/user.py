@@ -1,4 +1,3 @@
-from typing import Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql import select
@@ -19,7 +18,7 @@ class CRUDUser(
 ):
     async def get_by_email(
         self, db: AsyncSession, *, email: str
-    ) -> Optional[models.User]:
+    ) -> models.User | None:
         stmt = select(models.User).where(models.User.email == email)
         return (await db.execute(stmt)).scalars().first()
         # return db.query(models.User).filter(models.User.email == email).first()
@@ -45,7 +44,7 @@ class CRUDUser(
 
     async def authenticate(
         self, db: AsyncSession, *, email: str, password: str
-    ) -> Optional[models.User]:
+    ) -> models.User | None:
         user = await self.get_by_email(db, email=email)
         if not user:
             return None

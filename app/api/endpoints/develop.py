@@ -13,7 +13,6 @@ router = APIRouter()
 
 @router.get("/error")
 def exec_error() -> None:
-    # time.sleep(100)
     logger.error("debug test")
     print(1 / 0)
     raise APIException(ErrorMessage.NOT_FOUND("デバックテストID"))
@@ -21,7 +20,6 @@ def exec_error() -> None:
 
 @router.get("/error2")
 def exec_error2() -> None:
-    # time.sleep(100)
     raise APIException(ErrorMessage.INTERNAL_SERVER_ERROR)
 
 

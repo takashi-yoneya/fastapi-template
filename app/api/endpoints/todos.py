@@ -1,4 +1,3 @@
-from typing import Optional
 
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -17,10 +16,10 @@ router = APIRouter()
 
 @router.get("/{id}", operation_id="get_todo_by_id")
 async def get_job(
-    id: str, include_deleted: bool = False, db: AsyncSession = Depends(get_async_db)
+    id: str, include_deleted: bool = False, db: AsyncSession = Depends(get_async_db),
 ) -> schemas.TodoResponse:
     todo = await crud_v2.todo.get_db_obj_by_id(
-        db, id=id, include_deleted=include_deleted
+        db, id=id, include_deleted=include_deleted,
     )
     print(todo)
     if not todo:
@@ -30,7 +29,7 @@ async def get_job(
 
 @router.get("", operation_id="get_paged_todos")
 async def get_paged_todos(
-    q: Optional[str] = None,
+    q: str | None = None,
     paging_query_in: PagingQueryIn = Depends(),
     sort_query_in: schemas.TodoSortQueryIn = Depends(),
     include_deleted: bool = False,
@@ -47,7 +46,7 @@ async def get_paged_todos(
 
 @router.post("", operation_id="create_todo")
 async def create_todo(
-    data_in: schemas.TodoCreate, db: AsyncSession = Depends(get_async_db)
+    data_in: schemas.TodoCreate, db: AsyncSession = Depends(get_async_db),
 ) -> schemas.TodoResponse:
     return await crud_v2.todo.create(db, data_in)
 
@@ -78,7 +77,7 @@ async def add_tags_to_todo(
 
 
 @router.delete(
-    "/{id}", status_code=status.HTTP_204_NO_CONTENT, operation_id="delete_todo"
+    "/{id}", status_code=status.HTTP_204_NO_CONTENT, operation_id="delete_todo",
 )
 async def delete_todo(
     id: str,
@@ -88,5 +87,3 @@ async def delete_todo(
     if not todo:
         raise APIException(ErrorMessage.ID_NOT_FOUND)
     await crud_v2.todo.delete(db, db_obj=todo)
-
-    return None

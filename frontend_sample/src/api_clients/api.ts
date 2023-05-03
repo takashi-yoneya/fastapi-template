@@ -408,7 +408,7 @@ export const AuthApiAxiosParamCreator = function (
 ) {
   return {
     /**
-     * OAuth2 compatible token login, get an access token for future requests
+     * OAuth2 compatible token login, get an access token for future requests.
      * @summary Login Access Token
      * @param {string} username
      * @param {string} password
@@ -502,7 +502,7 @@ export const AuthApiFp = function (configuration?: Configuration) {
   const localVarAxiosParamCreator = AuthApiAxiosParamCreator(configuration);
   return {
     /**
-     * OAuth2 compatible token login, get an access token for future requests
+     * OAuth2 compatible token login, get an access token for future requests.
      * @summary Login Access Token
      * @param {string} username
      * @param {string} password
@@ -556,7 +556,7 @@ export const AuthApiFactory = function (
   const localVarFp = AuthApiFp(configuration);
   return {
     /**
-     * OAuth2 compatible token login, get an access token for future requests
+     * OAuth2 compatible token login, get an access token for future requests.
      * @summary Login Access Token
      * @param {string} username
      * @param {string} password
@@ -599,7 +599,7 @@ export const AuthApiFactory = function (
  */
 export class AuthApi extends BaseAPI {
   /**
-   * OAuth2 compatible token login, get an access token for future requests
+   * OAuth2 compatible token login, get an access token for future requests.
    * @summary Login Access Token
    * @param {string} username
    * @param {string} password

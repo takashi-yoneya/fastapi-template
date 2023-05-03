@@ -1,4 +1,3 @@
-from typing import Optional
 
 from app.schemas.core import BaseSchema
 
@@ -14,4 +13,4 @@ class Token(BaseSchema):
 
 
 class TokenPayload(BaseSchema):
-    sub: Optional[str]
+    sub: str | None

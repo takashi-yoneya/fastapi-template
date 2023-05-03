@@ -1,18 +1,17 @@
 import datetime
-from typing import Optional
 
 from app.schemas.core import BaseSchema, PagingMeta
 
 
 class TagBase(BaseSchema):
-    name: Optional[str]
+    name: str | None
 
 
 class TagResponse(TagBase):
     id: str
-    created_at: Optional[datetime.datetime]
-    updated_at: Optional[datetime.datetime]
-    deleted_at: Optional[datetime.datetime]
+    created_at: datetime.datetime | None
+    updated_at: datetime.datetime | None
+    deleted_at: datetime.datetime | None
 
     class Config:
         orm_mode = True
@@ -27,5 +26,5 @@ class TagUpdate(TagBase):
 
 
 class TagsPagedResponse(BaseSchema):
-    data: Optional[list[TagResponse]]
-    meta: Optional[PagingMeta]
+    data: list[TagResponse] | None
+    meta: PagingMeta | None

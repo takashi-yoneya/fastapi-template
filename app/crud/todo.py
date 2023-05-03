@@ -1,5 +1,3 @@
-from typing import Optional
-
 from sqlalchemy import or_
 from sqlalchemy.orm import Session, contains_eager
 
@@ -15,21 +13,21 @@ class CRUDTodo(
         schemas.TodoCreate,
         schemas.TodoUpdate,
         schemas.TodosPagedResponse,
-    ]
+    ],
 ):
     def get_paged_list(  # type: ignore[override]
         self,
         db: Session,
         paging_query_in: schemas.PagingQueryIn,
-        q: Optional[str] = None,
-        sort_query_in: Optional[schemas.SortQueryIn] = None,
+        q: str | None = None,
+        sort_query_in: schemas.SortQueryIn | None = None,
     ) -> schemas.TodosPagedResponse:
         where_clause = (
             [
                 or_(
                     models.Todo.title.ilike(f"%{q}%"),
                     models.Todo.description.ilike(f"%{q}%"),
-                )
+                ),
             ]
             if q
             else []
@@ -42,7 +40,10 @@ class CRUDTodo(
         )
 
     def add_tags_to_todo(
-        self, db: Session, todo: models.Todo, tags_in: list[schemas.TagCreate]
+        self,
+        db: Session,
+        todo: models.Todo,
+        tags_in: list[schemas.TagCreate],
     ) -> models.Todo:
         tags = crud.tag.upsert_tags(db, tags_in=tags_in)
         for tag in tags:
@@ -59,9 +60,6 @@ class CRUDTodo(
         )
 
         return todo
-
-    # def get(self, db: Session, id: str, include_deleted: bool = False):
-    #     schema_columns = list(schemas.TodoResponse.__fields__.keys())
 
 
 todo = CRUDTodo(

@@ -1,4 +1,4 @@
-from typing import AsyncGenerator, Generator
+from collections.abc import AsyncGenerator, Generator
 
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
@@ -33,17 +33,16 @@ try:
         future=True,
     )
     async_session_factory = sessionmaker(
-        autocommit=False, autoflush=False, bind=async_engine, class_=AsyncSession
+        autocommit=False, autoflush=False, bind=async_engine, class_=AsyncSession,
     )
 except Exception as e:
     logger.error(f"DB connection error. detail={e}")
 
 
 def get_db() -> Generator[Session, None, None]:
-    """
-    endpointからアクセス時に、Dependで呼び出しdbセッションを生成する
+    """endpointからアクセス時に、Dependで呼び出しdbセッションを生成する
     エラーがなければ、commitする
-    エラー時はrollbackし、いずれの場合も最終的にcloseする
+    エラー時はrollbackし、いずれの場合も最終的にcloseする.
     """
     db = None
     try:
@@ -59,9 +58,7 @@ def get_db() -> Generator[Session, None, None]:
 
 
 async def get_async_db() -> AsyncGenerator[AsyncSession, None]:
-    """
-    async用のdb-sessionの作成
-    """
+    """async用のdb-sessionの作成."""
     async with async_session_factory() as db:
         try:
             yield db
@@ -75,12 +72,12 @@ async def get_async_db() -> AsyncGenerator[AsyncSession, None]:
 def drop_all_tables() -> None:
     logger.info("start: drop_all_tables")
     """
-    全てのテーブルおよび型、Roleなどを削除して、初期状態に戻す（開発環境専用）
+    全てのテーブルおよび型、Roleなどを削除して、初期状態に戻す(開発環境専用)
     """
     if settings.ENV != "local":
         # ローカル環境でしか動作させない
         logger.info("drop_all_table() is ENV local only.")
-        return None
+        return
 
     metadata = MetaData()
     metadata.reflect(bind=engine)

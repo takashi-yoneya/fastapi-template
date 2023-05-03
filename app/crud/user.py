@@ -1,4 +1,3 @@
-from typing import Optional
 
 from sqlalchemy.orm import Session
 
@@ -14,9 +13,9 @@ class CRUDUser(
         schemas.UserCreate,
         schemas.UserUpdate,
         schemas.UserResponse,
-    ]
+    ],
 ):
-    def get_by_email(self, db: Session, *, email: str) -> Optional[models.User]:
+    def get_by_email(self, db: Session, *, email: str) -> models.User | None:
         return db.query(models.User).filter(models.User.email == email).first()
 
     def create(self, db: Session, obj_in: schemas.UserCreate) -> models.User:
@@ -31,7 +30,7 @@ class CRUDUser(
         return db_obj
 
     def update(  # type: ignore[override]
-        self, db: Session, *, db_obj: models.User, obj_in: schemas.UserUpdate
+        self, db: Session, *, db_obj: models.User, obj_in: schemas.UserUpdate,
     ) -> models.User:
         if obj_in.password:
             hashed_password = get_password_hash(obj_in.password)
@@ -39,8 +38,8 @@ class CRUDUser(
         return super().update(db, db_obj=db_obj, update_schema=obj_in)
 
     def authenticate(
-        self, db: Session, *, email: str, password: str
-    ) -> Optional[models.User]:
+        self, db: Session, *, email: str, password: str,
+    ) -> models.User | None:
         user = self.get_by_email(db, email=email)
         if not user:
             return None

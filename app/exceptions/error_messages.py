@@ -1,15 +1,15 @@
-from typing import Any, Optional
+from typing import Any
 
 from starlette import status
 
 
 class BaseMessage:
-    """メッセージクラスのベース"""
+    """メッセージクラスのベース."""
 
     text: str
     status_code: int = status.HTTP_400_BAD_REQUEST
 
-    def __init__(self, param: Optional[Any] = None) -> None:
+    def __init__(self, param: Any | None = None) -> None:
         self.param = param
 
     def __str__(self) -> str:
@@ -17,9 +17,10 @@ class BaseMessage:
 
 
 class ErrorMessage:
-    """エラーメッセージクラス
+    """エラーメッセージクラス.
 
-    Notes:
+    Notes
+    -----
         BaseMessagを継承することで
         Class呼び出し時にClass名がエラーコードになり、.textでエラーメッセージも取得できるため
         エラーコードと、メッセージの管理が直感的に行える。

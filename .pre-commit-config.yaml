@@ -1,35 +1,42 @@
 repos:
-  - repo: https://github.com/timothycrosley/isort
-    rev: 5.12.0
-    hooks:
-      - id: isort
-        additional_dependencies: [toml]
+  # - repo: https://github.com/timothycrosley/isort
+  #   rev: 5.12.0
+  #   hooks:
+  #     - id: isort
+  #       additional_dependencies: [toml]
 
-  - repo: https://github.com/PyCQA/autoflake
-    rev: v2.0.2
-    hooks:
-      - id: autoflake
-        args:
-          - --in-place
-          - --recursive
-          - --expand-star-imports
-          - --remove-all-unused-imports
-          - --ignore-init-module-imports
-          - --remove-unused-variables
+  # - repo: https://github.com/PyCQA/autoflake
+  #   rev: v2.0.2
+  #   hooks:
+  #     - id: autoflake
+  #       args:
+  #         - --in-place
+  #         - --recursive
+  #         - --expand-star-imports
+  #         - --remove-all-unused-imports
+  #         - --ignore-init-module-imports
+  #         - --remove-unused-variables
 
-  - repo: https://github.com/psf/black
-    rev: 23.3.0
-    hooks:
-      - id: black
-        args:
-          - app/
+  # - repo: https://github.com/psf/black
+  #   rev: 23.3.0
+  #   hooks:
+  #     - id: black
+  #       args:
+  #         - app/
 
-  - repo: https://github.com/PyCQA/flake8
-    rev: 6.0.0
+  # - repo: https://github.com/PyCQA/flake8
+  #   rev: 6.0.0
+  #   hooks:
+  #     - id: flake8
+  #       args:
+  #         - app/
+
+  # black, flake8, isort, autoflakeはより高速で一元管理可能なruffに置き換える
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: "v0.0.264"
     hooks:
-      - id: flake8
-        args:
-          - app/
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.2.0

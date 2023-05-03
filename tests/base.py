@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 from httpx import AsyncClient
 from starlette import status
@@ -11,7 +11,7 @@ async def assert_create(
     client: AsyncClient,
     data_in: dict[str, Any],
     expected_status: int,
-    expected_data: Optional[dict[str, Any]],
+    expected_data: dict[str, Any] | None,
 ):
     res = await client.post(uri, json=data_in)
     assert res.status_code == expected_status
@@ -26,7 +26,7 @@ async def assert_update(
     id: str,
     data_in: dict[str, Any],
     expected_status: int,
-    expected_data: Optional[dict[str, Any]],
+    expected_data: dict[str, Any] | None,
 ):
     res = await client.patch(f"{uri}/{id}", json=data_in)
     assert res.status_code == expected_status
@@ -40,7 +40,7 @@ async def assert_get_by_id(
     client: AsyncClient,
     id: str,
     expected_status: int,
-    expected_data: Optional[dict[str, Any]],
+    expected_data: dict[str, Any] | None,
 ):
     res = await client.get(f"{uri}/{id}")
     assert res.status_code == expected_status

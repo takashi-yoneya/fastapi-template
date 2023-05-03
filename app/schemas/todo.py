@@ -1,6 +1,5 @@
 import datetime
 from enum import Enum
-from typing import Optional
 
 from fastapi import Query
 
@@ -10,16 +9,16 @@ from app.schemas.tag import TagResponse
 
 
 class TodoBase(BaseSchema):
-    title: Optional[str]
-    description: Optional[str]
-    completed_at: Optional[datetime.datetime]
+    title: str | None
+    description: str | None
+    completed_at: datetime.datetime | None
 
 
 class TodoResponse(TodoBase):
     id: str
-    tags: Optional[list[TagResponse]]
-    created_at: Optional[datetime.datetime]
-    updated_at: Optional[datetime.datetime]
+    tags: list[TagResponse] | None
+    created_at: datetime.datetime | None
+    updated_at: datetime.datetime | None
     # deleted_at: Optional[datetime.datetime]
 
     class Config:
@@ -28,7 +27,7 @@ class TodoResponse(TodoBase):
 
 class TodoCreate(TodoBase):
     title: str
-    description: Optional[str]
+    description: str | None
 
 
 class TodoUpdate(TodoBase):
@@ -36,8 +35,8 @@ class TodoUpdate(TodoBase):
 
 
 class TodosPagedResponse(BaseSchema):
-    data: Optional[list[TodoResponse]]
-    meta: Optional[PagingMeta]
+    data: list[TodoResponse] | None
+    meta: PagingMeta | None
 
 
 class TodoSortFieldEnum(Enum):
@@ -46,4 +45,4 @@ class TodoSortFieldEnum(Enum):
 
 
 class TodoSortQueryIn(schemas.SortQueryIn):
-    sort_field: Optional[TodoSortFieldEnum] = Query(TodoSortFieldEnum.created_at)
+    sort_field: TodoSortFieldEnum | None = Query(TodoSortFieldEnum.created_at)

@@ -1,9 +1,16 @@
 import logging
 import os
-from typing import Any, AsyncGenerator
+from collections.abc import AsyncGenerator
+from typing import Any
 
+import alembic.command
+import alembic.config
 import pytest
 import pytest_asyncio
+from app import schemas
+from app.core.config import Settings
+from app.core.database import get_async_db
+from app.main import app
 from fastapi import status
 from httpx import AsyncClient
 from pytest_mysql import factories
@@ -11,13 +18,6 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
-
-import alembic.command
-import alembic.config
-from app import schemas
-from app.core.config import Settings
-from app.core.database import get_async_db
-from app.main import app
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)

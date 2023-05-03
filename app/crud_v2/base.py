@@ -1,7 +1,7 @@
 import datetime
 import math
 from enum import Enum
-from typing import Any, Generic, Optional, Type, TypeVar, Union
+from typing import Any, Generic, TypeVar
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
@@ -30,23 +30,22 @@ class CRUDV2Base(
         CreateSchemaType,
         UpdateSchemaType,
         ListResponseSchemaType,
-    ]
+    ],
 ):
     def __init__(
         self,
-        model: Type[ModelType],
-        response_schema_class: Type[ResponseSchemaType],
-        list_response_class: Type[ListResponseSchemaType],
-    ):
+        model: type[ModelType],
+        response_schema_class: type[ResponseSchemaType],
+        list_response_class: type[ListResponseSchemaType],
+    ) -> None:
         self.model = model
         self.response_schema_class = response_schema_class
         self.list_response_class = list_response_class
 
     def _get_select_columns(self) -> list[ColumnProperty]:
-        """ResponseSchemaに含まれるfieldのみをsqlalchemyのselect用のobjectとして返す"""
+        """ResponseSchemaに含まれるfieldのみをsqlalchemyのselect用のobjectとして返す."""
         schema_columns = list(self.response_schema_class.__fields__.keys())
         mapper = inspect(self.model)
-        # ColumnPropertyのみを対象とする(relationshipはselect区に指定できないため)
         select_columns = [
             getattr(self.model, attr.key)
             for attr in mapper.attrs
@@ -56,7 +55,7 @@ class CRUDV2Base(
         return select_columns
 
     def _filter_model_exists_fields(self, data_dict: dict[str, Any]) -> dict[str, Any]:
-        """data_dictを与え、modelに存在するfieldだけをfilterして返す"""
+        """data_dictを与え、modelに存在するfieldだけをfilterして返す."""
         data_fields = list(data_dict.keys())
         mapper = inspect(self.model)
         exists_data_dict = {}
@@ -67,12 +66,12 @@ class CRUDV2Base(
         return exists_data_dict
 
     def _get_order_by_clause(
-        self, sort_field: Union[Any, Enum]
-    ) -> Optional[ColumnProperty]:
+        self,
+        sort_field: Any | Enum,
+    ) -> ColumnProperty | None:
         sort_field_value = (
             sort_field.value if isinstance(sort_field, Enum) else sort_field
         )
-        # ColumnPropertyのみを対象とする(relationshipはselect区に指定できないため)
         mapper = inspect(self.model)
         order_by_clause = [
             attr
@@ -87,7 +86,7 @@ class CRUDV2Base(
         db: AsyncSession,
         id: Any,
         include_deleted: bool = False,
-    ) -> Optional[ModelType]:
+    ) -> ModelType | None:
         stmt = (
             select(self.model)
             .where(self.model.id == id)
@@ -98,10 +97,11 @@ class CRUDV2Base(
     async def get_db_obj_list(
         self,
         db: AsyncSession,
-        where_clause: list[Any] = [],
-        sort_query_in: Optional[schemas.SortQueryIn] = None,
+        where_clause: list[Any] | None = None,
+        sort_query_in: schemas.SortQueryIn | None = None,
         include_deleted: bool = False,
     ) -> list[ModelType]:
+        where_clause = where_clause if where_clause is not None else []
         stmt = select(self.model).where(*where_clause)
         if sort_query_in:
             order_by_clause = self._get_order_by_clause(sort_query_in.sort_field)
@@ -116,14 +116,14 @@ class CRUDV2Base(
         self,
         db: AsyncSession,
         paging_query_in: PagingQueryIn,
-        where_clause: list[Any] = [],
-        sort_query_in: Optional[schemas.SortQueryIn] = None,
+        where_clause: list[Any] | None = None,
+        sort_query_in: schemas.SortQueryIn | None = None,
         include_deleted: bool = False,
     ) -> ListResponseSchemaType:
+        """Notes
+        include_deleted=Trueの場合は、削除フラグ=Trueのデータも返す.
         """
-        Notes:
-            include_deleted=Trueの場合は、削除フラグ=Trueのデータも返す
-        """
+        where_clause = where_clause if where_clause is not None else []
         stmt = (
             select(func.count(self.model.id))
             .where(*where_clause)
@@ -150,7 +150,9 @@ class CRUDV2Base(
         return list_response
 
     async def create(
-        self, db: AsyncSession, create_schema: CreateSchemaType
+        self,
+        db: AsyncSession,
+        create_schema: CreateSchemaType,
     ) -> ModelType:
         # by_alias=Falseにしないとalias側(CamenCase)が採用されてしまう
         create_dict = jsonable_encoder(create_schema, by_alias=False)
@@ -163,12 +165,16 @@ class CRUDV2Base(
         return db_obj
 
     async def update(
-        self, db: AsyncSession, *, db_obj: ModelType, update_schema: UpdateSchemaType
+        self,
+        db: AsyncSession,
+        *,
+        db_obj: ModelType,
+        update_schema: UpdateSchemaType,
     ) -> ModelType:
         # obj_inでセットされたスキーマをmodelの各カラムにUpdate
         db_obj_dict = jsonable_encoder(db_obj)
         update_dict = update_schema.dict(
-            exclude_unset=True
+            exclude_unset=True,
         )  # exclude_unset=Trueとすることで、未指定のカラムはUpdateしない
         for field in db_obj_dict:
             if field in update_dict:
@@ -180,19 +186,19 @@ class CRUDV2Base(
         return db_obj
 
     async def delete(self, db: AsyncSession, db_obj: ModelType) -> ModelType:
-        """論理削除(soft delete)"""
+        """論理削除(soft delete)."""
         if not hasattr(db_obj, "deleted_at"):
             raise APIException(ErrorMessage.SOFT_DELETE_NOT_SUPPORTED)
         if db_obj.deleted_at:
             raise APIException(ErrorMessage.ALREADY_DELETED)
 
-        db_obj.deleted_at = datetime.datetime.now()
+        db_obj.deleted_at = datetime.datetime.now(tz=datetime.timezone.utc)
         await db.add(db_obj)
         await db.flush()
         await db.refresh(db_obj)
         return db_obj
 
     async def real_delete(self, db: AsyncSession, db_obj: ModelType) -> None:
-        """実削除(real redele)"""
+        """実削除(real redele)."""
         await db.delete(db_obj)
         await db.flush()

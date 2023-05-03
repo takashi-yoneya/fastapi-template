@@ -1,4 +1,3 @@
-from typing import Optional
 
 from pydantic import EmailStr
 
@@ -6,7 +5,7 @@ from app.schemas.core import BaseSchema, PagingMeta
 
 
 class UserBase(BaseSchema):
-    full_name: Optional[str] = None
+    full_name: str | None = None
 
 
 class UserCreate(UserBase):
@@ -16,7 +15,7 @@ class UserCreate(UserBase):
 
 # Properties to receive via API on update
 class UserUpdate(UserBase):
-    password: Optional[str] = None
+    password: str | None = None
 
 
 class UserResponse(UserBase):
@@ -29,5 +28,5 @@ class UserResponse(UserBase):
 
 
 class UsersPagedResponse(BaseSchema):
-    data: Optional[list[UserResponse]]
-    meta: Optional[PagingMeta]
+    data: list[UserResponse] | None
+    meta: PagingMeta | None

@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Optional
+from typing import Any
 
 from fastapi import Query
 from humps import camel
@@ -18,23 +18,16 @@ class BaseSchema(BaseModel):
     #     全ての項目に対して、pre処理を行いたい場合の例
     #     '''
     #     if isinstance(v, Any):
-    #         return v
-    #     return v
-
-    # @validator("*", pre=True)
+      # @validator("*", pre=True)
     # def split_comma(cls, v):
     #     '''
     #     カンマでsplitする例
     #     '''
     #     if isinstance(v, str):
-    #         return v.split(",")
-    #     return v
-
-    class Config:
-        """
-        # キャメルケース　<-> スネークケースの自動変換
+      class Config:
+        """# キャメルケース　<-> スネークケースの自動変換
         pythonではスネークケースを使用するが、Javascriptではキャメルケースを使用する場合が多いため
-        変換する必要がある
+        変換する必要がある.
         """
 
         alias_generator = to_camel
@@ -78,10 +71,10 @@ class SortDirectionEnum(Enum):
 
 
 class SortQueryIn(BaseSchema):
-    sort_field: Optional[Any] = Query(None)
+    sort_field: Any | None = Query(None)
     direction: SortDirectionEnum = Query(SortDirectionEnum.asc)
 
-    def apply_to_query(self, query: Any, order_by_clause: Optional[Any] = None) -> Any:
+    def apply_to_query(self, query: Any, order_by_clause: Any | None = None) -> Any:
         if not order_by_clause:
             return query
 
@@ -94,15 +87,16 @@ class SortQueryIn(BaseSchema):
 class FilterQueryIn(BaseSchema):
     sort: str = Query(None)
     direction: str = Query(None)
-    start: Optional[int] = Query(None)
-    end: Optional[int] = Query(None)
+    start: int | None = Query(None)
+    end: int | None = Query(None)
 
     @validator("direction")
     def validate_direction(cls, v: str) -> str:
         if not v:
             return "asc"
         if v not in ["asc", "desc"]:
-            raise ValueError("asc or desc only")
+            msg = "asc or desc only"
+            raise ValueError(msg)
         return v
 
     def validate_allowed_sort_column(self, allowed_columns: list[str]) -> bool:

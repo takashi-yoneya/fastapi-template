@@ -1,10 +1,10 @@
-from typing import Any, Dict, List
+from typing import Any
 
 
 def assert_dict_part(
-    result_dict: Dict[Any, Any],
-    expected_dict: Dict[Any, Any],
-    exclude_fields: List[str] = [],
+    result_dict: dict[Any, Any],
+    expected_dict: dict[Any, Any],
+    exclude_fields: list[str] = [],
     expected_delete: bool = False,
 ) -> None:
     # 削除済データを取得する場合は、deleted_atにデータが存在することのみをチェックする
@@ -20,7 +20,7 @@ def assert_dict_part(
         ), f"key={key}. result_value={result_dict.get(key)}. expected_value={value}"
 
 
-def assert_is_deleted(result_dict: Dict[Any, Any]) -> None:
+def assert_is_deleted(result_dict: dict[Any, Any]) -> None:
     assert result_dict.get("deleted_at")
 
 
@@ -37,7 +37,7 @@ def assert_failed_status_code(status_code: int) -> None:
 
 
 def assert_crud_model(
-    result_obj: Any, expected_obj: Any, exclude_fileds: List[str] = []
+    result_obj: Any, expected_obj: Any, exclude_fileds: list[str] = []
 ) -> None:
     """
     sqlalchemy-modelのassertion

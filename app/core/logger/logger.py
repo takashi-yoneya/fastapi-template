@@ -6,10 +6,8 @@ import yaml
 
 
 def init_logger(filepath: str) -> None:
-    # config_path = "logging_conf2.yaml"
     with open(filepath) as f:
         config = yaml.safe_load(f)
-        # print(config)
         dictConfig(config)
 
 

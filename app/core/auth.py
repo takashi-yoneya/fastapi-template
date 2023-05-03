@@ -1,9 +1,10 @@
-from datetime import datetime, timedelta
-from typing import Any, Optional, Union
+from datetime import datetime, timedelta, timezone
+from typing import Any
 
 from fastapi import Depends, status
 from fastapi.security import OAuth2PasswordBearer, SecurityScopes
 from jose import jwt
+from jose.exceptions import JWTError
 from passlib.context import CryptContext
 from pydantic import ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -21,18 +22,19 @@ logger = get_logger(__name__)
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 ALGORITHM = "HS256"
 reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.API_GATEWAY_STAGE_PATH}/auth/login", auto_error=False
+    tokenUrl=f"{settings.API_GATEWAY_STAGE_PATH}/auth/login", auto_error=False,
 )
 
 
 def create_access_token(
-    subject: Union[str, Any], expires_delta: Optional[timedelta] = None
+    subject: str | Any, expires_delta: timedelta | None = None,
 ) -> str:
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+
+        expire = datetime.now(tz=timezone.utc) + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(
-            minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+        expire = datetime.now(tz=timezone.utc) + timedelta(
+            minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES,
         )
     to_encode = {"exp": expire, "sub": str(subject)}
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=ALGORITHM)
@@ -53,16 +55,15 @@ async def get_current_user(
     token: str = Depends(reusable_oauth2),
 ) -> models.User:
     if not token:
-        # raise HTTPException(status_code=403)
         raise APIException(ErrorMessage.CouldNotValidateCredentials)
 
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
         token_data = schemas.TokenPayload(**payload)
-    except (jwt.JWTError, ValidationError):
+    except (JWTError, ValidationError):
         raise APIException(
-            ErrorMessage.CouldNotValidateCredentials,
-        )
+            ErrorMessage.CouldNotValidateCredentials
+        ) from None
     user = await crud_v2.user.get_db_obj_by_id(db, id=token_data.sub)
     if not user:
         raise APIException(ErrorMessage.NOT_FOUND("User"))
@@ -77,18 +78,11 @@ async def get_current_user(
 
 
 # def get_current_active_user(
-#     current_user: models.User = Depends(get_current_user),
 # ) -> models.User:
 #     if not crud.user.is_active(current_user):
-#         raise HTTPException(status_code=400, detail="Inactive user")
-#     return current_user
 
 
 # def get_current_active_superuser(
-#     current_user: models.User = Depends(get_current_user),
 # ) -> models.User:
 #     if not crud.user.is_superuser(current_user):
 #         raise HTTPException(
-#             status_code=400, detail="The user doesn't have enough privileges"
-#         )
-#     return
