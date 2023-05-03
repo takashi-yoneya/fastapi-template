@@ -34,6 +34,165 @@ https://fastapi-sample-tk.herokuapp.com/docs
 
 # プロジェクト構造(Project Structures)
 
+```text
+.
+├── Dockerfile          // 通常使用するDockerfile
+├── Dockerfile.lambda   // Lambdaにデプロイする場合のDockerfile
+├── LICENSE.md
+├── Makefile            // タスクランナーを定義したMakefile
+├── Procfile
+├── alembic             // migrationに使用するalembicのディレクトリ
+│   ├── README
+│   ├── env.py
+│   ├── script.py.mako
+│   └── versions
+│       └── 20230131-0237_.py
+├── alembic.ini
+├── app                 // mainのソースコードディレクト遺r
+│   ├── __init__.py
+│   ├── api             // WebAPI Endpoint
+│   │   └── endpoints
+│   │       ├── __init__.py
+│   │       ├── auth.py
+│   │       ├── develop.py
+│   │       ├── tasks.py
+│   │       ├── todos.py
+│   │       └── users.py
+│   ├── commands
+│   │   ├── __init__.py
+│   │   ├── __set_base_path__.py
+│   │   └── user_creation.py
+│   ├── core            // 共通で共通するCore機能
+│   │   ├── __init__.py
+│   │   ├── auth.py
+│   │   ├── config.py
+│   │   ├── database.py
+│   │   ├── logger
+│   │   │   ├── __init__.py
+│   │   │   └── logger.py
+│   │   └── utils.py
+│   ├── crud            // crudディレクトリ（Sqlalchemy v1.4のため、メンテ停止）
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── tag.py
+│   │   ├── todo.py
+│   │   └── user.py
+│   ├── crud_v2　       // crudディレクトリ (sqlalchemy v2対応)
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── tag.py
+│   │   ├── todo.py
+│   │   └── user.py
+│   ├── exceptions      // expectionsの定義
+│   │   ├── __init__.py
+│   │   ├── core.py
+│   │   ├── error_messages.py
+│   │   └── exception_handlers.py
+│   ├── logger_config.yaml
+│   ├── main.py         // fastapiのmainファイル。uvicornで指定する
+│   ├── models          // DBテーブルのmodel
+│   │   ├── __init__.py
+│   │   ├── base.py
+│   │   ├── tags.py
+│   │   ├── todos.py
+│   │   ├── todos_tags.py
+│   │   └── users.py
+│   └── schemas         // 外部入出力用のschema
+│       ├── __init__.py
+│       ├── core.py
+│       ├── language_analyzer.py
+│       ├── request_info.py
+│       ├── tag.py
+│       ├── todo.py
+│       ├── token.py
+│       └── user.py
+├── docker-compose.ecs.yml
+├── docker-compose.es.yml
+├── docker-compose.yml
+├── docs
+│   ├── docs
+│   │   ├── index.md
+│   │   └── install.md
+│   └── mkdocs.yml
+├── elasticsearch
+│   ├── docker-compose.yml
+│   ├── elasticsearch
+│   │   └── Dockerfile.es
+│   ├── logstash
+│   │   ├── Dockerfile
+│   │   └── pipeline
+│   │       └── main.conf
+│   └── readme.md
+├── flake8.ini
+├── frontend_sample             // Frontend(react)からBackendを呼び出すサンプル
+│   ├── README.md
+│   ├── next.config.js
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── public
+│   │   ├── favicon.ico
+│   │   └── vercel.svg
+│   ├── src
+│   │   ├── api_clients
+│   │   │   ├── api.ts
+│   │   │   ├── base.ts
+│   │   │   ├── client.ts
+│   │   │   ├── common.ts
+│   │   │   ├── configuration.ts
+│   │   │   ├── git_push.sh
+│   │   │   └── index.ts
+│   │   ├── components
+│   │   │   └── templates
+│   │   │       └── todos
+│   │   │           ├── TodoCreateTemplate
+│   │   │           │   └── TodoCreateTemplate.tsx
+│   │   │           ├── TodoUpdateTemplate
+│   │   │           │   └── TodoUpdateTemplate.tsx
+│   │   │           └── TodosListTemplate
+│   │   │               └── TodosListTemplate.tsx
+│   │   ├── config.ts
+│   │   ├── lib
+│   │   │   └── hooks
+│   │   │       └── api
+│   │   │           ├── index.ts
+│   │   │           └── todos.ts
+│   │   ├── pages
+│   │   │   ├── _app.tsx
+│   │   │   ├── index.tsx
+│   │   │   └── todos
+│   │   │       ├── create.tsx
+│   │   │       ├── edit.tsx
+│   │   │       └── list.tsx
+│   │   ├── styles
+│   │   │   ├── Home.module.css
+│   │   │   └── globals.css
+│   │   └── types
+│   │       └── api
+│   │           └── index.ts
+│   └── tsconfig.json
+├── mypy.ini
+├── poetry.lock
+├── pyproject.toml
+├── readme.md
+├── requirements-dev.txt
+├── requirements.txt
+├── runtime.txt
+├── seeder                        // seedの定義、インポーター
+│   ├── run.py
+│   └── seeds_json
+│       ├── todos.json
+│       └── users.json
+└── tests                         // test
+    ├── __init__.py
+    ├── base.py
+    ├── conftest.py
+    ├── testing_utils.py
+    └── todos
+        ├── __init__.py
+        ├── conftest.py
+        └── test_todos.py
+```
+
 # 機能(Features)
 
 ## パッケージ管理、タスクランナー管理(Package management, task runner management)
