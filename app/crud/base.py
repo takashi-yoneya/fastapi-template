@@ -46,9 +46,7 @@ class CRUDBase(
         schema_columns = list(self.response_schema_class.__fields__.keys())
         mapper = inspect(self.model)
         select_columns = [
-            attr
-            for attr in mapper.attrs
-            if isinstance(attr, ColumnProperty) and attr.key in schema_columns
+            attr for attr in mapper.attrs if isinstance(attr, ColumnProperty) and attr.key in schema_columns
         ]
 
         return select_columns
@@ -68,14 +66,10 @@ class CRUDBase(
         self,
         sort_field: Any | Enum,
     ) -> ColumnProperty | None:
-        sort_field_value = (
-            sort_field.value if isinstance(sort_field, Enum) else sort_field
-        )
+        sort_field_value = sort_field.value if isinstance(sort_field, Enum) else sort_field
         mapper = inspect(self.model)
         order_by_clause = [
-            attr
-            for attr in mapper.attrs
-            if isinstance(attr, ColumnProperty) and attr.key == sort_field_value
+            attr for attr in mapper.attrs if isinstance(attr, ColumnProperty) and attr.key == sort_field_value
         ]
 
         return order_by_clause[0] if order_by_clause else None
@@ -87,10 +81,7 @@ class CRUDBase(
         include_deleted: bool = False,
     ) -> ModelType | None:
         db_obj = (
-            db.query(self.model)
-            .filter(self.model.id == id)
-            .execution_options(include_deleted=include_deleted)
-            .first()
+            db.query(self.model).filter(self.model.id == id).execution_options(include_deleted=include_deleted).first()
         )
         return db_obj
 

@@ -18,7 +18,9 @@ class Base(DeclarativeBase):
 class ModelBaseMixin:
     id: Mapped[str] = mapped_column(String(32), primary_key=True, default=get_ulid)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime, nullable=False, server_default=current_timestamp(),
+        DateTime,
+        nullable=False,
+        server_default=current_timestamp(),
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime,
@@ -32,7 +34,9 @@ class ModelBaseMixin:
 class ModelBaseMixinWithoutDeletedAt:
     id: Mapped[str] = mapped_column(String(32), primary_key=True, default=get_ulid)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime, nullable=False, server_default=current_timestamp(),
+        DateTime,
+        nullable=False,
+        server_default=current_timestamp(),
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime,

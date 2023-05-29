@@ -33,7 +33,10 @@ try:
         future=True,
     )
     async_session_factory = sessionmaker(
-        autocommit=False, autoflush=False, bind=async_engine, class_=AsyncSession,
+        autocommit=False,
+        autoflush=False,
+        bind=async_engine,
+        class_=AsyncSession,
     )
 except Exception as e:
     logger.error(f"DB connection error. detail={e}")

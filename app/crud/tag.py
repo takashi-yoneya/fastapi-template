@@ -17,7 +17,9 @@ class CRUDTag(
     ],
 ):
     def upsert_tags(
-        self, db: Session, tags_in: list[schemas.TagCreate],
+        self,
+        db: Session,
+        tags_in: list[schemas.TagCreate],
     ) -> list[models.Tag]:
         tags_in_list = jsonable_encoder(tags_in)
         insert_stmt = insert(models.Tag).values(tags_in_list)

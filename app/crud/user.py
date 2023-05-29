@@ -1,4 +1,3 @@
-
 from sqlalchemy.orm import Session
 
 from app import models, schemas
@@ -30,7 +29,11 @@ class CRUDUser(
         return db_obj
 
     def update(  # type: ignore[override]
-        self, db: Session, *, db_obj: models.User, obj_in: schemas.UserUpdate,
+        self,
+        db: Session,
+        *,
+        db_obj: models.User,
+        obj_in: schemas.UserUpdate,
     ) -> models.User:
         if obj_in.password:
             hashed_password = get_password_hash(obj_in.password)
@@ -38,7 +41,11 @@ class CRUDUser(
         return super().update(db, db_obj=db_obj, update_schema=obj_in)
 
     def authenticate(
-        self, db: Session, *, email: str, password: str,
+        self,
+        db: Session,
+        *,
+        email: str,
+        password: str,
     ) -> models.User | None:
         user = self.get_by_email(db, email=email)
         if not user:

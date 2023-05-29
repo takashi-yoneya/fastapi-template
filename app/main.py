@@ -55,7 +55,6 @@ app.add_middleware(
 )
 
 
-
 @app.get("/", tags=["info"])
 def get_info() -> dict[str, str]:
     return {"title": settings.TITLE, "version": settings.VERSION}

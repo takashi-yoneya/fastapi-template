@@ -1,0 +1,6 @@
+{
+    "recommendations": [
+        "matangover.mypy",
+        "charliermarsh.ruff"
+    ]
+}

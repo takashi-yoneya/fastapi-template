@@ -17,13 +17,6 @@ repos:
   #         - --ignore-init-module-imports
   #         - --remove-unused-variables
 
-  # - repo: https://github.com/psf/black
-  #   rev: 23.3.0
-  #   hooks:
-  #     - id: black
-  #       args:
-  #         - app/
-
   # - repo: https://github.com/PyCQA/flake8
   #   rev: 6.0.0
   #   hooks:
@@ -31,12 +24,20 @@ repos:
   #       args:
   #         - app/
 
-  # black, flake8, isort, autoflakeはより高速で一元管理可能なruffに置き換える
+  # flake8, isort, autoflakeはより高速で一元管理可能なruffに置き換える
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: "v0.0.264"
     hooks:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
+
+  # ruffは一部の機能が未実装のため、一旦はblackで代用する
+  - repo: https://github.com/psf/black
+    rev: 23.3.0
+    hooks:
+      - id: black
+        args:
+          - app/
 
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.2.0

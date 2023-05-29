@@ -69,14 +69,10 @@ class CRUDV2Base(
         self,
         sort_field: Any | Enum,
     ) -> ColumnProperty | None:
-        sort_field_value = (
-            sort_field.value if isinstance(sort_field, Enum) else sort_field
-        )
+        sort_field_value = sort_field.value if isinstance(sort_field, Enum) else sort_field
         mapper = inspect(self.model)
         order_by_clause = [
-            attr
-            for attr in mapper.attrs
-            if isinstance(attr, ColumnProperty) and attr.key == sort_field_value
+            attr for attr in mapper.attrs if isinstance(attr, ColumnProperty) and attr.key == sort_field_value
         ]
 
         return order_by_clause[0] if order_by_clause else None
@@ -87,11 +83,7 @@ class CRUDV2Base(
         id: Any,
         include_deleted: bool = False,
     ) -> ModelType | None:
-        stmt = (
-            select(self.model)
-            .where(self.model.id == id)
-            .execution_options(include_deleted=include_deleted)
-        )
+        stmt = select(self.model).where(self.model.id == id).execution_options(include_deleted=include_deleted)
         return (await db.execute(stmt)).scalars().first()
 
     async def get_db_obj_list(
@@ -107,9 +99,7 @@ class CRUDV2Base(
             order_by_clause = self._get_order_by_clause(sort_query_in.sort_field)
             stmt = sort_query_in.apply_to_query(stmt, order_by_clause=order_by_clause)
 
-        db_obj_list = (
-            await db.execute(stmt.execution_options(include_deleted=include_deleted))
-        ).all()
+        db_obj_list = (await db.execute(stmt.execution_options(include_deleted=include_deleted))).all()
         return db_obj_list
 
     async def get_paged_list(
@@ -124,11 +114,7 @@ class CRUDV2Base(
         include_deleted=Trueの場合は、削除フラグ=Trueのデータも返す.
         """
         where_clause = where_clause if where_clause is not None else []
-        stmt = (
-            select(func.count(self.model.id))
-            .where(*where_clause)
-            .execution_options(include_deleted=include_deleted)
-        )
+        stmt = select(func.count(self.model.id)).where(*where_clause).execution_options(include_deleted=include_deleted)
         total_count = (await db.execute(stmt)).scalar()
 
         select_columns = self._get_select_columns()

@@ -22,15 +22,16 @@ logger = get_logger(__name__)
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 ALGORITHM = "HS256"
 reusable_oauth2 = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.API_GATEWAY_STAGE_PATH}/auth/login", auto_error=False,
+    tokenUrl=f"{settings.API_GATEWAY_STAGE_PATH}/auth/login",
+    auto_error=False,
 )
 
 
 def create_access_token(
-    subject: str | Any, expires_delta: timedelta | None = None,
+    subject: str | Any,
+    expires_delta: timedelta | None = None,
 ) -> str:
     if expires_delta:
-
         expire = datetime.now(tz=timezone.utc) + expires_delta
     else:
         expire = datetime.now(tz=timezone.utc) + timedelta(
@@ -61,9 +62,7 @@ async def get_current_user(
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[ALGORITHM])
         token_data = schemas.TokenPayload(**payload)
     except (JWTError, ValidationError):
-        raise APIException(
-            ErrorMessage.CouldNotValidateCredentials
-        ) from None
+        raise APIException(ErrorMessage.CouldNotValidateCredentials) from None
     user = await crud_v2.user.get_db_obj_by_id(db, id=token_data.sub)
     if not user:
         raise APIException(ErrorMessage.NOT_FOUND("User"))

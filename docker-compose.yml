@@ -63,6 +63,8 @@ services:
     networks:
       - fastapi_network
 
+
+
 volumes:
   db_volume:
     driver: local

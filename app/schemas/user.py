@@ -1,4 +1,3 @@
-
 from pydantic import EmailStr
 
 from app.schemas.core import BaseSchema, PagingMeta

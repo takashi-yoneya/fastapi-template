@@ -22,7 +22,8 @@ async def get_user_me(
     dependencies=[Security(get_current_user, scopes=["admin"])],
 )
 async def get_user(
-    id: str, db: AsyncSession = Depends(get_async_db),
+    id: str,
+    db: AsyncSession = Depends(get_async_db),
 ) -> schemas.UserResponse:
     user = await crud_v2.user.get_db_obj_by_id(db, id=id)
     if not user:

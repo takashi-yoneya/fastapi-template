@@ -21,7 +21,9 @@ async def login_access_token(
 ) -> schemas.Token:
     """OAuth2 compatible token login, get an access token for future requests."""
     user = await crud_v2.user.authenticate(
-        db, email=form_data.username, password=form_data.password,
+        db,
+        email=form_data.username,
+        password=form_data.password,
     )
     if not user:
         raise APIException(ErrorMessage.FAILURE_LOGIN)

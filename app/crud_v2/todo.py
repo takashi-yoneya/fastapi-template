@@ -1,4 +1,3 @@
-
 from sqlalchemy import or_
 from sqlalchemy.dialects.mysql import insert
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -46,7 +45,10 @@ class CRUDTodo(
         )
 
     def add_tags_to_todo(
-        self, db: Session, todo: models.Todo, tags_in: list[schemas.TagCreate],
+        self,
+        db: Session,
+        todo: models.Todo,
+        tags_in: list[schemas.TagCreate],
     ) -> models.Todo:
         tags = crud_v2.tag.upsert_tags(db, tags_in=tags_in)
         todos_tags_data = [{"todo_id": todo.id, "tag_id": tag.id} for tag in tags]

@@ -12,5 +12,8 @@ class Tag(ModelBaseMixin, Base):
     name: Mapped[str] = Column(String(100), unique=True, index=True)
 
     todos: Mapped[list] = relationship(
-        "Todo", secondary="todos_tags", back_populates="tags", lazy="joined",
+        "Todo",
+        secondary="todos_tags",
+        back_populates="tags",
+        lazy="joined",
     )
