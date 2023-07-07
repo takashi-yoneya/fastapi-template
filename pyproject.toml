@@ -30,7 +30,7 @@ dependencies = [
     "passlib~=1.7.4",
     "pydantic_settings>=2.0.0",
     "fastapi>=0.100.0",
-    "pydantic>=2.0.2",
+    "pydantic[email]>=2.0.2",
 ]
 readme = "README.md"
 requires-python = ">= 3.10"

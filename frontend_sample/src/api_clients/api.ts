@@ -41,17 +41,11 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError } from "./base";
 export interface HTTPValidationError {
   /**
    *
-   * @type {Array<ValidationError>}
+   * @type {any}
    * @memberof HTTPValidationError
    */
-  detail?: Array<ValidationError>;
+  detail?: any;
 }
-/**
- *
- * @export
- * @interface LocationInner
- */
-export interface LocationInner {}
 /**
  *
  * @export
@@ -60,55 +54,35 @@ export interface LocationInner {}
 export interface PagingMeta {
   /**
    *
-   * @type {number}
+   * @type {any}
    * @memberof PagingMeta
    */
-  currentPage: number;
+  currentPage: any;
   /**
    *
-   * @type {number}
+   * @type {any}
    * @memberof PagingMeta
    */
-  totalPageCount: number;
+  totalPageCount: any;
   /**
    *
-   * @type {number}
+   * @type {any}
    * @memberof PagingMeta
    */
-  totalDataCount: number;
+  totalDataCount: any;
   /**
    *
-   * @type {number}
+   * @type {any}
    * @memberof PagingMeta
    */
-  perPage: number;
+  perPage: any;
 }
 /**
  *
  * @export
- * @interface Q
+ * @interface SortDirectionEnum
  */
-export interface Q {}
-/**
- *
- * @export
- * @enum {string}
- */
-
-export const SortDirectionEnum = {
-  Asc: "asc",
-  Desc: "desc",
-} as const;
-
-export type SortDirectionEnum =
-  (typeof SortDirectionEnum)[keyof typeof SortDirectionEnum];
-
-/**
- *
- * @export
- * @interface Sortfield
- */
-export interface Sortfield {}
+export interface SortDirectionEnum {}
 /**
  *
  * @export
@@ -117,10 +91,10 @@ export interface Sortfield {}
 export interface TagCreate {
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof TagCreate
    */
-  name: string;
+  name: any;
 }
 /**
  *
@@ -130,34 +104,34 @@ export interface TagCreate {
 export interface TagResponse {
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof TagResponse
    */
-  name: string | null;
+  name: any | null;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof TagResponse
    */
-  id: string;
+  id: any;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof TagResponse
    */
-  createdAt: string | null;
+  createdAt: any | null;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof TagResponse
    */
-  updatedAt: string | null;
+  updatedAt: any | null;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof TagResponse
    */
-  deletedAt: string | null;
+  deletedAt: any | null;
 }
 /**
  *
@@ -167,22 +141,22 @@ export interface TagResponse {
 export interface TodoCreate {
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof TodoCreate
    */
-  title: string;
+  title: any;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof TodoCreate
    */
-  description: string | null;
+  description?: any | null;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof TodoCreate
    */
-  completedAt: string | null;
+  completedAt?: any | null;
 }
 /**
  *
@@ -192,61 +166,53 @@ export interface TodoCreate {
 export interface TodoResponse {
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof TodoResponse
    */
-  title: string | null;
+  title?: any | null;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof TodoResponse
    */
-  description: string | null;
+  description?: any | null;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof TodoResponse
    */
-  completedAt: string | null;
+  completedAt?: any | null;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof TodoResponse
    */
-  id: string;
+  id: any;
   /**
    *
-   * @type {Array<TagResponse>}
+   * @type {any}
    * @memberof TodoResponse
    */
-  tags: Array<TagResponse> | null;
+  tags?: any | null;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof TodoResponse
    */
-  createdAt: string | null;
+  createdAt?: any | null;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof TodoResponse
    */
-  updatedAt: string | null;
+  updatedAt?: any | null;
 }
 /**
  *
  * @export
- * @enum {string}
+ * @interface TodoSortFieldEnum
  */
-
-export const TodoSortFieldEnum = {
-  CreatedAt: "created_at",
-  Title: "title",
-} as const;
-
-export type TodoSortFieldEnum =
-  (typeof TodoSortFieldEnum)[keyof typeof TodoSortFieldEnum];
-
+export interface TodoSortFieldEnum {}
 /**
  *
  * @export
@@ -255,22 +221,22 @@ export type TodoSortFieldEnum =
 export interface TodoUpdate {
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof TodoUpdate
    */
-  title: string | null;
+  title?: any | null;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof TodoUpdate
    */
-  description: string | null;
+  description?: any | null;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof TodoUpdate
    */
-  completedAt: string | null;
+  completedAt?: any | null;
 }
 /**
  *
@@ -280,16 +246,16 @@ export interface TodoUpdate {
 export interface TodosPagedResponse {
   /**
    *
-   * @type {Array<TodoResponse>}
+   * @type {any}
    * @memberof TodosPagedResponse
    */
-  data: Array<TodoResponse> | null;
+  data?: any | null;
   /**
    *
    * @type {PagingMeta}
    * @memberof TodosPagedResponse
    */
-  meta: PagingMeta | null;
+  meta?: PagingMeta | null;
 }
 /**
  *
@@ -299,16 +265,16 @@ export interface TodosPagedResponse {
 export interface Token {
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof Token
    */
-  access_token: string;
+  access_token: any;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof Token
    */
-  token_type: string;
+  token_type: any;
 }
 /**
  *
@@ -318,22 +284,22 @@ export interface Token {
 export interface UserCreate {
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof UserCreate
    */
-  fullName?: string | null;
+  fullName?: any | null;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof UserCreate
    */
-  email: string;
+  email: any;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof UserCreate
    */
-  password: string;
+  password: any;
 }
 /**
  *
@@ -343,28 +309,28 @@ export interface UserCreate {
 export interface UserResponse {
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof UserResponse
    */
-  fullName?: string | null;
+  fullName?: any | null;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof UserResponse
    */
-  id: string;
+  id: any;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof UserResponse
    */
-  email: string;
+  email: any;
   /**
    *
-   * @type {boolean}
+   * @type {any}
    * @memberof UserResponse
    */
-  emailVerified: boolean;
+  emailVerified: any;
 }
 /**
  *
@@ -374,16 +340,16 @@ export interface UserResponse {
 export interface UserUpdate {
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof UserUpdate
    */
-  fullName?: string | null;
+  fullName?: any | null;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof UserUpdate
    */
-  password?: string | null;
+  password?: any | null;
 }
 /**
  *
@@ -393,22 +359,22 @@ export interface UserUpdate {
 export interface ValidationError {
   /**
    *
-   * @type {Array<LocationInner>}
+   * @type {any}
    * @memberof ValidationError
    */
-  loc: Array<LocationInner>;
+  loc: any;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof ValidationError
    */
-  msg: string;
+  msg: any;
   /**
    *
-   * @type {string}
+   * @type {any}
    * @memberof ValidationError
    */
-  type: string;
+  type: any;
 }
 
 /**
@@ -422,22 +388,22 @@ export const AuthApiAxiosParamCreator = function (
     /**
      * OAuth2 compatible token login, get an access token for future requests.
      * @summary Login Access Token
-     * @param {string} username
-     * @param {string} password
-     * @param {string | null} [grantType]
-     * @param {string} [scope]
-     * @param {string | null} [clientId]
-     * @param {string | null} [clientSecret]
+     * @param {any} username
+     * @param {any} password
+     * @param {any | null} [grantType]
+     * @param {any} [scope]
+     * @param {any | null} [clientId]
+     * @param {any | null} [clientSecret]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     loginAccessTokenAuthLoginPost: async (
-      username: string,
-      password: string,
-      grantType?: string | null,
-      scope?: string,
-      clientId?: string | null,
-      clientSecret?: string | null,
+      username: any,
+      password: any,
+      grantType?: any | null,
+      scope?: any,
+      clientId?: any | null,
+      clientSecret?: any | null,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'username' is not null or undefined
@@ -516,22 +482,22 @@ export const AuthApiFp = function (configuration?: Configuration) {
     /**
      * OAuth2 compatible token login, get an access token for future requests.
      * @summary Login Access Token
-     * @param {string} username
-     * @param {string} password
-     * @param {string | null} [grantType]
-     * @param {string} [scope]
-     * @param {string | null} [clientId]
-     * @param {string | null} [clientSecret]
+     * @param {any} username
+     * @param {any} password
+     * @param {any | null} [grantType]
+     * @param {any} [scope]
+     * @param {any | null} [clientId]
+     * @param {any | null} [clientSecret]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async loginAccessTokenAuthLoginPost(
-      username: string,
-      password: string,
-      grantType?: string | null,
-      scope?: string,
-      clientId?: string | null,
-      clientSecret?: string | null,
+      username: any,
+      password: any,
+      grantType?: any | null,
+      scope?: any,
+      clientId?: any | null,
+      clientSecret?: any | null,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Token>
@@ -570,22 +536,22 @@ export const AuthApiFactory = function (
     /**
      * OAuth2 compatible token login, get an access token for future requests.
      * @summary Login Access Token
-     * @param {string} username
-     * @param {string} password
-     * @param {string | null} [grantType]
-     * @param {string} [scope]
-     * @param {string | null} [clientId]
-     * @param {string | null} [clientSecret]
+     * @param {any} username
+     * @param {any} password
+     * @param {any | null} [grantType]
+     * @param {any} [scope]
+     * @param {any | null} [clientId]
+     * @param {any | null} [clientSecret]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     loginAccessTokenAuthLoginPost(
-      username: string,
-      password: string,
-      grantType?: string | null,
-      scope?: string,
-      clientId?: string | null,
-      clientSecret?: string | null,
+      username: any,
+      password: any,
+      grantType?: any | null,
+      scope?: any,
+      clientId?: any | null,
+      clientSecret?: any | null,
       options?: any,
     ): AxiosPromise<Token> {
       return localVarFp
@@ -613,23 +579,23 @@ export class AuthApi extends BaseAPI {
   /**
    * OAuth2 compatible token login, get an access token for future requests.
    * @summary Login Access Token
-   * @param {string} username
-   * @param {string} password
-   * @param {string | null} [grantType]
-   * @param {string} [scope]
-   * @param {string | null} [clientId]
-   * @param {string | null} [clientSecret]
+   * @param {any} username
+   * @param {any} password
+   * @param {any | null} [grantType]
+   * @param {any} [scope]
+   * @param {any | null} [clientId]
+   * @param {any | null} [clientSecret]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof AuthApi
    */
   public loginAccessTokenAuthLoginPost(
-    username: string,
-    password: string,
-    grantType?: string | null,
-    scope?: string,
-    clientId?: string | null,
-    clientSecret?: string | null,
+    username: any,
+    password: any,
+    grantType?: any | null,
+    scope?: any,
+    clientId?: any | null,
+    clientSecret?: any | null,
     options?: AxiosRequestConfig,
   ) {
     return AuthApiFp(this.configuration)
@@ -715,7 +681,7 @@ export const InfoApiFp = function (configuration?: Configuration) {
       (
         axios?: AxiosInstance,
         basePath?: string,
-      ) => AxiosPromise<{ [key: string]: string }>
+      ) => AxiosPromise<{ [key: string]: any }>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.getInfoGet(
         options,
@@ -747,7 +713,7 @@ export const InfoApiFactory = function (
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getInfoGet(options?: any): AxiosPromise<{ [key: string]: string }> {
+    getInfoGet(options?: any): AxiosPromise<{ [key: string]: any }> {
       return localVarFp
         .getInfoGet(options)
         .then((request) => request(axios, basePath));
@@ -787,12 +753,12 @@ export const TasksApiAxiosParamCreator = function (
     /**
      *
      * @summary Exec Long Process Async
-     * @param {string} id
+     * @param {any} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     execLongProcessAsyncTasksLongProcessAsyncPost: async (
-      id: string,
+      id: any,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
@@ -838,12 +804,12 @@ export const TasksApiAxiosParamCreator = function (
     /**
      *
      * @summary Exec Long Process Thread
-     * @param {string} id
+     * @param {any} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     execLongProcessThreadTasksLongProcessThreadPost: async (
-      id: string,
+      id: any,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
@@ -899,12 +865,12 @@ export const TasksApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Exec Long Process Async
-     * @param {string} id
+     * @param {any} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async execLongProcessAsyncTasksLongProcessAsyncPost(
-      id: string,
+      id: any,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
@@ -924,12 +890,12 @@ export const TasksApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Exec Long Process Thread
-     * @param {string} id
+     * @param {any} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async execLongProcessThreadTasksLongProcessThreadPost(
-      id: string,
+      id: any,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<any>
@@ -963,12 +929,12 @@ export const TasksApiFactory = function (
     /**
      *
      * @summary Exec Long Process Async
-     * @param {string} id
+     * @param {any} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     execLongProcessAsyncTasksLongProcessAsyncPost(
-      id: string,
+      id: any,
       options?: any,
     ): AxiosPromise<any> {
       return localVarFp
@@ -978,12 +944,12 @@ export const TasksApiFactory = function (
     /**
      *
      * @summary Exec Long Process Thread
-     * @param {string} id
+     * @param {any} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     execLongProcessThreadTasksLongProcessThreadPost(
-      id: string,
+      id: any,
       options?: any,
     ): AxiosPromise<any> {
       return localVarFp
@@ -1003,13 +969,13 @@ export class TasksApi extends BaseAPI {
   /**
    *
    * @summary Exec Long Process Async
-   * @param {string} id
+   * @param {any} id
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof TasksApi
    */
   public execLongProcessAsyncTasksLongProcessAsyncPost(
-    id: string,
+    id: any,
     options?: AxiosRequestConfig,
   ) {
     return TasksApiFp(this.configuration)
@@ -1020,13 +986,13 @@ export class TasksApi extends BaseAPI {
   /**
    *
    * @summary Exec Long Process Thread
-   * @param {string} id
+   * @param {any} id
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof TasksApi
    */
   public execLongProcessThreadTasksLongProcessThreadPost(
-    id: string,
+    id: any,
     options?: AxiosRequestConfig,
   ) {
     return TasksApiFp(this.configuration)
@@ -1046,20 +1012,20 @@ export const TodosApiAxiosParamCreator = function (
     /**
      *
      * @summary Add Tags To Todo
-     * @param {string} id
-     * @param {Array<TagCreate>} tagCreate
+     * @param {any} id
+     * @param {any} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     addTagsToTodo: async (
-      id: string,
-      tagCreate: Array<TagCreate>,
+      id: any,
+      body: any,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
       assertParamExists("addTagsToTodo", "id", id);
-      // verify required parameter 'tagCreate' is not null or undefined
-      assertParamExists("addTagsToTodo", "tagCreate", tagCreate);
+      // verify required parameter 'body' is not null or undefined
+      assertParamExists("addTagsToTodo", "body", body);
       const localVarPath = `/todos/{id}/tags`.replace(
         `{${"id"}}`,
         encodeURIComponent(String(id)),
@@ -1090,7 +1056,7 @@ export const TodosApiAxiosParamCreator = function (
         ...options.headers,
       };
       localVarRequestOptions.data = serializeDataIfNeeded(
-        tagCreate,
+        body,
         localVarRequestOptions,
         configuration,
       );
@@ -1153,12 +1119,12 @@ export const TodosApiAxiosParamCreator = function (
     /**
      *
      * @summary Delete Todo
-     * @param {string} id
+     * @param {any} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     deleteTodo: async (
-      id: string,
+      id: any,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
@@ -1199,22 +1165,22 @@ export const TodosApiAxiosParamCreator = function (
     /**
      *
      * @summary Get Paged Todos
-     * @param {Q | null} [q]
-     * @param {boolean} [includeDeleted]
-     * @param {number} [page]
-     * @param {number} [perPage]
-     * @param {Sortfield | null} [sortField]
-     * @param {SortDirectionEnum} [direction]
+     * @param {any | null} [q]
+     * @param {any} [includeDeleted]
+     * @param {any} [page]
+     * @param {any} [perPage]
+     * @param {any | null} [sortField]
+     * @param {any} [direction]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getPagedTodos: async (
-      q?: Q | null,
-      includeDeleted?: boolean,
-      page?: number,
-      perPage?: number,
-      sortField?: Sortfield | null,
-      direction?: SortDirectionEnum,
+      q?: any | null,
+      includeDeleted?: any,
+      page?: any,
+      perPage?: any,
+      sortField?: any | null,
+      direction?: any,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       const localVarPath = `/todos`;
@@ -1274,14 +1240,14 @@ export const TodosApiAxiosParamCreator = function (
     /**
      *
      * @summary Get Job
-     * @param {string} id
-     * @param {boolean} [includeDeleted]
+     * @param {any} id
+     * @param {any} [includeDeleted]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getTodoById: async (
-      id: string,
-      includeDeleted?: boolean,
+      id: any,
+      includeDeleted?: any,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
@@ -1326,13 +1292,13 @@ export const TodosApiAxiosParamCreator = function (
     /**
      *
      * @summary Update Todo
-     * @param {string} id
+     * @param {any} id
      * @param {TodoUpdate} todoUpdate
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     updateTodo: async (
-      id: string,
+      id: any,
       todoUpdate: TodoUpdate,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
@@ -1393,21 +1359,21 @@ export const TodosApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Add Tags To Todo
-     * @param {string} id
-     * @param {Array<TagCreate>} tagCreate
+     * @param {any} id
+     * @param {any} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async addTagsToTodo(
-      id: string,
-      tagCreate: Array<TagCreate>,
+      id: any,
+      body: any,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<TodoResponse>
     > {
       const localVarAxiosArgs = await localVarAxiosParamCreator.addTagsToTodo(
         id,
-        tagCreate,
+        body,
         options,
       );
       return createRequestFunction(
@@ -1444,12 +1410,12 @@ export const TodosApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Delete Todo
-     * @param {string} id
+     * @param {any} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async deleteTodo(
-      id: string,
+      id: any,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>
@@ -1468,22 +1434,22 @@ export const TodosApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Get Paged Todos
-     * @param {Q | null} [q]
-     * @param {boolean} [includeDeleted]
-     * @param {number} [page]
-     * @param {number} [perPage]
-     * @param {Sortfield | null} [sortField]
-     * @param {SortDirectionEnum} [direction]
+     * @param {any | null} [q]
+     * @param {any} [includeDeleted]
+     * @param {any} [page]
+     * @param {any} [perPage]
+     * @param {any | null} [sortField]
+     * @param {any} [direction]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getPagedTodos(
-      q?: Q | null,
-      includeDeleted?: boolean,
-      page?: number,
-      perPage?: number,
-      sortField?: Sortfield | null,
-      direction?: SortDirectionEnum,
+      q?: any | null,
+      includeDeleted?: any,
+      page?: any,
+      perPage?: any,
+      sortField?: any | null,
+      direction?: any,
       options?: AxiosRequestConfig,
     ): Promise<
       (
@@ -1510,14 +1476,14 @@ export const TodosApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Get Job
-     * @param {string} id
-     * @param {boolean} [includeDeleted]
+     * @param {any} id
+     * @param {any} [includeDeleted]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getTodoById(
-      id: string,
-      includeDeleted?: boolean,
+      id: any,
+      includeDeleted?: any,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<TodoResponse>
@@ -1537,13 +1503,13 @@ export const TodosApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Update Todo
-     * @param {string} id
+     * @param {any} id
      * @param {TodoUpdate} todoUpdate
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async updateTodo(
-      id: string,
+      id: any,
       todoUpdate: TodoUpdate,
       options?: AxiosRequestConfig,
     ): Promise<
@@ -1578,18 +1544,18 @@ export const TodosApiFactory = function (
     /**
      *
      * @summary Add Tags To Todo
-     * @param {string} id
-     * @param {Array<TagCreate>} tagCreate
+     * @param {any} id
+     * @param {any} body
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     addTagsToTodo(
-      id: string,
-      tagCreate: Array<TagCreate>,
+      id: any,
+      body: any,
       options?: any,
     ): AxiosPromise<TodoResponse> {
       return localVarFp
-        .addTagsToTodo(id, tagCreate, options)
+        .addTagsToTodo(id, body, options)
         .then((request) => request(axios, basePath));
     },
     /**
@@ -1610,11 +1576,11 @@ export const TodosApiFactory = function (
     /**
      *
      * @summary Delete Todo
-     * @param {string} id
+     * @param {any} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    deleteTodo(id: string, options?: any): AxiosPromise<void> {
+    deleteTodo(id: any, options?: any): AxiosPromise<void> {
       return localVarFp
         .deleteTodo(id, options)
         .then((request) => request(axios, basePath));
@@ -1622,22 +1588,22 @@ export const TodosApiFactory = function (
     /**
      *
      * @summary Get Paged Todos
-     * @param {Q | null} [q]
-     * @param {boolean} [includeDeleted]
-     * @param {number} [page]
-     * @param {number} [perPage]
-     * @param {Sortfield | null} [sortField]
-     * @param {SortDirectionEnum} [direction]
+     * @param {any | null} [q]
+     * @param {any} [includeDeleted]
+     * @param {any} [page]
+     * @param {any} [perPage]
+     * @param {any | null} [sortField]
+     * @param {any} [direction]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getPagedTodos(
-      q?: Q | null,
-      includeDeleted?: boolean,
-      page?: number,
-      perPage?: number,
-      sortField?: Sortfield | null,
-      direction?: SortDirectionEnum,
+      q?: any | null,
+      includeDeleted?: any,
+      page?: any,
+      perPage?: any,
+      sortField?: any | null,
+      direction?: any,
       options?: any,
     ): AxiosPromise<TodosPagedResponse> {
       return localVarFp
@@ -1655,14 +1621,14 @@ export const TodosApiFactory = function (
     /**
      *
      * @summary Get Job
-     * @param {string} id
-     * @param {boolean} [includeDeleted]
+     * @param {any} id
+     * @param {any} [includeDeleted]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getTodoById(
-      id: string,
-      includeDeleted?: boolean,
+      id: any,
+      includeDeleted?: any,
       options?: any,
     ): AxiosPromise<TodoResponse> {
       return localVarFp
@@ -1672,13 +1638,13 @@ export const TodosApiFactory = function (
     /**
      *
      * @summary Update Todo
-     * @param {string} id
+     * @param {any} id
      * @param {TodoUpdate} todoUpdate
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     updateTodo(
-      id: string,
+      id: any,
       todoUpdate: TodoUpdate,
       options?: any,
     ): AxiosPromise<TodoResponse> {
@@ -1699,19 +1665,15 @@ export class TodosApi extends BaseAPI {
   /**
    *
    * @summary Add Tags To Todo
-   * @param {string} id
-   * @param {Array<TagCreate>} tagCreate
+   * @param {any} id
+   * @param {any} body
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof TodosApi
    */
-  public addTagsToTodo(
-    id: string,
-    tagCreate: Array<TagCreate>,
-    options?: AxiosRequestConfig,
-  ) {
+  public addTagsToTodo(id: any, body: any, options?: AxiosRequestConfig) {
     return TodosApiFp(this.configuration)
-      .addTagsToTodo(id, tagCreate, options)
+      .addTagsToTodo(id, body, options)
       .then((request) => request(this.axios, this.basePath));
   }
 
@@ -1732,12 +1694,12 @@ export class TodosApi extends BaseAPI {
   /**
    *
    * @summary Delete Todo
-   * @param {string} id
+   * @param {any} id
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof TodosApi
    */
-  public deleteTodo(id: string, options?: AxiosRequestConfig) {
+  public deleteTodo(id: any, options?: AxiosRequestConfig) {
     return TodosApiFp(this.configuration)
       .deleteTodo(id, options)
       .then((request) => request(this.axios, this.basePath));
@@ -1746,23 +1708,23 @@ export class TodosApi extends BaseAPI {
   /**
    *
    * @summary Get Paged Todos
-   * @param {Q | null} [q]
-   * @param {boolean} [includeDeleted]
-   * @param {number} [page]
-   * @param {number} [perPage]
-   * @param {Sortfield | null} [sortField]
-   * @param {SortDirectionEnum} [direction]
+   * @param {any | null} [q]
+   * @param {any} [includeDeleted]
+   * @param {any} [page]
+   * @param {any} [perPage]
+   * @param {any | null} [sortField]
+   * @param {any} [direction]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof TodosApi
    */
   public getPagedTodos(
-    q?: Q | null,
-    includeDeleted?: boolean,
-    page?: number,
-    perPage?: number,
-    sortField?: Sortfield | null,
-    direction?: SortDirectionEnum,
+    q?: any | null,
+    includeDeleted?: any,
+    page?: any,
+    perPage?: any,
+    sortField?: any | null,
+    direction?: any,
     options?: AxiosRequestConfig,
   ) {
     return TodosApiFp(this.configuration)
@@ -1781,15 +1743,15 @@ export class TodosApi extends BaseAPI {
   /**
    *
    * @summary Get Job
-   * @param {string} id
-   * @param {boolean} [includeDeleted]
+   * @param {any} id
+   * @param {any} [includeDeleted]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof TodosApi
    */
   public getTodoById(
-    id: string,
-    includeDeleted?: boolean,
+    id: any,
+    includeDeleted?: any,
     options?: AxiosRequestConfig,
   ) {
     return TodosApiFp(this.configuration)
@@ -1800,14 +1762,14 @@ export class TodosApi extends BaseAPI {
   /**
    *
    * @summary Update Todo
-   * @param {string} id
+   * @param {any} id
    * @param {TodoUpdate} todoUpdate
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof TodosApi
    */
   public updateTodo(
-    id: string,
+    id: any,
     todoUpdate: TodoUpdate,
     options?: AxiosRequestConfig,
   ) {
@@ -1926,12 +1888,12 @@ export const UsersApiAxiosParamCreator = function (
     /**
      *
      * @summary Get User
-     * @param {string} id
+     * @param {any} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getUserUsersIdGet: async (
-      id: string,
+      id: any,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'id' is not null or undefined
@@ -1981,13 +1943,13 @@ export const UsersApiAxiosParamCreator = function (
     /**
      *
      * @summary Update User
-     * @param {string} id
+     * @param {any} id
      * @param {UserUpdate} userUpdate
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     updateUserUsersIdPut: async (
-      id: string,
+      id: any,
       userUpdate: UserUpdate,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
@@ -2102,12 +2064,12 @@ export const UsersApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Get User
-     * @param {string} id
+     * @param {any} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getUserUsersIdGet(
-      id: string,
+      id: any,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserResponse>
@@ -2124,13 +2086,13 @@ export const UsersApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Update User
-     * @param {string} id
+     * @param {any} id
      * @param {UserUpdate} userUpdate
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async updateUserUsersIdPut(
-      id: string,
+      id: any,
       userUpdate: UserUpdate,
       options?: AxiosRequestConfig,
     ): Promise<
@@ -2192,11 +2154,11 @@ export const UsersApiFactory = function (
     /**
      *
      * @summary Get User
-     * @param {string} id
+     * @param {any} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
-    getUserUsersIdGet(id: string, options?: any): AxiosPromise<UserResponse> {
+    getUserUsersIdGet(id: any, options?: any): AxiosPromise<UserResponse> {
       return localVarFp
         .getUserUsersIdGet(id, options)
         .then((request) => request(axios, basePath));
@@ -2204,13 +2166,13 @@ export const UsersApiFactory = function (
     /**
      *
      * @summary Update User
-     * @param {string} id
+     * @param {any} id
      * @param {UserUpdate} userUpdate
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     updateUserUsersIdPut(
-      id: string,
+      id: any,
       userUpdate: UserUpdate,
       options?: any,
     ): AxiosPromise<UserResponse> {
@@ -2261,12 +2223,12 @@ export class UsersApi extends BaseAPI {
   /**
    *
    * @summary Get User
-   * @param {string} id
+   * @param {any} id
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UsersApi
    */
-  public getUserUsersIdGet(id: string, options?: AxiosRequestConfig) {
+  public getUserUsersIdGet(id: any, options?: AxiosRequestConfig) {
     return UsersApiFp(this.configuration)
       .getUserUsersIdGet(id, options)
       .then((request) => request(this.axios, this.basePath));
@@ -2275,14 +2237,14 @@ export class UsersApi extends BaseAPI {
   /**
    *
    * @summary Update User
-   * @param {string} id
+   * @param {any} id
    * @param {UserUpdate} userUpdate
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof UsersApi
    */
   public updateUserUsersIdPut(
-    id: string,
+    id: any,
     userUpdate: UserUpdate,
     options?: AxiosRequestConfig,
   ) {
