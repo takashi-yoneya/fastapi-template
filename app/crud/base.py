@@ -43,7 +43,7 @@ class CRUDBase(
 
     def _get_select_columns(self) -> list[ColumnProperty]:
         """ResponseSchemaに含まれるfieldのみをsqlalchemyのselect用のobjectとして返す."""
-        schema_columns = list(self.response_schema_class.__fields__.keys())
+        schema_columns = list(self.response_schema_class.model_fields.keys())
         mapper = inspect(self.model)
         select_columns = [
             attr for attr in mapper.attrs if isinstance(attr, ColumnProperty) and attr.key in schema_columns

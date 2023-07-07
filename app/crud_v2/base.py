@@ -44,7 +44,7 @@ class CRUDV2Base(
 
     def _get_select_columns(self) -> list[ColumnProperty]:
         """ResponseSchemaに含まれるfieldのみをsqlalchemyのselect用のobjectとして返す."""
-        schema_columns = list(self.response_schema_class.__fields__.keys())
+        schema_columns = list(self.response_schema_class.model_fields.keys())
         mapper = inspect(self.model)
         select_columns = [
             getattr(self.model, attr.key)

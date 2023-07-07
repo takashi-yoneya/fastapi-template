@@ -2,14 +2,14 @@
 
 This is a practical template using FastAPI.
 It is dockerized including DB (MySQL) and uvicorn.
-Package management and task runner are implemented using poetry.
+Package management is implemented using rye.
 We apologize for the inconvenience.
 The following text is in Japanese only.
 Please use automatic translation, etc.
 
 FastAPI を使用した実用的なテンプレートです。
 DB(MySQL)と uvicorn を含めて docker 化しています。
-poetry を使用して、パッケージ管理およびタスクランナーを実装しています。
+rye を使用して、パッケージ管理を実装しています。
 
 # 機能追加要望・改善要望・バグ報告(Feature reports, Improvement reports, Bug reports)
 
@@ -171,11 +171,11 @@ https://fastapi-sample-tk.herokuapp.com/docs
 │   │           └── index.ts
 │   └── tsconfig.json
 ├── mypy.ini
-├── poetry.lock
 ├── pyproject.toml
+├── Makefile
 ├── readme.md
-├── requirements-dev.txt
-├── requirements.txt
+├── requirements-dev.lock
+├── requirements.lock
 ├── runtime.txt
 ├── seeder                        // seedの定義、インポーター
 │   ├── run.py
@@ -197,9 +197,8 @@ https://fastapi-sample-tk.herokuapp.com/docs
 
 ## パッケージ管理、タスクランナー管理(Package management, task runner management)
 
-poetry および poe を使用してパッケージやタスクランナーを管理しています。
-詳しい定義内容は、pyproject.toml を参照してください。
-[tool.poe.tasks] セクションにタスクランナーを定義しています。
+rye を使用してパッケージ管理を行い、makefileでタスクランナーを管理しています。
+詳しい定義内容は、Makefile を参照してください。
 
 ## DB レコードの作成・取得・更新・削除(CRUD)
 
@@ -535,13 +534,13 @@ alembic/versions.py にマイグレーション情報を記述すると、DB マ
 以下を実行することで、models の定義と実際の DB との差分から自動的にマイグレーションファイルを作成できます。
 
 ```bash
-poe makemigrations
+make makemigrations m="any-migration-description-message"
 ```
 
 以下を実行することで、マイグレーションが実行できます。
 
 ```bash
-poe migrate
+make migrate
 ```
 
 ## fastapi-debug-toolbar
@@ -575,22 +574,22 @@ FastAPI との連携は未対応のため、別途対応予定です。
 
 .env.example を.env にリネームしてください。
 
-### Poetry のインストール
+### Rye のインストール
 
-Poetry をローカル PC にインストールします。
+以下のコマンドで、Rye をローカル PC にインストールします。
 
-実際の動作は docker コンテナ内で行われるので動作上必須ではありませんが、VSCODE で開発する場合のインタープリター設定を行うために必要になります。
-
+```bash
+curl -sSf https://rye-up.com/get | bash
 ```
-curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
-```
+
 
 ### 依存パッケージのインストール
 
 依存パッケージをローカル PC にインストールします。
+Appの実際の動作はDockerコンテナ内で行われますが、VSCODEのインタープリター設定で使用するために、ローカルPCにもパッケージをインストールします。
 
 ```
-poetry install
+rye sync
 ```
 
 ### docker コンテナのビルド & 起動
@@ -620,7 +619,7 @@ make docker-run
 コンテナ内で以下を実行することで、DB の初期化、migrate、seed データ投入までの一連の処理を一括で行うことができます。
 
 ```bash
-poe init-all-tables
+make init-db
 ```
 
 ## API 管理画面(OpenAPI)表示
@@ -664,22 +663,6 @@ npm run dev
 
 ```
 http://localhost:3000
-```
-
-## poe タブ入力補完設定(Completion)
-
-※docker コンテ内で開発する場合は、Dockerfile に組み込まれているため実行不要です
-bash を使用している場合は、以下のコマンドを実行する。
-これにより、タスクランナー実行時にタブで入力補完が可能になります。
-
-```bash
- poe _bash_completion >> ~/.bashrc
-```
-
-次回 bash 起動時に有効化されるが、即時有効化するためには以下を実行します。
-
-```
-. ~/.bashrc
 ```
 
 # デプロイ(Deploy to heroku)

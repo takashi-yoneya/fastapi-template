@@ -84,8 +84,9 @@ def migrate(
 
 
 @pytest_asyncio.fixture
-@pytest.mark.usefixtures("mysql")
-async def engine() -> AsyncEngine:
+async def engine(
+    mysql: Any,  # noqa: ARG001
+) -> AsyncEngine:
     """fixture: db-engineの作成およびmigrate"""
     logger.debug("fixture:engine")
     # uri = (
