@@ -39,7 +39,7 @@ def import_seed() -> None:
 
         entities = []
         for file in seeds_json_files:
-            logger.info(f"load seed file={str(file)}")
+            logger.info(f"load seed file={file!s}")
             entities.append(load_entities_from_json(str(file)))
 
         seeder = Seeder(db)

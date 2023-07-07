@@ -1,11 +1,11 @@
 from typing import Any
 
 import pytest
-from app.schemas.core import PagingMeta
-from app.schemas.todo import TodoCreate, TodoUpdate
 from httpx import AsyncClient
 from starlette import status
 
+from app.schemas.core import PagingMeta
+from app.schemas.todo import TodoCreate, TodoUpdate
 from tests.base import (
     assert_create,
     assert_get_by_id,
@@ -21,21 +21,17 @@ class TestTodos:
     """create
     """
 
-    _params_create_todo = {
-        "success": (
-            TodoCreate(
-                title="test-create-title", description="test-create-description"
-            ).dict(by_alias=True),
-            status.HTTP_200_OK,
-            {"title": "test-create-title", "description": "test-create-description"},
-            None,
-        ),
-    }
-
     @pytest.mark.parametrize(
         ["data_in", "expected_status", "expected_data", "expected_error"],
-        list(_params_create_todo.values()),
-        ids=list(_params_create_todo.keys()),
+        [
+            pytest.param(
+                TodoCreate(title="test-create-title", description="test-create-description").model_dump(by_alias=True),
+                status.HTTP_200_OK,
+                {"title": "test-create-title", "description": "test-create-description"},
+                None,
+                id="success",
+            )
+        ],
     )
     async def test_create(
         self,
@@ -56,27 +52,6 @@ class TestTodos:
     """update
     """
 
-    _params_update_todo = {
-        "success": (
-            "1",
-            TodoUpdate(
-                title="test-update-title", description="test-update-description"
-            ).dict(by_alias=True),
-            status.HTTP_200_OK,
-            {"title": "test-update-title", "description": "test-update-description"},
-            None,
-        ),
-        "error_id_not_found": (
-            "not-found-id",
-            TodoUpdate(
-                title="test-update-title", description="test-update-description"
-            ).dict(by_alias=True),
-            status.HTTP_404_NOT_FOUND,
-            None,
-            None,
-        ),
-    }
-
     @pytest.mark.parametrize(
         [
             "id",
@@ -85,8 +60,24 @@ class TestTodos:
             "expected_data",
             "expected_error",
         ],
-        list(_params_update_todo.values()),
-        ids=list(_params_update_todo.keys()),
+        [
+            pytest.param(
+                "1",
+                TodoUpdate(title="test-update-title", description="test-update-description").dict(by_alias=True),
+                status.HTTP_200_OK,
+                {"title": "test-update-title", "description": "test-update-description"},
+                None,
+                id="success",
+            ),
+            pytest.param(
+                "not-found-id",
+                TodoUpdate(title="test-update-title", description="test-update-description").dict(by_alias=True),
+                status.HTTP_404_NOT_FOUND,
+                None,
+                None,
+                id="error_id_not_found",
+            ),
+        ],
     )
     async def test_update(
         self,
@@ -110,21 +101,6 @@ class TestTodos:
     """get_by_id
     """
 
-    _params_get_todo_by_id = {
-        "success": (
-            "1",
-            status.HTTP_200_OK,
-            {"title": "test-title-1", "description": "test-description-1"},
-            None,
-        ),
-        "error_id_not_found": (
-            "not-found-id",
-            status.HTTP_404_NOT_FOUND,
-            None,
-            None,
-        ),
-    }
-
     @pytest.mark.parametrize(
         [
             "id",
@@ -132,8 +108,22 @@ class TestTodos:
             "expected_data",
             "expected_error",
         ],
-        list(_params_get_todo_by_id.values()),
-        ids=list(_params_get_todo_by_id.keys()),
+        [
+            pytest.param(
+                "1",
+                status.HTTP_200_OK,
+                {"title": "test-title-1", "description": "test-description-1"},
+                None,
+                id="success",
+            ),
+            pytest.param(
+                "not-found-id",
+                status.HTTP_404_NOT_FOUND,
+                None,
+                None,
+                id="error_id_not_found",
+            ),
+        ],
     )
     async def test_get_by_id(
         self,
@@ -155,18 +145,6 @@ class TestTodos:
     """get_paged_list
     """
 
-    _params_get_paged_list = {
-        "success": (
-            {"q": "", "perPage": 10},
-            status.HTTP_200_OK,
-            {"title": "test-title-24", "description": "test-description-24"},
-            PagingMeta(
-                current_page=1, total_page_count=3, total_data_count=24, per_page=10
-            ).dict(by_alias=True),
-            None,
-        ),
-    }
-
     @pytest.mark.parametrize(
         [
             "params",
@@ -175,8 +153,16 @@ class TestTodos:
             "expected_paging_meta",
             "expected_error",
         ],
-        list(_params_get_paged_list.values()),
-        ids=list(_params_get_paged_list.keys()),
+        [
+            pytest.param(
+                {"q": "", "perPage": 10},
+                status.HTTP_200_OK,
+                {"title": "test-title-24", "description": "test-description-24"},
+                PagingMeta(current_page=1, total_page_count=3, total_data_count=24, per_page=10).dict(by_alias=True),
+                None,
+                id="success",
+            )
+        ],
     )
     async def test_get_paged_list(
         self,

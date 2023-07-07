@@ -3,17 +3,18 @@ from __future__ import annotations
 import datetime
 
 import pytest_asyncio
-from app import models
 from sqlalchemy.orm import Session
+
+from app import models
 
 
 @pytest_asyncio.fixture
-async def data_set(db: Session):
+async def data_set(db: Session) -> None:
     await insert_todos(db)
 
 
-async def insert_todos(db: Session):
-    now = datetime.datetime.now()
+async def insert_todos(db: Session) -> None:
+    now = datetime.datetime.now(tz=datetime.timezone.utc)
     data = [
         models.Todo(
             id=str(i),

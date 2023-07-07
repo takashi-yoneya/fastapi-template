@@ -1,5 +1,7 @@
 import datetime
 
+from pydantic import ConfigDict
+
 from app.schemas.core import BaseSchema, PagingMeta
 
 
@@ -8,13 +10,11 @@ class TagBase(BaseSchema):
 
 
 class TagResponse(TagBase):
+    model_config = ConfigDict(from_attributes=True)
     id: str
     created_at: datetime.datetime | None
     updated_at: datetime.datetime | None
     deleted_at: datetime.datetime | None
-
-    class Config:
-        orm_mode = True
 
 
 class TagCreate(TagBase):

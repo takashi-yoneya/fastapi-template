@@ -9,25 +9,25 @@ from app.schemas.tag import TagResponse
 
 
 class TodoBase(BaseSchema):
-    title: str | None
-    description: str | None
-    completed_at: datetime.datetime | None
+    title: str | None = None
+    description: str | None = None
+    completed_at: datetime.datetime | None = None
 
 
 class TodoResponse(TodoBase):
     id: str
-    tags: list[TagResponse] | None
-    created_at: datetime.datetime | None
-    updated_at: datetime.datetime | None
+    tags: list[TagResponse] | None = []
+    created_at: datetime.datetime | None = None
+    updated_at: datetime.datetime | None = None
     # deleted_at: Optional[datetime.datetime]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class TodoCreate(TodoBase):
     title: str
-    description: str | None
+    description: str | None = None
 
 
 class TodoUpdate(TodoBase):
@@ -35,8 +35,8 @@ class TodoUpdate(TodoBase):
 
 
 class TodosPagedResponse(BaseSchema):
-    data: list[TodoResponse] | None
-    meta: PagingMeta | None
+    data: list[TodoResponse] | None = []
+    meta: PagingMeta | None = None
 
 
 class TodoSortFieldEnum(Enum):

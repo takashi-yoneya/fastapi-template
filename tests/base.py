@@ -12,7 +12,7 @@ async def assert_create(
     data_in: dict[str, Any],
     expected_status: int,
     expected_data: dict[str, Any] | None,
-):
+) -> None:
     res = await client.post(uri, json=data_in)
     assert res.status_code == expected_status
     if expected_status == status.HTTP_200_OK:
@@ -27,7 +27,7 @@ async def assert_update(
     data_in: dict[str, Any],
     expected_status: int,
     expected_data: dict[str, Any] | None,
-):
+) -> None:
     res = await client.patch(f"{uri}/{id}", json=data_in)
     assert res.status_code == expected_status
     if expected_status == status.HTTP_200_OK:
@@ -41,7 +41,7 @@ async def assert_get_by_id(
     id: str,
     expected_status: int,
     expected_data: dict[str, Any] | None,
-):
+) -> None:
     res = await client.get(f"{uri}/{id}")
     assert res.status_code == expected_status
     if expected_status == status.HTTP_200_OK:
@@ -56,7 +56,7 @@ async def assert_get_paged_list(
     expected_status: int,
     expected_first_data: dict[str, Any],
     expected_paging_meta: dict[str, Any],
-):
+) -> None:
     res = await client.get(uri, params=params)
     assert res.status_code == expected_status
     if expected_status == status.HTTP_200_OK:

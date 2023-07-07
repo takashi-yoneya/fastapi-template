@@ -84,7 +84,13 @@ export interface PagingMeta {
   perPage: number;
 }
 /**
- * An enumeration.
+ *
+ * @export
+ * @interface Q
+ */
+export interface Q {}
+/**
+ *
  * @export
  * @enum {string}
  */
@@ -97,6 +103,12 @@ export const SortDirectionEnum = {
 export type SortDirectionEnum =
   (typeof SortDirectionEnum)[keyof typeof SortDirectionEnum];
 
+/**
+ *
+ * @export
+ * @interface Sortfield
+ */
+export interface Sortfield {}
 /**
  *
  * @export
@@ -121,7 +133,7 @@ export interface TagResponse {
    * @type {string}
    * @memberof TagResponse
    */
-  name?: string;
+  name: string | null;
   /**
    *
    * @type {string}
@@ -133,19 +145,19 @@ export interface TagResponse {
    * @type {string}
    * @memberof TagResponse
    */
-  createdAt?: string;
+  createdAt: string | null;
   /**
    *
    * @type {string}
    * @memberof TagResponse
    */
-  updatedAt?: string;
+  updatedAt: string | null;
   /**
    *
    * @type {string}
    * @memberof TagResponse
    */
-  deletedAt?: string;
+  deletedAt: string | null;
 }
 /**
  *
@@ -164,13 +176,13 @@ export interface TodoCreate {
    * @type {string}
    * @memberof TodoCreate
    */
-  description?: string;
+  description: string | null;
   /**
    *
    * @type {string}
    * @memberof TodoCreate
    */
-  completedAt?: string;
+  completedAt: string | null;
 }
 /**
  *
@@ -183,19 +195,19 @@ export interface TodoResponse {
    * @type {string}
    * @memberof TodoResponse
    */
-  title?: string;
+  title: string | null;
   /**
    *
    * @type {string}
    * @memberof TodoResponse
    */
-  description?: string;
+  description: string | null;
   /**
    *
    * @type {string}
    * @memberof TodoResponse
    */
-  completedAt?: string;
+  completedAt: string | null;
   /**
    *
    * @type {string}
@@ -207,22 +219,22 @@ export interface TodoResponse {
    * @type {Array<TagResponse>}
    * @memberof TodoResponse
    */
-  tags?: Array<TagResponse>;
+  tags: Array<TagResponse> | null;
   /**
    *
    * @type {string}
    * @memberof TodoResponse
    */
-  createdAt?: string;
+  createdAt: string | null;
   /**
    *
    * @type {string}
    * @memberof TodoResponse
    */
-  updatedAt?: string;
+  updatedAt: string | null;
 }
 /**
- * An enumeration.
+ *
  * @export
  * @enum {string}
  */
@@ -246,19 +258,19 @@ export interface TodoUpdate {
    * @type {string}
    * @memberof TodoUpdate
    */
-  title?: string;
+  title: string | null;
   /**
    *
    * @type {string}
    * @memberof TodoUpdate
    */
-  description?: string;
+  description: string | null;
   /**
    *
    * @type {string}
    * @memberof TodoUpdate
    */
-  completedAt?: string;
+  completedAt: string | null;
 }
 /**
  *
@@ -271,13 +283,13 @@ export interface TodosPagedResponse {
    * @type {Array<TodoResponse>}
    * @memberof TodosPagedResponse
    */
-  data?: Array<TodoResponse>;
+  data: Array<TodoResponse> | null;
   /**
    *
    * @type {PagingMeta}
    * @memberof TodosPagedResponse
    */
-  meta?: PagingMeta;
+  meta: PagingMeta | null;
 }
 /**
  *
@@ -309,7 +321,7 @@ export interface UserCreate {
    * @type {string}
    * @memberof UserCreate
    */
-  fullName?: string;
+  fullName?: string | null;
   /**
    *
    * @type {string}
@@ -334,7 +346,7 @@ export interface UserResponse {
    * @type {string}
    * @memberof UserResponse
    */
-  fullName?: string;
+  fullName?: string | null;
   /**
    *
    * @type {string}
@@ -365,13 +377,13 @@ export interface UserUpdate {
    * @type {string}
    * @memberof UserUpdate
    */
-  fullName?: string;
+  fullName?: string | null;
   /**
    *
    * @type {string}
    * @memberof UserUpdate
    */
-  password?: string;
+  password?: string | null;
 }
 /**
  *
@@ -412,20 +424,20 @@ export const AuthApiAxiosParamCreator = function (
      * @summary Login Access Token
      * @param {string} username
      * @param {string} password
-     * @param {string} [grantType]
+     * @param {string | null} [grantType]
      * @param {string} [scope]
-     * @param {string} [clientId]
-     * @param {string} [clientSecret]
+     * @param {string | null} [clientId]
+     * @param {string | null} [clientSecret]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     loginAccessTokenAuthLoginPost: async (
       username: string,
       password: string,
-      grantType?: string,
+      grantType?: string | null,
       scope?: string,
-      clientId?: string,
-      clientSecret?: string,
+      clientId?: string | null,
+      clientSecret?: string | null,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
       // verify required parameter 'username' is not null or undefined
@@ -506,20 +518,20 @@ export const AuthApiFp = function (configuration?: Configuration) {
      * @summary Login Access Token
      * @param {string} username
      * @param {string} password
-     * @param {string} [grantType]
+     * @param {string | null} [grantType]
      * @param {string} [scope]
-     * @param {string} [clientId]
-     * @param {string} [clientSecret]
+     * @param {string | null} [clientId]
+     * @param {string | null} [clientSecret]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async loginAccessTokenAuthLoginPost(
       username: string,
       password: string,
-      grantType?: string,
+      grantType?: string | null,
       scope?: string,
-      clientId?: string,
-      clientSecret?: string,
+      clientId?: string | null,
+      clientSecret?: string | null,
       options?: AxiosRequestConfig,
     ): Promise<
       (axios?: AxiosInstance, basePath?: string) => AxiosPromise<Token>
@@ -560,20 +572,20 @@ export const AuthApiFactory = function (
      * @summary Login Access Token
      * @param {string} username
      * @param {string} password
-     * @param {string} [grantType]
+     * @param {string | null} [grantType]
      * @param {string} [scope]
-     * @param {string} [clientId]
-     * @param {string} [clientSecret]
+     * @param {string | null} [clientId]
+     * @param {string | null} [clientSecret]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     loginAccessTokenAuthLoginPost(
       username: string,
       password: string,
-      grantType?: string,
+      grantType?: string | null,
       scope?: string,
-      clientId?: string,
-      clientSecret?: string,
+      clientId?: string | null,
+      clientSecret?: string | null,
       options?: any,
     ): AxiosPromise<Token> {
       return localVarFp
@@ -603,10 +615,10 @@ export class AuthApi extends BaseAPI {
    * @summary Login Access Token
    * @param {string} username
    * @param {string} password
-   * @param {string} [grantType]
+   * @param {string | null} [grantType]
    * @param {string} [scope]
-   * @param {string} [clientId]
-   * @param {string} [clientSecret]
+   * @param {string | null} [clientId]
+   * @param {string | null} [clientSecret]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof AuthApi
@@ -614,10 +626,10 @@ export class AuthApi extends BaseAPI {
   public loginAccessTokenAuthLoginPost(
     username: string,
     password: string,
-    grantType?: string,
+    grantType?: string | null,
     scope?: string,
-    clientId?: string,
-    clientSecret?: string,
+    clientId?: string | null,
+    clientSecret?: string | null,
     options?: AxiosRequestConfig,
   ) {
     return AuthApiFp(this.configuration)
@@ -1187,21 +1199,21 @@ export const TodosApiAxiosParamCreator = function (
     /**
      *
      * @summary Get Paged Todos
-     * @param {string} [q]
+     * @param {Q | null} [q]
      * @param {boolean} [includeDeleted]
      * @param {number} [page]
      * @param {number} [perPage]
-     * @param {TodoSortFieldEnum} [sortField]
+     * @param {Sortfield | null} [sortField]
      * @param {SortDirectionEnum} [direction]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getPagedTodos: async (
-      q?: string,
+      q?: Q | null,
       includeDeleted?: boolean,
       page?: number,
       perPage?: number,
-      sortField?: TodoSortFieldEnum,
+      sortField?: Sortfield | null,
       direction?: SortDirectionEnum,
       options: AxiosRequestConfig = {},
     ): Promise<RequestArgs> => {
@@ -1456,21 +1468,21 @@ export const TodosApiFp = function (configuration?: Configuration) {
     /**
      *
      * @summary Get Paged Todos
-     * @param {string} [q]
+     * @param {Q | null} [q]
      * @param {boolean} [includeDeleted]
      * @param {number} [page]
      * @param {number} [perPage]
-     * @param {TodoSortFieldEnum} [sortField]
+     * @param {Sortfield | null} [sortField]
      * @param {SortDirectionEnum} [direction]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     async getPagedTodos(
-      q?: string,
+      q?: Q | null,
       includeDeleted?: boolean,
       page?: number,
       perPage?: number,
-      sortField?: TodoSortFieldEnum,
+      sortField?: Sortfield | null,
       direction?: SortDirectionEnum,
       options?: AxiosRequestConfig,
     ): Promise<
@@ -1610,21 +1622,21 @@ export const TodosApiFactory = function (
     /**
      *
      * @summary Get Paged Todos
-     * @param {string} [q]
+     * @param {Q | null} [q]
      * @param {boolean} [includeDeleted]
      * @param {number} [page]
      * @param {number} [perPage]
-     * @param {TodoSortFieldEnum} [sortField]
+     * @param {Sortfield | null} [sortField]
      * @param {SortDirectionEnum} [direction]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      */
     getPagedTodos(
-      q?: string,
+      q?: Q | null,
       includeDeleted?: boolean,
       page?: number,
       perPage?: number,
-      sortField?: TodoSortFieldEnum,
+      sortField?: Sortfield | null,
       direction?: SortDirectionEnum,
       options?: any,
     ): AxiosPromise<TodosPagedResponse> {
@@ -1734,22 +1746,22 @@ export class TodosApi extends BaseAPI {
   /**
    *
    * @summary Get Paged Todos
-   * @param {string} [q]
+   * @param {Q | null} [q]
    * @param {boolean} [includeDeleted]
    * @param {number} [page]
    * @param {number} [perPage]
-   * @param {TodoSortFieldEnum} [sortField]
+   * @param {Sortfield | null} [sortField]
    * @param {SortDirectionEnum} [direction]
    * @param {*} [options] Override http request option.
    * @throws {RequiredError}
    * @memberof TodosApi
    */
   public getPagedTodos(
-    q?: string,
+    q?: Q | null,
     includeDeleted?: boolean,
     page?: number,
     perPage?: number,
-    sortField?: TodoSortFieldEnum,
+    sortField?: Sortfield | null,
     direction?: SortDirectionEnum,
     options?: AxiosRequestConfig,
   ) {

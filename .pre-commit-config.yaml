@@ -26,7 +26,7 @@ repos:
 
   # flake8, isort, autoflakeはより高速で一元管理可能なruffに置き換える
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: "v0.0.264"
+    rev: "v0.0.277"
     hooks:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
@@ -62,20 +62,20 @@ repos:
         files: ^frontend_sample/.*\.(css|less|scsshtml|js|jsxjson|md|markdown|mdown|mkdn|mdx|ts|tsx|yaml|yml)$
         exclude: (^frontend_sample/public/)
 
-  - repo: https://github.com/python-poetry/poetry
-    rev: "1.4.0"
-    hooks:
-      - id: poetry-check
-      - id: poetry-lock
-      - id: poetry-export
-        args: ["-f", "requirements.txt", "-o", "requirements.txt"]
-      - id: poetry-export # for dev
-        args:
-          [
-            "--with",
-            "dev",
-            "-f",
-            "requirements.txt",
-            "-o",
-            "requirements-dev.txt",
-          ]
+  # - repo: https://github.com/python-poetry/poetry
+  #   rev: "1.4.0"
+  #   hooks:
+  #     - id: poetry-check
+  #     - id: poetry-lock
+  #     - id: poetry-export
+  #       args: ["-f", "requirements.txt", "-o", "requirements.txt"]
+  #     - id: poetry-export # for dev
+  #       args:
+  #         [
+  #           "--with",
+  #           "dev",
+  #           "-f",
+  #           "requirements.txt",
+  #           "-o",
+  #           "requirements-dev.txt",
+  #         ]

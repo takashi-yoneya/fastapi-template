@@ -2,36 +2,19 @@ from enum import Enum
 from typing import Any
 
 from fastapi import Query
-from humps import camel
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, ConfigDict, field_validator
+from pydantic.alias_generators import to_camel
 from sqlalchemy import desc
 
-
-def to_camel(string: str) -> str:
-    return camel.case(string)
+# def to_camel(string: str) -> str:
+#     return camel.case(string)
 
 
 class BaseSchema(BaseModel):
-    # @validator("*", pre=True)
-    # def cast_someone(cls, v):
-    #     '''
-    #     全ての項目に対して、pre処理を行いたい場合の例
-    #     '''
-    #     if isinstance(v, Any):
-    # @validator("*", pre=True)
-    # def split_comma(cls, v):
-    #     '''
-    #     カンマでsplitする例
-    #     '''
-    #     if isinstance(v, str):
-    class Config:
-        """# キャメルケース　<-> スネークケースの自動変換
-        pythonではスネークケースを使用するが、Javascriptではキャメルケースを使用する場合が多いため
-        変換する必要がある.
-        """
+    """全体共通の情報をセットするBaseSchema"""
 
-        alias_generator = to_camel
-        allow_population_by_field_name = True
+    # class Configで指定した場合に引数チェックがされないため、ConfigDictを推奨
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True, strict=True)
 
 
 class PagingMeta(BaseSchema):
@@ -45,11 +28,11 @@ class PagingQueryIn(BaseSchema):
     page: int = Query(1)
     per_page: int = Query(30)
 
-    @validator("page")
+    @field_validator("page", mode="before")
     def validate_page(cls, v: int) -> int:
         return 1 if not v >= 1 else v
 
-    @validator("per_page")
+    @field_validator("per_page", mode="before")
     def validate_per_page(cls, v: int) -> int:
         return 30 if not v >= 1 else v
 
@@ -86,7 +69,7 @@ class FilterQueryIn(BaseSchema):
     start: int | None = Query(None)
     end: int | None = Query(None)
 
-    @validator("direction")
+    @field_validator("direction", mode="before")  # mode=beforeは,v1のpre=Trueと同等
     def validate_direction(cls, v: str) -> str:
         if not v:
             return "asc"

@@ -94,10 +94,16 @@ def upgrade():
         sa.UniqueConstraint("todo_id", "tag_id", name="ix_todos_tags_todo_id_tag_id"),
     )
     op.create_index(
-        op.f("ix_todos_tags_tag_id"), "todos_tags", ["tag_id"], unique=False,
+        op.f("ix_todos_tags_tag_id"),
+        "todos_tags",
+        ["tag_id"],
+        unique=False,
     )
     op.create_index(
-        op.f("ix_todos_tags_todo_id"), "todos_tags", ["todo_id"], unique=False,
+        op.f("ix_todos_tags_todo_id"),
+        "todos_tags",
+        ["todo_id"],
+        unique=False,
     )
     # ### end Alembic commands ###
 

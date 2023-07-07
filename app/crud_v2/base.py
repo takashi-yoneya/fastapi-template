@@ -124,7 +124,7 @@ class CRUDV2Base(
             stmt = sort_query_in.apply_to_query(stmt, order_by_clause=order_by_clause)
         stmt = stmt.execution_options(include_deleted=include_deleted)
         stmt = paging_query_in.apply_to_query(stmt)
-        data = (await db.execute(stmt)).all()
+        db_obj_list = (await db.execute(stmt)).all()
 
         meta = schemas.PagingMeta(
             total_data_count=total_count,
@@ -132,7 +132,8 @@ class CRUDV2Base(
             total_page_count=int(math.ceil(total_count / paging_query_in.per_page)),
             per_page=paging_query_in.per_page,
         )
-        list_response = self.list_response_class(data=data, meta=meta)
+        data_response = [self.response_schema_class.model_validate(d) for d in db_obj_list]
+        list_response = self.list_response_class(data=data_response, meta=meta)
         return list_response
 
     async def create(

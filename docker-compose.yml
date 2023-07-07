@@ -21,6 +21,7 @@ services:
       - db_volume:/var/lib/mysql
 
   web:
+    # platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile
@@ -37,7 +38,7 @@ services:
     command: [
         "/bin/sh",
         "-c",
-        "poe migrate && uvicorn app.main:app --host 0.0.0.0 --port 80 --reload --log-config ./app/logger_config.yaml --proxy-headers --forwarded-allow-ips='*'"
+        "alembic upgrade heads && uvicorn app.main:app --host 0.0.0.0 --port 80 --reload --log-config ./app/logger_config.yaml --proxy-headers --forwarded-allow-ips='*'"
     ]
     ports:
       - 8888:80

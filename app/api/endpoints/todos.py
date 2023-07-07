@@ -24,7 +24,6 @@ async def get_job(
         id=id,
         include_deleted=include_deleted,
     )
-    print(todo)
     if not todo:
         raise APIException(ErrorMessage.ID_NOT_FOUND)
     return todo

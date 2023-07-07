@@ -478,7 +478,7 @@ API エンドポイント経由のテストではなく、db セッションを�
 
 以下の例では、TestBaseクラスを継承して、TestTodosクラスを作成しています。ENDPOINT_URIにテスト対象のAPIエンドポイントのURIを指定することで、CRUD全体で使用できます。
 
-pytestのmarametrizeを使用しており、１つのテスト関数で複数のテストケースを定義できます。
+pytestのparametrizeを使用しており、１つのテスト関数で複数のテストケースを定義できます。
 
 
 
@@ -489,26 +489,24 @@ class TestTodos(TestBase):
     """create
     """
 
-    _params_create_todo = {
-        "success": (
-            TodoCreate(
-                title="test-create-title", description="test-create-description"
-            ).dict(by_alias=True),
-            status.HTTP_200_OK,
-            dict(title="test-create-title", description="test-create-description"),
-            None,
-        ),
-    }
-
     @pytest.mark.parametrize(
+        ["data_in", "expected_status", "expected_data", "expected_error"],
         [
-            "data_in",
-            "expected_status",
-            "expected_data",
-            "expected_error",
+            pytest.param(
+                TodoCreate(title="test-create-title", description="test-create-description").model_dump(by_alias=True),
+                status.HTTP_200_OK,
+                {"title": "test-create-title", "description": "test-create-description"},
+                None,
+                id="success",
+            ),
+            pytest.param(
+                TodoCreate(title="test-create-title", description="test-create-description").model_dump(by_alias=True),
+                status.HTTP_200_OK,
+                {"title": "test-create-title", "description": "test-create-description"},
+                None,
+                id="any-test-case",
+            )
         ],
-        list(_params_create_todo.values()),
-        ids=list(_params_create_todo.keys()),
     )
     def test_create(
         self,

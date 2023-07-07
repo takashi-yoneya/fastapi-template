@@ -1,7 +1,8 @@
 import logging
 
 import sentry_sdk
-from debug_toolbar.middleware import DebugToolbarMiddleware
+
+# from debug_toolbar.middleware import DebugToolbarMiddleware
 from fastapi import FastAPI
 from mangum import Mangum
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
@@ -65,11 +66,11 @@ app.include_router(users.router, tags=["Users"], prefix="/users")
 app.include_router(todos.router, tags=["Todos"], prefix="/todos")
 app.include_router(tasks.router, tags=["Tasks"], prefix="/tasks")
 
-if settings.DEBUG:
-    app.add_middleware(
-        DebugToolbarMiddleware,
-        panels=["debug_toolbar.panels.sqlalchemy.SQLAlchemyPanel"],
-    )
+# if settings.DEBUG:
+#     app.add_middleware(
+#         DebugToolbarMiddleware,
+#         panels=["debug_toolbar.panels.sqlalchemy.SQLAlchemyPanel"],
+#     )
 
 
 handler = Mangum(app)

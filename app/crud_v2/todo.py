@@ -53,7 +53,7 @@ class CRUDTodo(
         tags = crud_v2.tag.upsert_tags(db, tags_in=tags_in)
         todos_tags_data = [{"todo_id": todo.id, "tag_id": tag.id} for tag in tags]
 
-        # TodoとTagを紐づけ
+        # Tagを紐づけ
         stmt = insert(models.TodoTag).values(todos_tags_data)
         stmt = stmt.on_duplicate_key_update(tag_id=stmt.inserted.tag_id)
         db.execute(stmt)

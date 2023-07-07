@@ -1,4 +1,4 @@
-from pydantic import EmailStr
+from pydantic import ConfigDict, EmailStr
 
 from app.schemas.core import BaseSchema, PagingMeta
 
@@ -18,12 +18,10 @@ class UserUpdate(UserBase):
 
 
 class UserResponse(UserBase):
+    model_config = ConfigDict(from_attributes=True)
     id: str
     email: EmailStr
     email_verified: bool
-
-    class Config:
-        orm_mode = True
 
 
 class UsersPagedResponse(BaseSchema):

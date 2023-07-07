@@ -3,14 +3,8 @@ import os
 from collections.abc import AsyncGenerator
 from typing import Any
 
-import alembic.command
-import alembic.config
 import pytest
 import pytest_asyncio
-from app import schemas
-from app.core.config import Settings
-from app.core.database import get_async_db
-from app.main import app
 from fastapi import status
 from httpx import AsyncClient
 from pytest_mysql import factories
@@ -18,6 +12,13 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
+
+import alembic.command
+import alembic.config
+from app import schemas
+from app.core.config import Settings
+from app.core.database import get_async_db
+from app.main import app
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -83,9 +84,8 @@ def migrate(
 
 
 @pytest_asyncio.fixture
-async def engine(
-    mysql: Any,
-) -> AsyncEngine:
+@pytest.mark.usefixtures("mysql")
+async def engine() -> AsyncEngine:
     """fixture: db-engineの作成およびmigrate"""
     logger.debug("fixture:engine")
     # uri = (
@@ -102,7 +102,6 @@ async def engine(
 
     # migrate(alembic)はasyncに未対応なため、sync-engineを使用する
     sync_uri = settings.get_database_url()
-    print(sync_uri)
     sync_engine = create_engine(sync_uri, echo=False, poolclass=NullPool)
     with sync_engine.begin() as conn:
         migrate(
@@ -123,9 +122,7 @@ async def db(
 ) -> AsyncGenerator[AsyncSession, None]:
     """fixture: db-sessionの作成"""
     logger.debug("fixture:db")
-    test_session_factory = sessionmaker(
-        autocommit=False, autoflush=False, bind=engine, class_=AsyncSession
-    )
+    test_session_factory = sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=AsyncSession)
 
     async with test_session_factory() as session:
         yield session
@@ -136,9 +133,7 @@ async def db(
 async def client(engine: AsyncEngine) -> AsyncClient:
     """fixture: HTTP-Clientの作成"""
     logger.debug("fixture:client")
-    test_session_factory = sessionmaker(
-        autocommit=False, autoflush=False, bind=engine, class_=AsyncSession
-    )
+    test_session_factory = sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=AsyncSession)
 
     async def override_get_db() -> AsyncGenerator[AsyncSession, None]:
         async with test_session_factory() as session:

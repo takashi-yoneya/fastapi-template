@@ -3,7 +3,7 @@
     "python.linting.pylintEnabled": false,
     // "python.linting.flake8Enabled": true,
     "python.linting.mypyEnabled": true,
-    "python.formatting.provider": "black",
+    "python.formatting.provider": null,
     "python.linting.lintOnSave": true,
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
