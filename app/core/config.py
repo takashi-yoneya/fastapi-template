@@ -2,7 +2,7 @@ import os
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -43,8 +43,7 @@ class Settings(BaseSettings):
                 "mysql://" f"{self.DB_USER_NAME}:{self.DB_PASSWORD}@" f"{self.DB_HOST}/{self.DB_NAME}?charset=utf8mb4"
             )
 
-    class Config:
-        env_file = ".env"
+    model_config = SettingsConfigDict(env_file=".env")
 
 
 @lru_cache

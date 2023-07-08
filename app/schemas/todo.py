@@ -2,6 +2,7 @@ import datetime
 from enum import Enum
 
 from fastapi import Query
+from pydantic import ConfigDict
 
 from app import schemas
 from app.schemas.core import BaseSchema, PagingMeta
@@ -19,10 +20,8 @@ class TodoResponse(TodoBase):
     tags: list[TagResponse] | None = []
     created_at: datetime.datetime | None = None
     updated_at: datetime.datetime | None = None
-    # deleted_at: Optional[datetime.datetime]
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class TodoCreate(TodoBase):

@@ -7,6 +7,7 @@ import pytest
 import pytest_asyncio
 from fastapi import status
 from httpx import AsyncClient
+from pydantic_settings import SettingsConfigDict
 from pytest_mysql import factories
 from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
@@ -34,10 +35,8 @@ class TestSettings(Settings):
 
     TEST_USER_EMAIL: str = "test-user1@example.com"
     TEST_USER_PASSWORD: str = "test-user"
-    # TEST_SQL_DATA_PATH: str = os.path.join(BASE_DIR_PATH, "tests", "test_data", "dump.sql.gz")
 
-    class Config:
-        env_file = ".env.test"
+    model_config = SettingsConfigDict(env_file=".env.test")
 
 
 settings = TestSettings()

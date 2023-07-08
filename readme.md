@@ -256,15 +256,20 @@ table の user.scopes の値と router に指定した scope を一致させて�
 Python ではスネークケースが標準ですが、Javascript ではキャメルケースが標準なため
 単純に pydantic で schema を作成しただけでは、json レスポンスにスネークケースを使用せざるをえない問題があります。
 
-そこで、humps を install して、自動的にスネークケースに変換するように
-以下のような BaseSchema を作成しています。
-この BaseSchema を継承することで、簡単にキャメルケースとスネークケースの相互変換が実現できます。
+そこで、以下のような BaseSchema を作成して、キャメルケース、スネークケースの相互変換を行なっています。
+pydantic v2では、```from pydantic.alias_generators import to_camel```をインポートして、ConfigDictのalias_generatorにセットすることで、簡単にキャメルケースとスネークケースの相互変換が実現できます。
 
 ```python
+from pydantic import BaseModel, ConfigDict
+from pydantic.alias_generators import to_camel
+
 class BaseSchema(BaseModel):
-    class Config:
-        alias_generator = to_camel
-        allow_population_by_field_name = True
+    """全体共通の情報をセットするBaseSchema"""
+
+    # class Configで指定した場合に引数チェックがされないため、ConfigDictを推奨
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True, strict=True)
+
+
 ```
 
 ## OpenAPI Generator を使用してバックエンドの型定義をフロントエンドでも使用する
