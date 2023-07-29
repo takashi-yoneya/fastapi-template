@@ -1,8 +1,6 @@
 import logging
 
 import sentry_sdk
-
-# from debug_toolbar.middleware import DebugToolbarMiddleware
 from fastapi import FastAPI
 from mangum import Mangum
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
@@ -66,11 +64,14 @@ app.include_router(users.router, tags=["Users"], prefix="/users")
 app.include_router(todos.router, tags=["Todos"], prefix="/todos")
 app.include_router(tasks.router, tags=["Tasks"], prefix="/tasks")
 
-# if settings.DEBUG:
-#     app.add_middleware(
-#         DebugToolbarMiddleware,
-#         panels=["debug_toolbar.panels.sqlalchemy.SQLAlchemyPanel"],
-#     )
+# debugモード時はfastapi-tool-barを有効化する
+if settings.DEBUG:
+    from debug_toolbar.middleware import DebugToolbarMiddleware
+
+    app.add_middleware(
+        DebugToolbarMiddleware,
+        panels=["app.core.database.SQLAlchemyPanel"],
+    )
 
 
 handler = Mangum(app)

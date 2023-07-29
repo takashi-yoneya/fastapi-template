@@ -1,5 +1,7 @@
 from collections.abc import AsyncGenerator, Generator
 
+from debug_toolbar.panels.sqlalchemy import SQLAlchemyPanel as BasePanel
+from fastapi import Request
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import Session, sessionmaker
@@ -96,3 +98,10 @@ def drop_all_tables() -> None:
         # 外部キーの制御を有効化
         conn.execute(text("SET FOREIGN_KEY_CHECKS = 1"))
         logger.info("end: drop_all_tables")
+
+
+if settings.DEBUG:
+
+    class SQLAlchemyPanel(BasePanel):
+        async def add_engines(self, request: Request) -> None:
+            self.engines.add(async_engine.sync_engine)
