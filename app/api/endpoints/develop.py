@@ -23,6 +23,13 @@ def exec_error2() -> None:
     raise APIException(ErrorMessage.INTERNAL_SERVER_ERROR)
 
 
+class RequestInfoResponse(BaseSchema):
+    ip_address: str | None
+    host: str | None
+
+    class Config:
+        orm_mode = True
+
 @router.get("/request-info")
 def get_request_info(request: Request) -> schemas.RequestInfoResponse:
     ip_address = utils.get_request_info(request)

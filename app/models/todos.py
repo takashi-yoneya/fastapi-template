@@ -12,8 +12,8 @@ class Todo(ModelBaseMixin, Base):
     mysql_collate = "utf8mb4_unicode_ci"
 
     title: Mapped[str] = mapped_column(String(100), index=True)
-    description: Mapped[str] = mapped_column(Text)
-    completed_at: Mapped[datetime] = mapped_column(DateTime)
+    description: Mapped[str] = mapped_column(Text, nullable=True)
+    completed_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
 
     tags: Mapped[list] = relationship(
         "Tag",

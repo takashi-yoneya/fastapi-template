@@ -352,6 +352,66 @@ http status code=400
 }
 ```
 
+## AppManager
+
+FastAPIのmount機能を使うと、多くのAPIを作成する場合などopenapiを複数画面に分割することができますが、openapi間のリンクが不便になる問題があります。
+そこで、複数のFastAPIのappを統合管理できるFastAPIAppManagerクラスを構築しています。
+
+FastAPIAppManagerを使用して、複数のappをadd_appで追加していくことで、複数のappに対する共通処理を実行することができます。
+
+一例として以下の実装では、setup_apps_docs_link()でopenapiの上部に表示するapp間のlinkを生成しています。
+
+```python
+# main.py
+app = FastAPI(
+    title=settings.TITLE,
+    version=settings.VERSION,
+    debug=settings.DEBUG or False,
+)
+app_manager = FastAPIAppManager(root_app=app)
+# appを分割する場合は、add_appで別のappを追加する
+app_manager.add_app(path="admin", app=admin_app.app)
+app_manager.add_app(path="other", app=other_app.app)
+app_manager.setup_apps_docs_link()
+```
+
+```python
+# app_manager.py
+class FastAPIAppManager():
+
+    def __init__(self, root_app: FastAPI):
+        self.app_path_list: list[str] = [""]
+        self.root_app: FastAPI = root_app
+        self.apps: list[FastAPI] = [root_app]
+
+    def add_app(self, app: FastAPI, path: str) -> None:
+        self.apps.append(app)
+        if not path.startswith("/"):
+            path = f"/{path}"
+        else:
+            path =path
+        self.app_path_list.append(path)
+        app.title = f"{self.root_app.title}({path})"
+        app.version = self.root_app.version
+        app.debug = self.root_app.debug
+        self.root_app.mount(path=path, app=app)
+
+    def setup_apps_docs_link(self) -> None:
+        """ 他のAppへのリンクがopenapiに表示されるようにセットする """
+        for app, path in zip(self.apps, self.app_path_list):
+            app.description = self._make_app_docs_link_html(path)
+
+    def _make_app_docs_link_html(self, current_path: str) -> str:
+        # openapiの上部に表示する各Appへのリンクを生成する
+        descriptions = [
+            f"<a href='{path}/docs'>{path}/docs</a>" if path != current_path else f"{path}/docs"
+            for path in self.app_path_list
+        ]
+        descriptions.insert(0, "Apps link")
+        return "<br>".join(descriptions)
+```
+
+
 ## logging
 
 logger_config.yaml で logging 設定を管理しています。可読性が高くなるように yaml で記述しています。

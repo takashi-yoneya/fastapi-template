@@ -28,7 +28,7 @@ class ModelBaseMixin:
         default=current_timestamp(),
         onupdate=func.utc_timestamp(),
     )
-    deleted_at: Mapped[datetime] = mapped_column(DateTime)
+    deleted_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
 
 
 class ModelBaseMixinWithoutDeletedAt:

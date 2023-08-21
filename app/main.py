@@ -2,13 +2,14 @@ import logging
 
 import sentry_sdk
 from fastapi import FastAPI
-from mangum import Mangum
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 from starlette.middleware.cors import CORSMiddleware
 
+from app.api.apps import admin_app, other_app
 from app.api.endpoints import auth, tasks, todos, users
+from app.app_manager import FastAPIAppManager
 from app.core.config import settings
 from app.core.logger import get_logger
 
@@ -28,11 +29,11 @@ logging.getLogger("uvicorn.access").addFilter(NoParsingFilter())
 sentry_logging = LoggingIntegration(level=logging.INFO, event_level=logging.ERROR)
 
 app = FastAPI(
-    title=f"[{settings.ENV}]{settings.TITLE}",
+    title=settings.TITLE,
     version=settings.VERSION,
     debug=settings.DEBUG or False,
-    root_path=f"{settings.API_GATEWAY_STAGE_PATH}/",
 )
+app_manager = FastAPIAppManager(root_app=app)
 
 
 if settings.SENTRY_SDK_DNS:
@@ -64,6 +65,11 @@ app.include_router(users.router, tags=["Users"], prefix="/users")
 app.include_router(todos.router, tags=["Todos"], prefix="/todos")
 app.include_router(tasks.router, tags=["Tasks"], prefix="/tasks")
 
+# appを分割する場合は、add_appで別のappを追加する
+app_manager.add_app(path="admin", app=admin_app.app)
+app_manager.add_app(path="other", app=other_app.app)
+app_manager.setup_apps_docs_link()
+
 # debugモード時はfastapi-tool-barを有効化する
 if settings.DEBUG:
     from debug_toolbar.middleware import DebugToolbarMiddleware
@@ -72,6 +78,3 @@ if settings.DEBUG:
         DebugToolbarMiddleware,
         panels=["app.core.database.SQLAlchemyPanel"],
     )
-
-
-handler = Mangum(app)

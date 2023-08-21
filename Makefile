@@ -26,7 +26,7 @@ pre-commit-update:
 # pytestでテストを実行
 .PHONY: test
 test:
-	@docker compose run --rm web bash -c "pytest tests/ -v"
+	@docker compose run --rm web bash -c "pytest tests/ --durations=5 -v"
 
 # マイグレーションファイルを作成
 # m: マイグレーションファイルの名前

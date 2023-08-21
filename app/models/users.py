@@ -22,4 +22,4 @@ class User(ModelBaseMixin, Base):
         server_default="0",
     )
     hashed_password: Mapped[str] = mapped_column(Text, nullable=False)
-    scopes: Mapped[str] = mapped_column(Text)
+    scopes: Mapped[str] = mapped_column(Text, nullable=True)

@@ -45,6 +45,9 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=".env")
 
+    def get_app_title(self, app_name: str) -> str:
+        return f"[{self.ENV}]{self.TITLE}({app_name=})"
+
 
 @lru_cache
 def get_settings() -> Settings:

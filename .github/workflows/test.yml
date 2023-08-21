@@ -1,0 +1,61 @@
+name: test
+
+on:
+  pull_request:
+  push:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      # テスト用のDBコンテナを起動
+      db:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 1
+          MYSQL_ROOT_PASSWORD:
+          MYSQL_DATABASE: docker
+          MYSQL_USER: docker
+          MYSQL_PASSWORD: docker
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: set up python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10.12"
+
+      - name: update path
+        shell: bash
+        run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: set up .venv cache
+        uses: actions/cache@v2
+        id: cache
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ hashFiles('**/requirements-dev.lock') }}
+          restore-keys: |
+            pip-
+
+      - name: install packages
+        run: |
+          sed '/-e/d' requirements-dev.lock > requirements.txt
+          pip install -r requirements.txt
+
+      - name: create .env
+        shell: bash
+        run: |
+          cp ".env.test" ".env"
+
+      - name: test
+        shell: bash
+        # serviceコンテナへは127.0.0.1でアクセスする必要があるため環境変数を変更
+        run: |
+          DB_HOST=127.0.0.1 pytest tests/ --durations=3 -v
+        timeout-minutes: 10

@@ -1,5 +1,4 @@
 import logging
-import os
 from collections.abc import AsyncGenerator
 from typing import Any
 
@@ -9,10 +8,10 @@ from fastapi import status
 from httpx import AsyncClient
 from pydantic_settings import SettingsConfigDict
 from pytest_mysql import factories
-from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
+from sqlalchemy.sql import select
 
 import alembic.command
 import alembic.config
@@ -20,12 +19,19 @@ from app import schemas
 from app.core.config import Settings
 from app.core.database import get_async_db
 from app.main import app
+from app.models.base import Base
+from app.models.users import User
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s %(name)s %(levelname)s  %(message)s %(filename)s %(module)s %(funcName)s %(lineno)d",
+)
 logger = logging.getLogger(__name__)
 
 
-pytest.USER_ID = ""
+pytest.USER_ID: str | None = None
+pytest.USER_DICT: dict[str, Any] | None = None
+pytest.ACCESS_TOKEN: str | None = None
 
 logger.info("root-conftest")
 
@@ -50,12 +56,6 @@ db_proc = factories.mysql_noproc(
 mysql = factories.mysql("db_proc")
 logger.debug("end:mysql_proc")
 
-
-# TEST_USER_DICT = {
-#     "email": settings.TEST_USER_EMAIL,
-#     "password": settings.TEST_USER_PASSWORD,
-#     "nickname": "test-user",
-# }
 
 TEST_USER_CREATE_SCHEMA = schemas.UserCreate(
     email=settings.TEST_USER_EMAIL,
@@ -100,19 +100,21 @@ async def engine(
     # settings.DATABASE_URI = uri
     engine = create_async_engine(uri, echo=False, poolclass=NullPool)
 
+    # NOTE: テストケース毎にmigrateすると時間がかるので使用停止
     # migrate(alembic)はasyncに未対応なため、sync-engineを使用する
-    sync_uri = settings.get_database_url()
-    sync_engine = create_engine(sync_uri, echo=False, poolclass=NullPool)
-    with sync_engine.begin() as conn:
-        migrate(
-            migrations_path=settings.MIGRATIONS_DIR_PATH,
-            versions_path=os.path.join(settings.MIGRATIONS_DIR_PATH, "versions"),
-            alembic_ini_path=os.path.join(settings.ROOT_DIR_PATH, "alembic.ini"),
-            connection=conn,
-            uri=sync_uri,
-        )
-        logger.debug("migration end")
+    # with sync_engine.begin() as conn:
+    #     migrate(
+    #         migrations_path=settings.MIGRATIONS_DIR_PATH,
+    #         versions_path=os.path.join(settings.MIGRATIONS_DIR_PATH, "versions"),
+    #         alembic_ini_path=os.path.join(settings.ROOT_DIR_PATH, "alembic.ini"),
+    #         connection=conn,
+    #         uri=sync_uri,
+    #     )
+    #     logger.debug("migration end")
 
+    # create_allで一括処理する
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
     return engine
 
 
@@ -146,16 +148,32 @@ async def client(engine: AsyncEngine) -> AsyncClient:
     return AsyncClient(app=app, base_url="http://test")
 
 
+async def _insert_user(db: AsyncSession, user_dict: dict[str, Any]) -> None:
+    del user_dict["_sa_instance_state"]
+    db.add(User(**user_dict))
+    await db.commit()
+
+
 @pytest_asyncio.fixture
-async def authed_client(client: AsyncClient) -> AsyncClient:
+async def authed_client(client: AsyncClient, db: AsyncSession) -> AsyncClient:
     """fixture: clietnに認証情報をセット"""
-    logger.debug("fixture:authed_headers")
+    logger.debug("fixture:authed_client")
+
+    if pytest.USER_DICT:
+        # すでに１度ユーザー登録している場合は、過去に登録したレコードを再登録する
+        _insert_user(db, user_dict=pytest.USER_DICT)
+        logger.debug("already user created. restore user.")
+        client.headers = {"authorization": f"Bearer {pytest.ACCESS_TOKEN}"}
+        return client
+
+    # ユーザー登録
     res = await client.post(
         "/users",
         json=TEST_USER_CREATE_SCHEMA.dict(),
     )
     assert res.status_code == status.HTTP_200_OK
 
+    # ログインしてアクセストークンを取得
     res = await client.post(
         "/auth/login",
         data={
@@ -166,11 +184,17 @@ async def authed_client(client: AsyncClient) -> AsyncClient:
     assert res.status_code == status.HTTP_200_OK
     access_token = res.json().get("access_token")
     client.headers = {"authorization": f"Bearer {access_token}"}
+    pytest.ACCESS_TOKEN = access_token
 
-    # テスト全体で使用するので、グローバル変数とする
+    # 登録したユーザーIDを取得
     res = await client.get("users/me")
     assert res.json().get("id")
     pytest.USER_ID = res.json().get("id")
+
+    # ユーザーレコードを丸ごと取得して、次回以降のテストを高速化する
+    stmt = select(User).where(User.id == res.json().get("id"))
+    user = (await db.execute(stmt)).scalars().first()
+    pytest.USER_DICT = user.__dict__.copy()
 
     return client
 
