@@ -5,6 +5,7 @@ from app.core import utils
 from app.core.logger import get_logger
 from app.exceptions.core import APIException
 from app.exceptions.error_messages import ErrorMessage
+from app.schemas.core import BaseSchema
 
 logger = get_logger(__name__)
 
@@ -29,6 +30,7 @@ class RequestInfoResponse(BaseSchema):
 
     class Config:
         orm_mode = True
+
 
 @router.get("/request-info")
 def get_request_info(request: Request) -> schemas.RequestInfoResponse:

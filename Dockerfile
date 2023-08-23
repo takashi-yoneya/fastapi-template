@@ -1,4 +1,4 @@
-FROM python:3.10-buster
+FROM python:3.11-bookworm
 
 ENV LANG C.UTF-8
 ENV TZ UTC

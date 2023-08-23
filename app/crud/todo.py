@@ -47,7 +47,7 @@ class CRUDTodo(
     ) -> models.Todo:
         tags = crud.tag.upsert_tags(db, tags_in=tags_in)
         for tag in tags:
-            todo.tags.append(tag)
+            todo.tags.append(tag)  # noqa: PERF402
         db.flush()
 
         # one-to-many joined response one query
